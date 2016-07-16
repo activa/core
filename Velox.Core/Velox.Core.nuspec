@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>velox.core</id>
+    <version>0.9.48</version>
+    <title>Velox.Core</title>
+    <authors>Philippe Leybaert</authors>
+    <owners>Philippe Leybaert</owners>
+    <licenseUrl>http://github.com/velox/core/LICENSE</licenseUrl>
+    <projectUrl>http://github.com/velox/core</projectUrl>
+    <iconUrl>http://dstyler.com/vici/32x32/im-_IconPlain100-w32-h32.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>General purpose library for expression parsing, template rendering, type conversion, configuration management, ...</description>
+    <language>en-US</language>
+    <tags>velox core expressions parser configuration conversion</tags>
+  </metadata>
+  <files>
+    <file src="bin\Release\*.dll" target="lib\portable-net45+netcore45+wpa81+wp8" />
+  </files>
+</package>
