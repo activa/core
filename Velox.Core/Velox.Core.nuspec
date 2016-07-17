@@ -2,11 +2,11 @@
 <package>
   <metadata>
     <id>velox.core</id>
-    <version>0.9.48</version>
+    <version>1.0.0</version>
     <title>Velox.Core</title>
     <authors>Philippe Leybaert</authors>
     <owners>Philippe Leybaert</owners>
-    <licenseUrl>http://github.com/velox/core/LICENSE</licenseUrl>
+    <licenseUrl>https://raw.githubusercontent.com/velox/Core/master/LICENSE</licenseUrl>
     <projectUrl>http://github.com/velox/core</projectUrl>
     <iconUrl>http://dstyler.com/vici/32x32/im-_IconPlain100-w32-h32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
