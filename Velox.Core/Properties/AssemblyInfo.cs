@@ -14,6 +14,5 @@ using System.Runtime.InteropServices;
 
 [assembly:InternalsVisibleTo("Velox.Core.Test")]
 
-[assembly: AssemblyVersion("0.9.48.*")]
-[assembly: AssemblyInformationalVersion("0.9.48")]
+[assembly: AssemblyVersion("1.0.0.*")]
 
