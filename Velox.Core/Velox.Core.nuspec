@@ -15,6 +15,6 @@
     <tags>velox core expressions parser configuration conversion</tags>
   </metadata>
   <files>
-    <file src="bin\Release\*.dll" target="lib\portable-net45+netcore45+wpa81+wp8" />
+    <file src="*.dll" target="lib\portable-net45+netcore45+wpa81+wp8" />
   </files>
 </package>
