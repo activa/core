@@ -31,8 +31,13 @@ namespace Velox.Core.Parser
 {
     public class RangeExpression : BinaryExpression
     {
-        public RangeExpression(Expression from, Expression to) : base(from, to)
+		public bool ExcludeFrom = false;
+		public bool ExcludeTo = false;
+
+        public RangeExpression(Expression from, Expression to, bool excludeFrom, bool excludeTo) : base(from, to)
         {
+			ExcludeFrom = excludeFrom;
+			ExcludeTo = excludeTo;
         }
 
         public Expression From
@@ -62,29 +67,29 @@ namespace Velox.Core.Parser
                 return Exp.Value(Range((int)Convert.ChangeType(from.Value, typeof(int), null), (int)Convert.ChangeType(to.Value, typeof(int), null)));
         }
 
-        private static IEnumerable<int> Range(int from, int to)
+        private IEnumerable<int> Range(int from, int to)
         {
             if (from == to)
                 yield return from;
             else if (from < to)
-                for (int i = from; i <= to; i++)
+				for (int i = from + (ExcludeFrom ? 1:0); i <= to - (ExcludeTo ? 1:0); i++)
                     yield return i;
             else
-                for (int i = from; i >= to; i--)
+				for (int i = from - (ExcludeFrom ? 1:0); i >= to + (ExcludeTo ? 1:0); i--)
                     yield return i;
         }
 
-        private static IEnumerable<long> Range(long from, long to)
+        private IEnumerable<long> Range(long from, long to)
         {
             if (from == to)
                 yield return from;
-            else if (from < to)
-                for (long i = from; i <= to; i++)
-                    yield return i;
-            else
-                for (long i = from; i >= to; i--)
-                    yield return i;
-        }
+			else if (from < to)
+				for (long i = from + (ExcludeFrom ? 1 : 0); i <= to - (ExcludeTo ? 1 : 0); i++)
+					yield return i;
+			else
+				for (long i = from - (ExcludeFrom ? 1 : 0); i >= to + (ExcludeTo ? 1 : 0); i--)
+					yield return i;
+		}
 
     }
 }

@@ -344,7 +344,7 @@ namespace Velox.Core.Parser
 
         public static Expression NumericRange(string token,  Expression[] terms)
         {
-            return new RangeExpression(terms[0], terms[1]);
+			return new RangeExpression(terms[0], terms[1], token.StartsWith(">"), token.EndsWith("<"));
         }
     }
 }

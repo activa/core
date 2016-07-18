@@ -66,7 +66,7 @@ namespace Velox.Core.Parser
             AddTokenMatcher(new AnyCharMatcher("&|"), TokenType.Operator, 13,CSharpEvaluator.Operator);
             AddTokenMatcher(new CharMatcher('^'), TokenType.Operator, 12, CSharpEvaluator.Operator);
             AddTokenMatcher(new CharMatcher('='), TokenType.Operator, 6, OperatorAssociativity.Right, CSharpEvaluator.Assignment);
-            AddTokenMatcher(new StringMatcher("..."), TokenType.Operator, 1, CSharpEvaluator.NumericRange);
+            AddTokenMatcher(new AnyOfStringMatcher("...","...<",">...",">...<"), TokenType.Operator, 1, CSharpEvaluator.NumericRange);
             AddTokenMatcher(new CompositeMatcher(new StringMatcher("new"), new WhiteSpaceMatcher(), new VariableMatcher()), TokenType.Term, CSharpEvaluator.Constructor);
             AddTokenMatcher(new StringMatcher("typeof"), TokenType.Term, CSharpEvaluator.TypeOf);
             AddTokenMatcher(new VariableMatcher(), TokenType.Term, CSharpEvaluator.VarName);
