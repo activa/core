@@ -62,17 +62,14 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigurationProviderAppConfig.cs" />
-    <Compile Include="FileHistoryStore.cs" />
     <Compile Include="Tests\BinaryExtensionsTest.cs" />
     <Compile Include="Tests\ConfigTest.cs" />
     <Compile Include="Tests\DynamicObjectTest.cs" />

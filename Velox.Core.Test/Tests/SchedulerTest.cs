@@ -166,7 +166,6 @@ namespace Velox.Core.Test
             Assert.IsFalse(scheduler.ShouldRun());
         }
 
-#if !PCL
         [Test]
         public void TestFileHistoryStore()
         {
@@ -193,7 +192,6 @@ namespace Velox.Core.Test
 
             File.Delete(fileName);
         }
-#endif
 
         [Test]
         public void TestDefaultHistoryStore()

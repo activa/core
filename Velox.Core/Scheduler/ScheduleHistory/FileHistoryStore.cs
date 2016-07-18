@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Velox.Core.Scheduling
@@ -15,11 +14,11 @@ namespace Velox.Core.Scheduling
         {
             _fileName = fileName;
 
-            if (File.Exists(fileName))
+			if (FileIO.FileExists(fileName))
             {
                 try
                 {
-                    string[] lines = File.ReadAllLines(fileName);
+                    string[] lines = FileIO.ReadAllLines(fileName);
 
                     _lastRunTimes = (from line in lines
                                      let key = line.Split(' ')[0]
@@ -53,7 +52,7 @@ namespace Velox.Core.Scheduling
             {
                 _lastRunTimes[taskId] = lastRun;
 
-                File.WriteAllLines(_fileName, from item in _lastRunTimes select item.Key + " " + item.Value.ToBinary());
+				FileIO.WriteAllText(_fileName, string.Concat(from item in _lastRunTimes select item.Key + " " + item.Value.ToBinary() + "\r\n"));
             }
         }
     }
