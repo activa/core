@@ -31,7 +31,7 @@ using Velox.Core.Parser;
 
 namespace Velox.Core.Test
 {
-    [TestFixture]
+    [TestFixture,Parallelizable(ParallelScope.Children)]
     public class CSharpParserFixture
     {
         private readonly ParserContext _context = new CSharpContext();
@@ -98,6 +98,21 @@ namespace Velox.Core.Test
         private static int Func(int i)
         {
             return i * 5;
+        }
+
+        [TestCase("+", 42 + 5)]
+        [TestCase("-", 42 - 5)]
+        [TestCase("/", 42 / 5)]
+        [TestCase("*", 42 * 5)]
+        [TestCase("%", 42 % 5)]
+        [TestCase("^", 42 ^ 5)]
+        [TestCase("|", 42 | 5)]
+        [TestCase("&", 42 & 5)]
+        [TestCase("<<", 42 << 5)]
+        [TestCase(">>", 42 >> 5)]
+        public void Int32Operations(string op, object result)
+        {
+            Assert.That(_parser.Evaluate<int>("42"+op+"5"), Is.EqualTo(result));
         }
 
         [Test]

@@ -225,6 +225,7 @@
     <Compile Include="Scheduler\ScheduleHistory\IScheduleHistoryStore.cs" />
     <Compile Include="Scheduler\Scheduler.cs" />
     <Compile Include="Scheduler\TimeOfDayScheduler.cs" />
+    <Compile Include="SmartConverter\DateConversionMethod.cs" />
     <Compile Include="SmartConverter\EnumConverter.cs" />
     <Compile Include="SmartConverter\IStringConverter.cs" />
     <Compile Include="SmartConverter\ObjectConverter.cs" />
