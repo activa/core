@@ -24,14 +24,11 @@
 //=============================================================================
 #endregion
 
-using System;
-
-
-namespace Velox.Core.Json
+namespace Velox.Core
 {
-    public class ObjectEndTokenMatcher : CharMatcher
+    public class WhiteSpaceMatcher : SequenceOfAnyCharMatcher
     {
-        public ObjectEndTokenMatcher() : base('}')
+        public WhiteSpaceMatcher() : base(" \r\n\t")
         {
         }
     }

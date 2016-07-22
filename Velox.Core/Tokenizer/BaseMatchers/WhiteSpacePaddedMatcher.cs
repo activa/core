@@ -24,47 +24,63 @@
 //=============================================================================
 #endregion
 
-using System;
-
-
-namespace Velox.Core.Json
+namespace Velox.Core
 {
-    public class IntegerTokenMatcher : ITokenMatcher, ITokenProcessor
+    public class WhiteSpacePaddedMatcher : ITokenMatcher
     {
-        private bool _firstChar = true;
+        private readonly ITokenMatcher _matcher;
+
+        public WhiteSpacePaddedMatcher(ITokenMatcher matcher)
+        {
+            _matcher = matcher;
+        }
 
         public ITokenProcessor CreateTokenProcessor()
         {
-            return new IntegerTokenMatcher();
+            return new MatchProcessor(_matcher);
         }
 
         public string TranslateToken(string originalToken, ITokenProcessor tokenProcessor)
         {
-            return originalToken;
+            return originalToken.Substring(((MatchProcessor) tokenProcessor).Skipped);
         }
 
-        public void ResetState()
+        private class MatchProcessor : ITokenProcessor
         {
-            _firstChar = true;
-        }
+            private bool _passedWhitespace;
+            private readonly ITokenProcessor _processor;
+            private int _skipped;
 
-        public TokenizerState ProcessChar(char c, string fullExpression, int currentIndex)
-        {
-            try
+            public MatchProcessor(ITokenMatcher matcher)
             {
-                if (c == '-' && _firstChar)
-                    return TokenizerState.Valid;
-
-                if (char.IsDigit(c))
-                    return TokenizerState.Valid;
-
-                return _firstChar ? TokenizerState.Fail : TokenizerState.Success;
+                _processor = matcher.CreateTokenProcessor();
             }
-            finally
+
+            public int Skipped
             {
-                _firstChar = false;
+                get { return _skipped; }
+            }
+
+            public void ResetState()
+            {
+                _passedWhitespace = false;
+                _skipped = 0;
+
+                _processor.ResetState();
+            }
+
+            public TokenizerState ProcessChar(char c, string fullExpression, int currentIndex)
+            {
+                if (!_passedWhitespace && " \t\r\n".IndexOf(c) >= 0)
+                {
+                    _skipped = Skipped + 1;
+                    return TokenizerState.Valid;
+                }
+
+                _passedWhitespace = true;
+
+                return _processor.ProcessChar(c,fullExpression,currentIndex);
             }
         }
     }
-
 }

@@ -24,15 +24,59 @@
 //=============================================================================
 #endregion
 
-using System;
+using System.Collections.Generic;
 
-
-namespace Velox.Core.Json
+namespace Velox.Core
 {
-    public class ObjectEndTokenMatcher : CharMatcher
+    public class Token
     {
-        public ObjectEndTokenMatcher() : base('}')
+        private ITokenMatcher _tokenMatcher;
+        private string _token;
+        private LinkedList<Token> _alternates;
+
+        public Token()
         {
+        }
+
+        protected Token(ITokenMatcher tokenMatcher)
+        {
+            _tokenMatcher = tokenMatcher;
+        }
+
+        protected Token(ITokenMatcher tokenMatcher, string text)
+        {
+            _tokenMatcher = tokenMatcher;
+            _token = text;
+        }
+
+        public ITokenMatcher TokenMatcher
+        {
+            get { return _tokenMatcher; }
+            set { _tokenMatcher = value; }
+        }
+
+        public IEnumerable<Token> Alternates { get { return _alternates; } }
+
+        public void AddAlternate(Token token)
+        {
+            if (_alternates == null)
+                _alternates = new LinkedList<Token>();
+
+            _alternates.AddLast(token);
+        }
+
+        public string Text
+        {
+            get { return _token; }
+            set { _token = value; }
+        }
+
+        public override string ToString()
+        {
+            if (_tokenMatcher == null)
+                return "(" + _token + ")";
+            else
+                return _tokenMatcher.GetType().Name + "(" + _token + ")";
         }
     }
 }

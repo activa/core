@@ -26,64 +26,13 @@
 
 using System;
 using NUnit.Framework;
-using Velox.Core.Parser;
+
 
 namespace Velox.Core.Test
 {
     [TestFixture]
     public class Tokenizer_Fixture
     {
-        [Test]
-        public void TestStringLiteral()
-        {
-            Tokenizer tokenizer = new Tokenizer();
-
-            tokenizer.AddTokenMatcher(new StringLiteralMatcher());
-            tokenizer.AddTokenMatcher(new WhiteSpaceMatcher());
-            tokenizer.AddTokenMatcher(new CharMatcher('+'));
-
-            Token[] tokens = tokenizer.Tokenize("\"test1\" + \"test2\"");
-
-            Assert.AreEqual(5, tokens.Length);
-            Assert.AreEqual("\"test1\"", tokens[0].Text);
-            Assert.AreEqual("\"test2\"", tokens[4].Text);
-
-            tokens = tokenizer.Tokenize("\"test1\" + \"test\\\"2\"");
-
-            Assert.AreEqual(5, tokens.Length);
-            Assert.AreEqual("\"test1\"", tokens[0].Text);
-            Assert.AreEqual("\"test\\\"2\"", tokens[4].Text);
-        }
-
-        [Test]
-        public void NumericLiterals()
-        {
-            Tokenizer tokenizer = new Tokenizer();
-
-            tokenizer.AddTokenMatcher(new IntegerLiteralMatcher());
-            tokenizer.AddTokenMatcher(new DecimalLiteralMatcher());
-            tokenizer.AddTokenMatcher(new WhiteSpaceMatcher());
-
-            Token[] tokens;
-
-            tokens = tokenizer.Tokenize("10 10.0");
-
-            Assert.AreEqual(3,tokens.Length);
-            Assert.AreEqual("10",tokens[0].Text);
-            Assert.AreEqual("10.0",tokens[2].Text);
-
-            tokens = tokenizer.Tokenize("10m 10ul");
-
-            Assert.AreEqual(3, tokens.Length);
-            Assert.AreEqual("10m", tokens[0].Text);
-            Assert.AreEqual("10ul", tokens[2].Text);
-
-            tokens = tokenizer.Tokenize("10f 10l");
-
-            Assert.AreEqual(3, tokens.Length);
-            Assert.AreEqual("10f", tokens[0].Text);
-            Assert.AreEqual("10l", tokens[2].Text);
-        }
 
         [Test]
         public void TestFallback()
@@ -132,26 +81,6 @@ namespace Velox.Core.Test
 
 
 
-        }
-
-        [Test]
-        //[ExpectedException(typeof(UnknownTokenException))]
-        public void BadToken()
-        {
-            try
-            {
-                Tokenizer tokenizer = new Tokenizer();
-
-                tokenizer.AddTokenMatcher(new IntegerLiteralMatcher());
-                tokenizer.AddTokenMatcher(new WhiteSpaceMatcher());
-
-                tokenizer.Tokenize("5 A");
-
-                Assert.Fail();
-            }
-            catch(UnknownTokenException ex)
-            {
-            }
         }
 
         [Test]

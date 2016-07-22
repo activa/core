@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 //=============================================================================
 // VeloxDB Core - Portable .NET Productivity Library 
 //
@@ -24,15 +24,17 @@
 //=============================================================================
 #endregion
 
-using System;
-
-
-namespace Velox.Core.Json
+namespace Velox.Core
 {
-    public class ObjectEndTokenMatcher : CharMatcher
+    public class UnknownTokenException : TokenizerException
     {
-        public ObjectEndTokenMatcher() : base('}')
+        public UnknownTokenException(string token) : base(token)
         {
+        }
+
+        public override string Message
+        {
+            get { return "Unknown token " + Token; }
         }
     }
 }

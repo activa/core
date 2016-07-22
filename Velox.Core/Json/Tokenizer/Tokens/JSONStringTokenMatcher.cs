@@ -27,7 +27,6 @@
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using Velox.Core.Parser;
 
 namespace Velox.Core.Json
 {

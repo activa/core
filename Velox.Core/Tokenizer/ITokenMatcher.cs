@@ -24,15 +24,11 @@
 //=============================================================================
 #endregion
 
-using System;
-
-
-namespace Velox.Core.Json
+namespace Velox.Core
 {
-    public class ObjectEndTokenMatcher : CharMatcher
+    public interface ITokenMatcher
     {
-        public ObjectEndTokenMatcher() : base('}')
-        {
-        }
+        ITokenProcessor CreateTokenProcessor();
+        string TranslateToken(string originalToken, ITokenProcessor tokenProcessor);
     }
 }

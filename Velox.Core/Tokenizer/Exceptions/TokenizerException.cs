@@ -26,13 +26,21 @@
 
 using System;
 
-
-namespace Velox.Core.Json
+namespace Velox.Core
 {
-    public class ObjectEndTokenMatcher : CharMatcher
+    public abstract class TokenizerException : Exception
     {
-        public ObjectEndTokenMatcher() : base('}')
+        private readonly string _token;
+
+        protected TokenizerException(string token)
         {
+            _token = token;
         }
+
+        public string Token
+        {
+            get { return _token; }
+        }
+        
     }
 }

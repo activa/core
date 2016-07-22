@@ -29,7 +29,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using Velox.Core.Parser;
 
 namespace Velox.Core
 {

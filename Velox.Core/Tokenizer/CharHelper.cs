@@ -24,15 +24,13 @@
 //=============================================================================
 #endregion
 
-using System;
-
-
-namespace Velox.Core.Json
+namespace Velox.Core
 {
-    public class ObjectEndTokenMatcher : CharMatcher
+    public static class CharHelper
     {
-        public ObjectEndTokenMatcher() : base('}')
+        public static bool IsMatch(char c1, char c2, bool caseSensitive)
         {
+            return caseSensitive ? (c1 == c2) : (char.ToLowerInvariant(c1) == char.ToLowerInvariant(c2));
         }
     }
 }

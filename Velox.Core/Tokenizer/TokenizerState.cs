@@ -24,15 +24,10 @@
 //=============================================================================
 #endregion
 
-using System;
-
-
-namespace Velox.Core.Json
+namespace Velox.Core
 {
-    public class ObjectEndTokenMatcher : CharMatcher
+    public enum TokenizerState
     {
-        public ObjectEndTokenMatcher() : base('}')
-        {
-        }
+        Fail, Valid, Success
     }
 }

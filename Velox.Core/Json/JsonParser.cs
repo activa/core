@@ -31,7 +31,6 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Text;
-using Velox.Core.Parser;
 
 namespace Velox.Core.Json
 {

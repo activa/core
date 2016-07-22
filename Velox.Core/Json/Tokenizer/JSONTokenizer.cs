@@ -25,7 +25,7 @@
 #endregion
 
 using System;
-using Velox.Core.Parser;
+
 using Velox.Core.Json;
 
 namespace Velox.Core.Json

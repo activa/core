@@ -4,7 +4,6 @@ using System.IO;
 using System.Windows.Markup;
 using NUnit.Framework;
 using Velox.Core;
-using Velox.Core.Parser;
 
 namespace Velox.Core.Test
 {

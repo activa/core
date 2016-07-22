@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Velox.Core.Test</RootNamespace>
     <AssemblyName>Velox.Core.Test</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -55,14 +55,17 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="nunit.framework, Version=3.4.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.4.1\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
     </Reference>
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Xml.Linq">
     </Reference>
     <Reference Include="System.Data" />
@@ -72,15 +75,11 @@
     <Compile Include="ConfigurationProviderAppConfig.cs" />
     <Compile Include="Tests\BinaryExtensionsTest.cs" />
     <Compile Include="Tests\ConfigTest.cs" />
-    <Compile Include="Tests\DynamicObjectTest.cs" />
-    <Compile Include="Tests\ExpressionWithContext.cs" />
     <Compile Include="Tests\Json\JSONParserFixture.cs" />
     <Compile Include="Tests\Json\JsonSeralizerTestFixture.cs" />
     <Compile Include="Tests\MockTimeProvider.cs" />
     <Compile Include="Tests\NotifierTest.cs" />
     <Compile Include="Tests\ObjectMappedTest.cs" />
-    <Compile Include="Tests\Parser\CSharpParserFixture.cs" />
-    <Compile Include="Tests\Parser\TemplateParser_Fixture.cs" />
     <Compile Include="Tests\SafeDictionaryTest.cs" />
     <Compile Include="Tests\SchedulerTest.cs" />
     <Compile Include="Tests\SmartCache_Fixture.cs" />

@@ -24,47 +24,61 @@
 //=============================================================================
 #endregion
 
-using System;
-
-
-namespace Velox.Core.Json
+namespace Velox.Core
 {
-    public class IntegerTokenMatcher : ITokenMatcher, ITokenProcessor
+    public class AnyCharMatcher : ITokenMatcher, ITokenProcessor
     {
-        private bool _firstChar = true;
+        private bool _seen;
+        private readonly bool _caseSensitive;
+        private readonly string _chars;
 
-        public ITokenProcessor CreateTokenProcessor()
+        public AnyCharMatcher(string chars)
         {
-            return new IntegerTokenMatcher();
+            _chars = chars;
+            _caseSensitive = true;
+        }
+
+        public AnyCharMatcher(string chars, bool caseSensitive)
+        {
+            _chars = caseSensitive ? chars : chars.ToLowerInvariant();
+
+            _caseSensitive = caseSensitive;
+        }
+
+        ITokenProcessor ITokenMatcher.CreateTokenProcessor()
+        {
+            return new AnyCharMatcher(_chars, _caseSensitive);
+        }
+
+        void ITokenProcessor.ResetState()
+        {
+            _seen = false;
+        }
+
+        TokenizerState ITokenProcessor.ProcessChar(char c, string fullExpression, int currentIndex)
+        {
+            if (_seen)
+                return TokenizerState.Success;
+
+            if (_caseSensitive)
+            {
+                if (_chars.IndexOf(c) < 0)
+                    return TokenizerState.Fail;
+            }
+            else
+            {
+                if (_chars.IndexOf(char.ToLowerInvariant(c)) < 0)
+                    return TokenizerState.Fail;
+            }
+
+            _seen = true;
+
+            return TokenizerState.Valid;
         }
 
         public string TranslateToken(string originalToken, ITokenProcessor tokenProcessor)
         {
             return originalToken;
         }
-
-        public void ResetState()
-        {
-            _firstChar = true;
-        }
-
-        public TokenizerState ProcessChar(char c, string fullExpression, int currentIndex)
-        {
-            try
-            {
-                if (c == '-' && _firstChar)
-                    return TokenizerState.Valid;
-
-                if (char.IsDigit(c))
-                    return TokenizerState.Valid;
-
-                return _firstChar ? TokenizerState.Fail : TokenizerState.Success;
-            }
-            finally
-            {
-                _firstChar = false;
-            }
-        }
     }
-
 }

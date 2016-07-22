@@ -26,7 +26,6 @@
 
 using System;
 using System.Collections.Generic;
-using Velox.Core.Parser;
 
 namespace Velox.Core.Json
 {

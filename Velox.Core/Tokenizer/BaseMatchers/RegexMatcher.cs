@@ -24,47 +24,76 @@
 //=============================================================================
 #endregion
 
-using System;
+using System.Text.RegularExpressions;
 
-
-namespace Velox.Core.Json
+namespace Velox.Core
 {
-    public class IntegerTokenMatcher : ITokenMatcher, ITokenProcessor
+    public class RegexMatcher : ITokenMatcher, ITokenProcessor
     {
-        private bool _firstChar = true;
+        private readonly Regex _regex;
+        private readonly Regex _regexComplete;
+
+        private string _buffer;
+        private bool _seen;
 
         public ITokenProcessor CreateTokenProcessor()
         {
-            return new IntegerTokenMatcher();
+            return new RegexMatcher(_regex, _regexComplete);
+        }
+
+        private RegexMatcher(Regex regex, Regex regexComplete)
+        {
+            _regex = regex;
+            _regexComplete = regexComplete;
+        }
+
+        public RegexMatcher(string regex, string regexComplete)
+        {
+            if (!regex.StartsWith("^"))
+                regex = "^" + regex;
+
+            if (!regex.EndsWith("$"))
+                regex += "$";
+
+            if (!regexComplete.StartsWith("^"))
+                regexComplete = "^" + regexComplete;
+
+            if (!regexComplete.EndsWith("$"))
+                regexComplete += "$";
+
+            _regex = new Regex(regex, RegexOptions.Singleline);
+            _regexComplete = new Regex(regexComplete, RegexOptions.Singleline);
+        }
+
+        public void ResetState()
+        {
+            _buffer = "";
+            _seen = false;
+        }
+
+        public TokenizerState ProcessChar(char c, string fullExpression, int currentIndex)
+        {
+            _buffer += c;
+
+            bool isMatch = _regex.IsMatch(_buffer);
+
+            if (isMatch)
+            {
+                if (_regexComplete.IsMatch(_buffer))
+                    _seen = true;
+
+                return TokenizerState.Valid;
+            }
+
+            if (_seen)
+                return TokenizerState.Success;
+            else
+                return TokenizerState.Fail;
         }
 
         public string TranslateToken(string originalToken, ITokenProcessor tokenProcessor)
         {
             return originalToken;
         }
-
-        public void ResetState()
-        {
-            _firstChar = true;
-        }
-
-        public TokenizerState ProcessChar(char c, string fullExpression, int currentIndex)
-        {
-            try
-            {
-                if (c == '-' && _firstChar)
-                    return TokenizerState.Valid;
-
-                if (char.IsDigit(c))
-                    return TokenizerState.Valid;
-
-                return _firstChar ? TokenizerState.Fail : TokenizerState.Success;
-            }
-            finally
-            {
-                _firstChar = false;
-            }
-        }
     }
-
 }

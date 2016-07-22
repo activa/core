@@ -24,15 +24,48 @@
 //=============================================================================
 #endregion
 
-using System;
-
-
-namespace Velox.Core.Json
+namespace Velox.Core
 {
-    public class ObjectEndTokenMatcher : CharMatcher
+    public class SequenceOfCharRangeMatcher : ITokenMatcher, ITokenProcessor
     {
-        public ObjectEndTokenMatcher() : base('}')
+        private readonly char _fromChar;
+        private readonly char _toChar;
+        private bool _seen;
+
+        public SequenceOfCharRangeMatcher(char fromChar, char toChar)
         {
+            _fromChar = fromChar;
+            _toChar = toChar;
+        }
+
+        public ITokenProcessor CreateTokenProcessor()
+        {
+            return new SequenceOfCharRangeMatcher(_fromChar, _toChar);
+        }
+
+        public void ResetState()
+        {
+            _seen = false;
+        }
+
+        public TokenizerState ProcessChar(char c, string fullExpression, int currentIndex)
+        {
+            if (c < _fromChar || c > _toChar)
+            {
+                if (_seen)
+                    return TokenizerState.Success;
+                else
+                    return TokenizerState.Fail;
+            }
+
+            _seen = true;
+
+            return TokenizerState.Valid;
+        }
+
+        public string TranslateToken(string originalToken, ITokenProcessor tokenProcessor)
+        {
+            return originalToken;
         }
     }
 }
