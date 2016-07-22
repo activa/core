@@ -10,9 +10,9 @@
     <projectUrl>http://github.com/velox/core</projectUrl>
     <iconUrl>http://dstyler.com/vici/32x32/im-_IconPlain100-w32-h32.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>General purpose library for expression parsing, template rendering, type conversion, configuration management, ...</description>
+    <description>General purpose library for type conversion, reflection, caching, JSON, logging, ...</description>
     <language>en-US</language>
-    <tags>velox core expressions parser configuration conversion</tags>
+    <tags>velox core reflection json conversion caching</tags>
   </metadata>
   <files>
     <file src="*.dll" target="lib\portable-net45+netcore45+wpa81+wp8" />
