@@ -82,7 +82,7 @@
     <Compile Include="Reflection\Inspectors\MemberInspector.cs" />
     <Compile Include="Reflection\Inspectors\PropertyInspector.cs" />
     <Compile Include="Reflection\Inspectors\TypeInspector.cs" />
-    <Compile Include="Reflection\LazyBinder.cs" />
+    <Compile Include="Reflection\SmartBinder.cs" />
     <Compile Include="Reflection\ObjectMapper.cs" />
     <Compile Include="Reflection\ReflectionExtensions.cs" />
     <Compile Include="Scheduler\CyclicScheduler.cs" />

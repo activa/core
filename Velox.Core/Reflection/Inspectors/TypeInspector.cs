@@ -232,7 +232,7 @@ namespace Velox.Core
 
         public PropertyInfo GetIndexer(Type[] types)
         {
-            return WalkAndFindSingle(t => t.GetTypeInfo().DeclaredProperties.FirstOrDefault(pi => pi.Name == "Item" && LazyBinder.MatchParameters(types, pi.GetIndexParameters())));
+            return WalkAndFindSingle(t => t.GetTypeInfo().DeclaredProperties.FirstOrDefault(pi => pi.Name == "Item" && SmartBinder.MatchParameters(types, pi.GetIndexParameters())));
         }
 
         public T[] GetCustomAttributes<T>(bool inherit) where T:Attribute
@@ -272,7 +272,7 @@ namespace Velox.Core
 
         public MethodInfo GetMethod(string methodName, BindingFlags bindingFlags, Type[] parameterTypes)
         {
-            return WalkAndFindSingle(t => LazyBinder.SelectBestMethod(t.GetTypeInfo().GetDeclaredMethods(methodName),parameterTypes,bindingFlags));
+            return WalkAndFindSingle(t => SmartBinder.SelectBestMethod(t.GetTypeInfo().GetDeclaredMethods(methodName),parameterTypes,bindingFlags));
         }
 
         public Type[] GetGenericArguments()

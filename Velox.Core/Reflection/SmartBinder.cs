@@ -48,14 +48,9 @@ namespace Velox.Core
         Default = 0
     }
 
-    public class LazyBinder
+    public class SmartBinder
     {
-        private static readonly LazyBinder _default = new LazyBinder();
-
-        public static LazyBinder Default
-        {
-            get { return _default; }
-        }
+        public static SmartBinder Default { get; } = new SmartBinder();
 
         private enum ParameterCompareType
         {
@@ -113,7 +108,7 @@ namespace Velox.Core
             return parameterTypes.SequenceEqual(parameters.Select(p => p.ParameterType), new ParameterComparer(compareType));
         }
 
-        internal static T SelectBestMethod<T>(IEnumerable<T> methods, Type[] parameterTypes, BindingFlags bindingFlags = BindingFlags.Default) where T:MethodBase
+        public static T SelectBestMethod<T>(IEnumerable<T> methods, Type[] parameterTypes, BindingFlags bindingFlags = BindingFlags.Default) where T:MethodBase
         {
             var compareTypes = new[] { ParameterCompareType.Exact, ParameterCompareType.Assignable, ParameterCompareType.Implicit };
 
