@@ -81,6 +81,7 @@
     <Compile Include="Reflection\Inspectors\AssemblyInspector.cs" />
     <Compile Include="Reflection\Inspectors\MemberInspector.cs" />
     <Compile Include="Reflection\Inspectors\PropertyInspector.cs" />
+    <Compile Include="Reflection\RuntimePlatform.cs" />
     <Compile Include="Reflection\Inspectors\TypeInspector.cs" />
     <Compile Include="Reflection\SmartBinder.cs" />
     <Compile Include="Reflection\ObjectMapper.cs" />
