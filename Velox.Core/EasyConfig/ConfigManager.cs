@@ -150,7 +150,7 @@ namespace Velox.Core.Config
                 if (attributes.Length > 0 && !string.IsNullOrEmpty(attributes[0].BaseKey))
                     key = attributes[0].BaseKey;
 
-                Type fieldType = field.FieldType;
+                Type fieldType = field.Type;
 
                 bool follow = (attributes.Length > 0 && attributes[0] is ConfigObjectAttribute) || fieldType.Inspector().ImplementsOrInherits<IConfigObject>();
                 bool ignore = field.IsDefined(typeof (ConfigIgnoreAttribute), false);
@@ -176,7 +176,7 @@ namespace Velox.Core.Config
                 }
                 else
                 {
-                    if (field.FieldType.Inspector().ImplementsOrInherits<IDictionary>())
+                    if (field.Type.Inspector().ImplementsOrInherits<IDictionary>())
                     {
                         Type dicInterface = fieldType.Inspector().GetInterfaces().FirstOrDefault(i => i.GetGenericTypeDefinition() == typeof(IDictionary<,>));
 
@@ -191,7 +191,7 @@ namespace Velox.Core.Config
 
                         if (configObject == null)
                         {
-                            configObject = Activator.CreateInstance(field.FieldType);
+                            configObject = Activator.CreateInstance(field.Type);
 
                             field.SetValue(obj, configObject);
                         }
@@ -205,7 +205,7 @@ namespace Velox.Core.Config
                     }
                     else
                     {
-                        object value = GetValue(key, field.FieldType);
+                        object value = GetValue(key, field.Type);
 
                         if (value != null)
                             field.SetValue(obj, value);

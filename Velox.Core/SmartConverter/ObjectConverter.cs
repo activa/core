@@ -41,21 +41,18 @@ namespace Velox.Core
             return (T) Convert(value, typeof (T));
         }
 
-        public static object Convert(this object value, Type targetType, DateConversionMethod dateConversionMethod = DateConversionMethod.DoubleIsJulian|DateConversionMethod.LongIsTicks)
+        public static object Convert(this object value, Type targetType)
         {
             if (targetType == typeof(object))
                 return value;
 
             if (value is string)
-                return ((string)value).To(targetType);
+                return StringConverter.Convert((string)value, targetType);
 
             var targetTypeInspector = targetType.Inspector();
 
             if (value == null)
 				return targetTypeInspector.DefaultValue();
-
-//            var originalTargetType = targetType;
-
 
 			targetType = targetTypeInspector.RealType;
 
@@ -77,7 +74,7 @@ namespace Velox.Core
                 if (sourceTypeInspector.Is(TypeFlags.Decimal))
                     return ((decimal)value).ToString(CultureInfo.InvariantCulture);
                 if (sourceTypeInspector.Is(TypeFlags.FloatingPoint))
-                    return (System.Convert.ToDouble(value)).ToString(CultureInfo.InvariantCulture);
+                    return System.Convert.ToDouble(value).ToString(CultureInfo.InvariantCulture);
 
                 return value.ToString();
             }
@@ -129,7 +126,7 @@ namespace Velox.Core
 			}
 
             if (targetTypeInspector.Is(TypeFlags.DateTime))
-                return ToDateTime(value, sourceTypeInspector,dateConversionMethod) ?? targetTypeInspector.DefaultValue();
+                return ToDateTime(value, sourceTypeInspector) ?? targetTypeInspector.DefaultValue();
 
             if (targetType == typeof(TimeSpan))
                 return ToTimeSpan(value, sourceTypeInspector) ?? targetTypeInspector.DefaultValue();
@@ -144,39 +141,46 @@ namespace Velox.Core
             }
         }
 
-        private static DateTime? ToDateTime(object value, TypeInspector type, DateConversionMethod dateConversion)
+        private static DateTime? ToDateTime(object value, TypeInspector type)
         {
-            if (type.Is(TypeFlags.Integer64))
+            if (type.Is(TypeFlags.Integer64)) // Assume .NET ticks
             {
-                if ((dateConversion & DateConversionMethod.LongIsTicks) != 0)
-                    return new DateTime(System.Convert.ToInt64(value));
-                if ((dateConversion & DateConversionMethod.LongIsUnix) != 0)
-                    return new DateTime(1970, 1, 1).AddSeconds(System.Convert.ToInt64(value));
+                return new DateTime(System.Convert.ToInt64(value));
             }
 
-            if (type.Is(TypeFlags.Integer32))
+            if (type.Is(TypeFlags.Integer32)) // Assume Unix seconds since 1970-01-01
             {
-                return new DateTime(1970, 1, 1).AddSeconds(System.Convert.ToInt64(value));
+                return new DateTime(1970,1,1).AddSeconds(System.Convert.ToInt32(value));
             }
 
             if (type.Is(TypeFlags.FloatingPoint))
             {
-                if ((dateConversion & DateConversionMethod.DoubleIsTicks) != 0)
-                    return new DateTime(System.Convert.ToInt64(value));
-                if ((dateConversion & DateConversionMethod.DoubleIsUnix) != 0)
-                    return new DateTime(1970, 1, 1).AddSeconds(System.Convert.ToDouble(value));
-                if ((dateConversion & DateConversionMethod.DoubleIsJulian) != 0)
-                    return FromJulian(System.Convert.ToDouble(value));
+                return JulianToDateTime(System.Convert.ToDouble(value));
             }
 
             return null;
+        }
+
+        private static DateTime JulianToDateTime(double julian)
+        {
+            long L = (long)julian + 68569;
+            long N = (4 * L) / 146097;
+            L = L - (146097 * N + 3) / 4;
+            long I = 4000 * (L + 1) / 1461001;
+            L = L - (1461 * I) / 4 + 31;
+            long J = (80 * L) / 2447;
+            int day = (int)(L - (long)((2447 * J) / 80));
+            L = J / 11;
+            int month = (int)(J + 2 - 12 * L);
+            int year = (int)(100 * (N - 49) + I + L);
+
+            return new DateTime(year,month,day).Add(TimeSpan.FromDays(julian-(long)julian));
         }
 
         private static TimeSpan? ToTimeSpan(object value, TypeInspector type)
         {
             if (type.Is(TypeFlags.Integer64))
             {
-                
                 return new TimeSpan(System.Convert.ToInt64(value));
             }
 
@@ -186,42 +190,6 @@ namespace Velox.Core
             }
 
             return null;
-        }
-
-        public static int JGREG = 15 + 31 * (10 + 12 * 1582);
-        public static double HALFSECOND = 0.5;
-
-        private static DateTime FromJulian(double injulian)
-        {
-            int ja, jb, jc, jd, je, year, month, day;
-            double julian = injulian + HALFSECOND / 86400.0;
-            ja = (int) julian;
-
-            if (ja >= JGREG)
-            {
-                var jalpha = (int)(((ja - 1867216) - 0.25) / 36524.25);
-                ja = ja + 1 + jalpha - jalpha / 4;
-            }
-
-            jb = ja + 1524;
-            jc = (int)(6680.0 + ((jb - 2439870) - 122.1) / 365.25);
-            jd = 365 * jc + jc / 4;
-            je = (int)((jb - jd) / 30.6001);
-            day = jb - jd - (int)(30.6001 * je);
-            month = je - 1;
-
-            if (month > 12)
-                month = month - 12;
-
-            year = jc - 4715;
-
-            if (month > 2)
-                year--;
-
-            if (year <= 0)
-                year--;
-
-            return new DateTime(year, month, day).AddDays(julian - ja);
         }
 
     }

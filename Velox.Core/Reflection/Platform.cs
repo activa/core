@@ -14,9 +14,9 @@ namespace Velox.Core
 
         public static PlatformProperties Properties => _properties ?? (_properties = new PlatformProperties());
 
-        public enum OperatingSystem
+        public enum RuntimeEnv
         {
-            Unknown = -1, iOS = 0, Android, Win32, WinPhone, UWP
+            Unknown = -1, iOS = 0, Android, Win32, WindowsRuntime, UWP
         }
 
         public enum Architecture
@@ -26,14 +26,14 @@ namespace Velox.Core
 
         public class PlatformProperties
         {
-            public OperatingSystem OperatingSystem;
+            public RuntimeEnv RuntimeEnvironment;
             public Version Version;
             public Architecture Architecture;
             public Version DotNetVersion;
 
             public PlatformProperties()
             {
-                OperatingSystem = OperatingSystem.Unknown;
+                RuntimeEnvironment = RuntimeEnv.Unknown;
                 Version = new Version(0, 0, 0, 0);
                 Architecture = Architecture.Unknown;
                 DotNetVersion = new Version(4, 0, 0, 0);
@@ -48,15 +48,17 @@ namespace Velox.Core
                 }
 
 
-                var analyticsInfoType = Type.GetType("Windows.System.Profile.AnalyticsInfo, Windows, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime");
+                Func<bool>[] detectionFuncs = {Detect_Win32, Detect_WindowsRuntime, Detect_UWP, Detect_iOS, Detect_Android};
 
-                if (analyticsInfoType != null)
+                foreach (var func in detectionFuncs)
                 {
-                    OperatingSystem = OperatingSystem.UWP;
-                    GetWin10Props(analyticsInfoType);
-                    return;
+                    try { if (func()) return; }
+                    catch { }
                 }
+            }
 
+            private bool Detect_Win32()
+            {
                 var osVersionProp = typeof(Environment).GetRuntimeProperty("OSVersion");
 
                 if (osVersionProp != null)
@@ -65,13 +67,11 @@ namespace Velox.Core
 
                     if (platform.ToString() == "Win32NT")
                     {
-                        OperatingSystem = OperatingSystem.Win32;
+                        RuntimeEnvironment = RuntimeEnv.Win32;
 
                         var moduleProperty = typeof(Type).Inspector().GetProperty("Module");
 
-                        var getPeKindMethod =
-                            moduleProperty?.PropertyType.Inspector().GetMember("GetPEKind").FirstOrDefault() as
-                                MethodInfo;
+                        var getPeKindMethod = moduleProperty?.PropertyType.Inspector().GetMember("GetPEKind").FirstOrDefault() as MethodInfo;
 
                         if (getPeKindMethod != null)
                         {
@@ -93,68 +93,106 @@ namespace Velox.Core
                             }
                         }
 
-                        return;
+                        Version = (Version) osVersionProp.PropertyType.GetRuntimeProperty("Version").GetValue(osVersionProp.GetValue(null));
+
+                        return true;
                     }
                 }
 
+                return false;
+            }
+
+            private bool Detect_WindowsRuntime()
+            {
+                var packageType = Type.GetType("Windows.ApplicationModel.Package, Windows, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime");
+
+                if (packageType != null)
+                {
+                    RuntimeEnvironment = RuntimeEnv.WindowsRuntime;
+                    Version = new Version(8,1,0,0);
+
+                    var currentPackage = packageType.GetRuntimeProperty("Current").GetValue(null);
+                    var packageId = currentPackage.GetType().GetRuntimeProperty("Id").GetValue(currentPackage);
+
+                    switch (packageId.GetType().GetRuntimeProperty("Architecture").GetValue(packageId).ToString().ToUpper())
+                    {
+                        case "X86":
+                            Architecture = Architecture.x86;
+                            break;
+                        case "X64":
+                            Architecture = Architecture.x64;
+                            break;
+                        case "ARM":
+                            Architecture = Architecture.ARM;
+                            break;
+                    }
+                }
+
+                return false; // continue to check for UWP
+            }
+
+            private bool Detect_UWP()
+            {
+                var analyticsInfoType = Type.GetType("Windows.System.Profile.AnalyticsInfo, Windows, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime");
+
+                if (analyticsInfoType != null)
+                {
+                    RuntimeEnvironment = RuntimeEnv.UWP;
+
+                    var versionProp = analyticsInfoType.GetRuntimeProperty("VersionInfo");
+                    var versionInfo = versionProp.GetValue(null);
+                    var deviceFamilyVersion = (string)versionInfo.GetType().GetRuntimeProperty("DeviceFamilyVersion").GetValue(versionInfo);
+
+                    ulong version = ulong.Parse(deviceFamilyVersion);
+                    int major = (int)((version & 0xFFFF000000000000L) >> 48);
+                    int minor = (int)((version & 0x0000FFFF00000000L) >> 32);
+                    int build = (int)((version & 0x00000000FFFF0000L) >> 16);
+                    int revision = (int)(version & 0x000000000000FFFFL);
+
+                    Version = new Version(major, minor, build, revision);
+
+
+                    return true;
+                }
+
+                return false;
+            }
+
+            private bool Detect_Android()
+            {
+                var androidBuildVersionType = Type.GetType("Android.OS.Build+VERSION, Mono.Android, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null");
+
+                if (androidBuildVersionType != null)
+                {
+                    RuntimeEnvironment = RuntimeEnv.Android;
+
+                    var versionString = (string) androidBuildVersionType.GetRuntimeProperty("Release").GetValue(null);
+
+                    Version = new Version(versionString);
+
+                    return true;
+                }
+
+                return false;
+            }
+
+            private bool Detect_iOS()
+            {
                 var uiDeviceType = Type.GetType("UIKit.UIDevice, Xamarin.iOS, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null");
 
                 if (uiDeviceType != null)
                 {
-                    OperatingSystem = OperatingSystem.iOS;
+                    RuntimeEnvironment = RuntimeEnv.iOS;
 
                     var uiDevice = uiDeviceType.GetRuntimeProperty("CurrentDevice").GetValue(null);
                     var systemVersionString = (string) uiDevice.GetType().GetRuntimeProperty("SystemVersion").GetValue(uiDevice);
 
                     Version = new Version(systemVersionString);
 
-                    return;
+                    return true;
                 }
 
-                var androidBuildVersionType = Type.GetType("Android.OS.Build+VERSION, Mono.Android, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null");
-
-                if (androidBuildVersionType != null)
-                {
-                    OperatingSystem = OperatingSystem.Android;
-
-                    var versionString = (string) androidBuildVersionType.GetRuntimeProperty("Release").GetValue(null);
-
-                    Version = new Version(versionString);
-
-                    return;
-                }
-            }
-
-            private void GetWin10Props(Type analyticsInfoType)
-            {
-                var versionProp = analyticsInfoType.GetRuntimeProperty("VersionInfo");
-                var versionInfo = versionProp.GetValue(null);
-                var deviceFamilyVersion = (string) versionInfo.GetType().GetRuntimeProperty("DeviceFamilyVersion").GetValue(versionInfo);
-
-                ulong version = ulong.Parse(deviceFamilyVersion);
-                int major = (int) ((version & 0xFFFF000000000000L) >> 48);
-                int minor = (int) ((version & 0x0000FFFF00000000L) >> 32);
-                int build = (int) ((version & 0x00000000FFFF0000L) >> 16);
-                int revision = (int) (version & 0x000000000000FFFFL);
-
-                Version = new Version(major, minor, build, revision);
-
-                var packageType = Type.GetType("Windows.ApplicationModel.Package, Windows, Version=255.255.255.255, Culture=neutral, PublicKeyToken=null, ContentType=WindowsRuntime");
-                var currentPackage = packageType.GetRuntimeProperty("Current").GetValue(null);
-                var packageId = currentPackage.GetType().GetRuntimeProperty("Id").GetValue(currentPackage);
-
-                switch (packageId.GetType().GetRuntimeProperty("Architecture").GetValue(packageId).ToString().ToUpper())
-                {
-                    case "X86":
-                        Architecture = Architecture.x86;
-                        break;
-                    case "X64":
-                        Architecture = Architecture.x64;
-                        break;
-                    case "ARM":
-                        Architecture = Architecture.ARM;
-                        break;
-                }
+                return false;
             }
         }
     }

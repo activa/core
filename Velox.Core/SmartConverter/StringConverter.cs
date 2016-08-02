@@ -69,7 +69,7 @@ namespace Velox.Core
         private static List<IStringConverter> _stringConverters;
 
         private static readonly object _staticLock = new object();
-        private static string[] _dateFormats = new[] { "yyyyMMdd", "yyyy-MM-dd", "yyyy.MM.dd", "yyyy/MM/dd", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-ddTHH:mm:ss" };
+        private static string[] _dateFormats = new[] { "yyyyMMdd", "yyyy-MM-dd", "yyyy.MM.dd", "yyyy/MM/dd", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss.fff", "yyyy-MM-ddTHH:mm:ss" };
 
         public static void UnregisterAllStringConverters()
         {
@@ -240,6 +240,10 @@ namespace Velox.Core
                             returnValue = null;
                         else
                             returnValue = new DateTime(1970, 1, 1).AddSeconds(seconds.Value);
+                    }
+                    else
+                    {
+                        returnValue = dateTime;
                     }
                 }
                 else

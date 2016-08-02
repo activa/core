@@ -52,6 +52,10 @@ namespace Velox.Core
         private readonly TypeInfo _typeInfo;
         private readonly TypeInfo _realTypeInfo;
 
+        public Type Type { get; }
+        public Type RealType { get; }
+        public TypeFlags TypeFlags { get; }
+
         private static readonly Dictionary<Type, TypeFlags> _typeflagsMap = new Dictionary<Type, TypeFlags>()
         {
             { typeof(Byte), TypeFlags.Byte},
@@ -78,8 +82,9 @@ namespace Velox.Core
         public TypeInspector(Type type)
         {
             Type = type;
-            _typeInfo = type.GetTypeInfo();
             RealType = Nullable.GetUnderlyingType(Type) ?? Type;
+
+            _typeInfo = type.GetTypeInfo();
             _realTypeInfo = RealType.GetTypeInfo();
 
             TypeFlags = BuildTypeFlags();
@@ -157,9 +162,6 @@ namespace Velox.Core
             return list.ToArray();
         }
 
-        public Type Type { get; }
-        public Type RealType { get; }
-        public TypeFlags TypeFlags { get; }
 
         public bool IsArray => Is(TypeFlags.Array);
         public Type ArrayElementType => IsArray ? Type.GetElementType() : null;
@@ -171,16 +173,8 @@ namespace Velox.Core
         public bool IsValueType => Is(TypeFlags.ValueType);
         public Type BaseType => _typeInfo.BaseType;
         public bool IsEnum => Is(TypeFlags.Enum);
-
-        public bool Is(TypeFlags flags)
-        {
-            return (TypeFlags & flags) != 0;
-        }
-  
-        public bool IsSubclassOf(Type type)
-        {
-            return WalkAndFindSingle(t => t.GetTypeInfo().BaseType == type);
-        }
+        public bool Is(TypeFlags flags) => (TypeFlags & flags) != 0;
+        public bool IsSubclassOf(Type type) => WalkAndFindSingle(t => t.GetTypeInfo().BaseType == type);
 
         public object DefaultValue()
         {
@@ -275,11 +269,7 @@ namespace Velox.Core
             return WalkAndFindSingle(t => SmartBinder.SelectBestMethod(t.GetTypeInfo().GetDeclaredMethods(methodName),parameterTypes,bindingFlags));
         }
 
-        public Type[] GetGenericArguments()
-        {
-            return Type.GenericTypeArguments;
-        }
-
+        public Type[] GetGenericArguments() => Type.GenericTypeArguments;
 
         public FieldInfo[] GetFields(BindingFlags bindingFlags)
         {
@@ -305,13 +295,9 @@ namespace Velox.Core
             return WalkAndFindMultiple(t => t.GetTypeInfo().DeclaredMethods.Where(mi => mi.Inspector().MatchBindingFlags(bindingFlags)));
         }
 
+        public Type[] GetInterfaces() => _typeInfo.ImplementedInterfaces.ToArray();
 
-        public Type[] GetInterfaces()
-        {
-            return _typeInfo.ImplementedInterfaces.ToArray();
-        }
-
-		public FieldOrPropertyInfo[] GetFieldsAndProperties(BindingFlags bindingFlags)
+        public FieldOrPropertyInfo[] GetFieldsAndProperties(BindingFlags bindingFlags)
 		{
 			MemberInfo[] members;
 
