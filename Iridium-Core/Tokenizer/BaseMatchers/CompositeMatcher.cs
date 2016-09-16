@@ -28,65 +28,57 @@ namespace Iridium.Core
 {
     public class CompositeMatcher : ITokenMatcher
     {
-        private readonly ITokenMatcher[] _tokens;
-
         public CompositeMatcher(params ITokenMatcher[] tokens)
         {
-            _tokens = tokens;
+            TokenMatchers = tokens;
         }
 
         public ITokenProcessor CreateTokenProcessor()
         {
-            ITokenProcessor[] tokenProcessors = new ITokenProcessor[_tokens.Length];
+            ITokenProcessor[] tokenProcessors = new ITokenProcessor[TokenMatchers.Length];
 
-            for (int i=0;i<_tokens.Length;i++)
-                tokenProcessors[i] = _tokens[i].CreateTokenProcessor();
+            for (int i=0;i<TokenMatchers.Length;i++)
+                tokenProcessors[i] = TokenMatchers[i].CreateTokenProcessor();
 
             return new CompositeTokenProcessor(tokenProcessors);
         }
 
-        protected ITokenMatcher[] TokenMatchers
-        {
-            get { return _tokens; }
-        }
+        protected ITokenMatcher[] TokenMatchers { get; }
 
         protected class CompositeTokenProcessor : ITokenProcessor
         {
-            private readonly ITokenProcessor[] _tokenProcessors;
-            private readonly int[] _startIndexes;
             private int _firstIndex;
-
             private int _current;
 
             public CompositeTokenProcessor(ITokenProcessor[] tokens)
             {
-                _tokenProcessors = tokens;
-                _startIndexes = new int[tokens.Length];
+                TokenProcessors = tokens;
+                StartIndexes = new int[tokens.Length];
             }
 
             public virtual void ResetState()
             {
-                _tokenProcessors[0].ResetState();
+                TokenProcessors[0].ResetState();
                 _current = 0;
                 _firstIndex = -1;
-                _startIndexes[0] = 0;
+                StartIndexes[0] = 0;
             }
 
             public TokenizerState ProcessChar(char c, string fullExpression, int currentIndex)
             {
-                TokenizerState state = _tokenProcessors[_current].ProcessChar(c, fullExpression, currentIndex);
+                TokenizerState state = TokenProcessors[_current].ProcessChar(c, fullExpression, currentIndex);
 
                 if (state == TokenizerState.Success)
                 {
                     _current++;
 
-                    if (_current == _tokenProcessors.Length)
+                    if (_current == TokenProcessors.Length)
                         return TokenizerState.Success;
 
-                    _startIndexes[_current] = currentIndex - _firstIndex;
-                    _tokenProcessors[_current].ResetState();
+                    StartIndexes[_current] = currentIndex - _firstIndex;
+                    TokenProcessors[_current].ResetState();
 
-                    state = _tokenProcessors[_current].ProcessChar(c, fullExpression, currentIndex);
+                    state = TokenProcessors[_current].ProcessChar(c, fullExpression, currentIndex);
                 }
 
                 if (state == TokenizerState.Fail)
@@ -98,15 +90,8 @@ namespace Iridium.Core
                 return TokenizerState.Valid;
             }
 
-            public ITokenProcessor[] TokenProcessors
-            {
-                get { return _tokenProcessors; }
-            }
-
-            public int[] StartIndexes
-            {
-                get { return _startIndexes; }
-            }
+            public ITokenProcessor[] TokenProcessors { get; }
+            public int[] StartIndexes { get; }
         }
 
         string ITokenMatcher.TranslateToken(string originalToken, ITokenProcessor tokenProcessor)

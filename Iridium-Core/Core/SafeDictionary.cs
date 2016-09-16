@@ -37,7 +37,7 @@ namespace Iridium.Core
     {
         private readonly Dictionary<TK, TV> _dic;
 
-        private IDictionary<TK,TV> AsInterface() { return _dic; } 
+        private IDictionary<TK,TV> AsInterface() => _dic;
 
         public SafeDictionary()
         {
@@ -109,9 +109,9 @@ namespace Iridium.Core
             return AsInterface().Remove(item);
         }
 
-        public int Count { get { return _dic.Count; } }
-        public bool IsReadOnly { get { return AsInterface().IsReadOnly; } }
-        public bool ContainsKey(TK key) { return _dic.ContainsKey(key); }
+        public int Count => _dic.Count;
+        public bool IsReadOnly => AsInterface().IsReadOnly;
+        public bool ContainsKey(TK key) => _dic.ContainsKey(key);
 
         public void Add(TK key, TV value)
         {
@@ -140,20 +140,10 @@ namespace Iridium.Core
             }
         }
 
-        public ICollection<TK> Keys 
-        {
-            get { return _dic.Keys; }
-        }
+        public ICollection<TK> Keys => _dic.Keys;
+        public ICollection<TV> Values => _dic.Values;
 
-        public ICollection<TV> Values 
-        {
-            get { return _dic.Values; }
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public TV DefaultValue { get; set; }
 

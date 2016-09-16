@@ -68,8 +68,9 @@ namespace Iridium.Core
 	        return new AssemblyInspector(assembly);
 	    }
 
-
-
-
+	    public static ValueInspector ValueInspector(this object obj)
+	    {
+	        return new ValueInspector(obj);
+	    }
     }
 }

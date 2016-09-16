@@ -14,6 +14,6 @@ using System.Runtime.InteropServices;
 
 [assembly:InternalsVisibleTo("Iridium-Core.Test")]
 
-[assembly: AssemblyVersion("1.0.3.*")]
+[assembly: AssemblyVersion("1.0.4.*")]
 
 

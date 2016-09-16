@@ -37,6 +37,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\SmartCache.cs" />
+    <Compile Include="Core\IFileIOHandler.cs" />
     <Compile Include="PreserveAttribute.cs" />
     <Compile Include="Core\BinaryHelper.cs" />
     <Compile Include="Core\CoreExtensions.cs" />
@@ -62,7 +63,7 @@
     <Compile Include="Json\Tokenizer\Tokens\FalseTokenMatcher.cs" />
     <Compile Include="Json\Tokenizer\Tokens\FloatTokenMatcher.cs" />
     <Compile Include="Json\Tokenizer\Tokens\IntegerTokenMatcher.cs" />
-    <Compile Include="Json\Tokenizer\Tokens\JSONStringTokenMatcher.cs" />
+    <Compile Include="Json\Tokenizer\Tokens\StringTokenMatcher.cs" />
     <Compile Include="Json\Tokenizer\Tokens\NullTokenMatcher.cs" />
     <Compile Include="Json\Tokenizer\Tokens\ObjectEndTokenMatcher.cs" />
     <Compile Include="Json\Tokenizer\Tokens\ObjectStartTokenMatcher.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Reflection\FieldOrPropertyInfo.cs" />
     <Compile Include="Reflection\Inspectors\AssemblyInspector.cs" />
     <Compile Include="Reflection\Inspectors\MemberInspector.cs" />
+    <Compile Include="Reflection\Inspectors\ValueInspector.cs" />
     <Compile Include="Reflection\Inspectors\PropertyInspector.cs" />
     <Compile Include="Reflection\Platform.cs" />
     <Compile Include="Reflection\Inspectors\TypeInspector.cs" />

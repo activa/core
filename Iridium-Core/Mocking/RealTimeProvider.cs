@@ -30,9 +30,6 @@ namespace Iridium.Core
 {
     public class RealTimeProvider : ITimeProvider
     {
-        public DateTime Now
-        {
-            get { return DateTime.Now; }
-        }
+        public DateTime Now => DateTime.Now;
     }
 }

@@ -31,10 +31,10 @@ namespace Iridium.Core
     public abstract class Scheduler
     {
         private readonly string _schedulerId;
-        private ITimeProvider _timeProvider = new RealTimeProvider();
 
         public static IScheduleHistoryStore DefaultHistoryStore { private get; set; }
         public IScheduleHistoryStore HistoryStore { get; set; }
+        public ITimeProvider TimeProvider { get; set; } = new RealTimeProvider();
 
         public abstract bool ShouldRun();
 
@@ -56,10 +56,5 @@ namespace Iridium.Core
             set { HistoryStore.SetLastRun(_schedulerId, value);}
         }
 
-        public ITimeProvider TimeProvider
-        {
-            get { return _timeProvider; }
-            set { _timeProvider = value; }
-        }
     }
 }

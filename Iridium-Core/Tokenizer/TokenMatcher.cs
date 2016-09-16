@@ -31,18 +31,14 @@ namespace Iridium.Core
         private bool _stillValid = true;
 
         private readonly ITokenProcessor _tokenProcessor;
-        private readonly ITokenMatcher _tokenMatcher;
 
         public TokenMatcher(ITokenMatcher tokenMatcher)
         {
             _tokenProcessor = tokenMatcher.CreateTokenProcessor();
-            _tokenMatcher = tokenMatcher;
+            Matcher = tokenMatcher;
         }
 
-        public ITokenMatcher Matcher
-        {
-            get { return _tokenMatcher; }
-        }
+        public ITokenMatcher Matcher { get; }
 
         public void Reset()
         {
@@ -65,6 +61,7 @@ namespace Iridium.Core
         }
 
 
+#if DEBUG
         public override string ToString()
         {
             string s = "";
@@ -76,10 +73,11 @@ namespace Iridium.Core
 
             return s;
         }
+#endif
 
         public string TranslateToken(string text)
         {
-            return _tokenMatcher.TranslateToken(text, _tokenProcessor);
+            return Matcher.TranslateToken(text, _tokenProcessor);
         }
     }
 }

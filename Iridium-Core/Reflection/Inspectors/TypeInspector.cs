@@ -363,6 +363,7 @@ namespace Iridium.Core
 			return members.Select(m => new FieldOrPropertyInfo(m)).ToArray();
 		}
 
+
         public Func<object, object> ImplicitConversion(Type fromType)
         {
             var implicitOperator = GetMethod("op_Implicit", new[] { fromType });
@@ -386,6 +387,4 @@ namespace Iridium.Core
             return Convert.ChangeType(value, Type, null);
         }
     }
-
-
 }

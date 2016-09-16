@@ -30,7 +30,7 @@ namespace Iridium.Core
 {
     public class MonthlyScheduler : TimeOfDayScheduler
     {
-        public bool[] MonthDays { get; private set; }
+        public bool[] MonthDays { get; }
         
         public MonthlyScheduler(string scheduleId, TimeSpan timeOfDay, params int[] daysOfMonth) : base(scheduleId, timeOfDay)
         {

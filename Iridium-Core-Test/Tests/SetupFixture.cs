@@ -6,44 +6,44 @@ namespace Iridium.Core.Test
 	[SetUpFixture]
 	public class MySetUpClass
 	{
-		public class IOHandler : FileIOHandler
+		public class IOHandler : IFileIOHandler
 		{
-			public override void AppendAllText(string path, string s)
+			public virtual void AppendAllText(string path, string s)
 			{
 				File.AppendAllText(path, s);
 			}
 
-			public override void Delete(string path)
+			public virtual void Delete(string path)
 			{
 				File.Delete(path);
 			}
 
-			public override bool FileExists(string path)
+			public virtual bool FileExists(string path)
 			{
 				return File.Exists(path);
 			}
 
-			public override Stream OpenReadStream(string path, bool exclusive)
+			public virtual Stream OpenReadStream(string path, bool exclusive)
 			{
 				return File.OpenRead(path);
 			}
 
-			public override Stream OpenWriteStream(string path, bool exclusive, bool create)
+			public virtual Stream OpenWriteStream(string path, bool exclusive, bool create)
 			{
 				return File.OpenWrite(path);
 			}
 
-			public override string[] ReadAllLines(string path)
+			public virtual string[] ReadAllLines(string path)
 			{
 				return File.ReadAllLines(path);
 			}
 
-			public override string ReadAllText(string path)
+			public virtual string ReadAllText(string path)
 			{
 				return File.ReadAllText(path);
 			}
 
-			public override void WriteAllText(string path, string s)
+			public virtual void WriteAllText(string path, string s)
 			{
 				File.WriteAllText(path, s);
 			}

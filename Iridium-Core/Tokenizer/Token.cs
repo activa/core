@@ -30,8 +30,6 @@ namespace Iridium.Core
 {
     public class Token
     {
-        private ITokenMatcher _tokenMatcher;
-        private string _token;
         private LinkedList<Token> _alternates;
 
         public Token()
@@ -40,22 +38,18 @@ namespace Iridium.Core
 
         protected Token(ITokenMatcher tokenMatcher)
         {
-            _tokenMatcher = tokenMatcher;
+            TokenMatcher = tokenMatcher;
         }
 
         protected Token(ITokenMatcher tokenMatcher, string text)
         {
-            _tokenMatcher = tokenMatcher;
-            _token = text;
+            TokenMatcher = tokenMatcher;
+            Text = text;
         }
 
-        public ITokenMatcher TokenMatcher
-        {
-            get { return _tokenMatcher; }
-            set { _tokenMatcher = value; }
-        }
+        public ITokenMatcher TokenMatcher { get; set; }
 
-        public IEnumerable<Token> Alternates { get { return _alternates; } }
+        public IEnumerable<Token> Alternates => _alternates;
 
         public void AddAlternate(Token token)
         {
@@ -65,18 +59,16 @@ namespace Iridium.Core
             _alternates.AddLast(token);
         }
 
-        public string Text
-        {
-            get { return _token; }
-            set { _token = value; }
-        }
+        public string Text { get; set; }
 
+#if DEBUG
         public override string ToString()
         {
-            if (_tokenMatcher == null)
-                return "(" + _token + ")";
+            if (TokenMatcher == null)
+                return "(" + Text + ")";
             else
-                return _tokenMatcher.GetType().Name + "(" + _token + ")";
+                return TokenMatcher.GetType().Name + "(" + Text + ")";
         }
+#endif
     }
 }

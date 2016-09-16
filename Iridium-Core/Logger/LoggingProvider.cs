@@ -30,25 +30,13 @@ namespace Iridium.Core
 {
     public abstract class LoggingProvider : IDisposable
     {
-        private LogLevel _logLevelMask = LogLevel.All;
-        private LogLevel _minimumLogLevel = LogLevel.Information;
-
         protected LoggingProvider()
         {
             TimeFormatString = "yyyy.MM.dd HH:mm:ss.ff";
         }
 
-        public virtual LogLevel LogLevelMask
-        {
-            get { return _logLevelMask; }
-            set { _logLevelMask = value; }
-        }
-
-        public virtual LogLevel MinimumLogLevel
-        {
-            get { return _minimumLogLevel; }
-            set { _minimumLogLevel = value; }
-        }
+        public virtual LogLevel LogLevelMask { get; set; } = LogLevel.All;
+        public virtual LogLevel MinimumLogLevel { get; set; } = LogLevel.Information;
 
         public string TimeFormatString { get; set; }
 

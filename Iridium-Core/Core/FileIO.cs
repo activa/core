@@ -29,65 +29,45 @@ using System.IO;
 
 namespace Iridium.Core
 {
-    public abstract class FileIOHandler
-    {
-        public abstract string ReadAllText(string path);
-        public abstract string[] ReadAllLines(string path);
-        public abstract void WriteAllText(string path, string s);
-        public abstract bool FileExists(string path);
-        public abstract void Delete(string path);
-        public abstract Stream OpenReadStream(string path, bool exclusive);
-        public abstract Stream OpenWriteStream(string path, bool exclusive, bool create);
-        public abstract void AppendAllText(string path, string s);
-    }
-
-    public class DummyFileIOHandler : FileIOHandler
-    {
-        public override string ReadAllText(string path) { throw new NotSupportedException(); }
-        public override string[] ReadAllLines(string path) { throw new NotSupportedException(); }
-        public override void WriteAllText(string path, string s) { throw new NotSupportedException(); }
-        public override bool FileExists(string path) { throw new NotSupportedException(); }
-        public override void Delete(string path) { throw new NotSupportedException(); }
-        public override Stream OpenReadStream(string path, bool exclusive) { throw new NotSupportedException(); }
-        public override Stream OpenWriteStream(string path, bool exclusive, bool create) { throw new NotSupportedException(); }
-        public override void AppendAllText(string path, string s) {  throw new NotSupportedException(); }
-    }
-
-
     public static class FileIO
     {
-        private static FileIOHandler _handler = new DummyFileIOHandler();
+        private static IFileIOHandler _handler = new DummyFileIOHandler();
 
-        public static void SetIOHandler(FileIOHandler handler)
+        public static void SetIOHandler(IFileIOHandler handler)
         {
             _handler = handler;
-
         }
 
         public static string ReadAllText(string path)
         {
             return _handler.ReadAllText(path);
         }
+
         public static string[] ReadAllLines(string path)
         {
             return _handler.ReadAllLines(path);
         }
+
         public static void WriteAllText(string path, string s)
         {
             _handler.WriteAllText(path, s);
         }
+
         public static bool FileExists(string path)
         {
             return _handler.FileExists(path);
         }
+
         public static void Delete(string path)
         {
             _handler.Delete(path);
         }
+
         public static Stream OpenReadStream(string path, bool exclusive)
         {
             return _handler.OpenReadStream(path, exclusive);
         }
+
         public static Stream OpenWriteStream(string path, bool exclusive, bool create)
         {
             return _handler.OpenWriteStream(path, exclusive, create);
@@ -95,8 +75,20 @@ namespace Iridium.Core
 
         public static void AppendAllText(string path, string s)
         {
-            _handler.AppendAllText(path, s);
-            
+            _handler.AppendAllText(path, s);            
         }
+
+        public class DummyFileIOHandler : IFileIOHandler
+        {
+            string   IFileIOHandler.ReadAllText(string path) { throw new NotSupportedException(); }
+            string[] IFileIOHandler.ReadAllLines(string path) { throw new NotSupportedException(); }
+            void     IFileIOHandler.WriteAllText(string path, string s) { throw new NotSupportedException(); }
+            bool     IFileIOHandler.FileExists(string path) { throw new NotSupportedException(); }
+            void     IFileIOHandler.Delete(string path) { throw new NotSupportedException(); }
+            Stream   IFileIOHandler.OpenReadStream(string path, bool exclusive) { throw new NotSupportedException(); }
+            Stream   IFileIOHandler.OpenWriteStream(string path, bool exclusive, bool create) { throw new NotSupportedException(); }
+            void     IFileIOHandler.AppendAllText(string path, string s) { throw new NotSupportedException(); }
+        }
+
     }
 }

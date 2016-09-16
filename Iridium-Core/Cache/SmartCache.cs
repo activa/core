@@ -31,6 +31,9 @@ namespace Iridium.Core
 {
     public class SmartCache<T>
     {
+        public TimeSpan DefaultSlidingExpiration { get; set; } = TimeSpan.FromDays(1000);
+        public DateTime DefaultAbsoluteExpiration { get; set; } = DateTime.MaxValue;
+
         private static DateTime Min(DateTime t1, DateTime t2)
         {
             return t1 < t2 ? t1 : t2;
@@ -66,10 +69,6 @@ namespace Iridium.Core
         private readonly LinkedList<CachedItem> _keys = new LinkedList<CachedItem>();
         private readonly object _lock = new object();
         private readonly ITimeProvider _time;
-        private static readonly TimeSpan _noSlidingExpiration = TimeSpan.FromDays(1000);
-        private static readonly DateTime _noAbsoluteExpiration = DateTime.MaxValue;
-        private TimeSpan _defaultSlidingExpiration = _noSlidingExpiration;
-        private DateTime _defaultAbsoluteExpiration = _noAbsoluteExpiration;
         private int _cacheSize;
         private TimeSpan _cleanupInterval = TimeSpan.FromSeconds(60);
         private DateTime _nextCleanup;
@@ -132,17 +131,6 @@ namespace Iridium.Core
             }
         }
 
-        public TimeSpan DefaultSlidingExpiration
-        {
-            get { return _defaultSlidingExpiration; }
-            set { _defaultSlidingExpiration = value; }
-        }
-
-        public DateTime DefaultAbsoluteExpiration
-        {
-            get { return _defaultAbsoluteExpiration; }
-            set { _defaultAbsoluteExpiration = value; }
-        }
 
         public void ClearCache()
         {
@@ -176,7 +164,7 @@ namespace Iridium.Core
         public bool TryGetValue(string key, out T item)
         {
             if (key == null)
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
 
             lock (_lock)
             {
@@ -211,7 +199,7 @@ namespace Iridium.Core
         public void Remove(string key)
         {
             if (key == null)
-                throw new ArgumentNullException("key");
+                throw new ArgumentNullException(nameof(key));
 
             lock (_lock)
             {

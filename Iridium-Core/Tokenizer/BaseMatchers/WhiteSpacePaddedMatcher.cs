@@ -49,22 +49,18 @@ namespace Iridium.Core
         {
             private bool _passedWhitespace;
             private readonly ITokenProcessor _processor;
-            private int _skipped;
 
             public MatchProcessor(ITokenMatcher matcher)
             {
                 _processor = matcher.CreateTokenProcessor();
             }
 
-            public int Skipped
-            {
-                get { return _skipped; }
-            }
+            public int Skipped { get; private set; }
 
             public void ResetState()
             {
                 _passedWhitespace = false;
-                _skipped = 0;
+                Skipped = 0;
 
                 _processor.ResetState();
             }
@@ -73,7 +69,7 @@ namespace Iridium.Core
             {
                 if (!_passedWhitespace && " \t\r\n".IndexOf(c) >= 0)
                 {
-                    _skipped = Skipped + 1;
+                    Skipped = Skipped + 1;
                     return TokenizerState.Valid;
                 }
 

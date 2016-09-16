@@ -118,13 +118,7 @@ namespace Iridium.Core
         }
 
         private readonly List<Subscription> _subscriptions = new List<Subscription>();
-        public static Notifier Default { get; private set; }
-
-        static Notifier()
-        {
-            Default = new Notifier();
-        }
-
+        public static Notifier Default { get; private set; } = new Notifier();
 
         public void Post(string name)
         {

@@ -27,6 +27,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Iridium.Core
 {
@@ -37,7 +38,7 @@ namespace Iridium.Core
 
     public class Tokenizer<T> where T:Token, new()
     {
-        readonly List<ITokenMatcher> _tokenMatchers = new List<ITokenMatcher>();
+        private readonly List<ITokenMatcher> _tokenMatchers = new List<ITokenMatcher>();
 
         private readonly bool _allowFillerTokens;
 
@@ -92,6 +93,8 @@ namespace Iridium.Core
                 successfulTokens.Clear();
 
                 //TODO: parallel processing in .NET 4.0
+                //Parallel.ForEach(tokenMatchers, tokenMatcher =>
+                //{
                 foreach (var tokenMatcher in tokenMatchers)
                 {
                     TokenizerState state = tokenMatcher.Feed(c, s, textIndex);
@@ -100,7 +103,7 @@ namespace Iridium.Core
                         foundToken = true;
                     else if (state == TokenizerState.Success)
                         successfulTokens.Add(tokenMatcher);
-                }
+                }//);
 
                 if (successfulTokens.Count > 0)
                 {

@@ -36,7 +36,7 @@ namespace Iridium.Core
         public static TOutput[] ConvertAll<TInput, TOutput>(this TInput[] array, Converter<TInput, TOutput> converter) 
         {  
             if (array == null)  
-                throw new ArgumentNullException("array");
+                throw new ArgumentNullException(nameof(array));
 
             var newArray = new TOutput[array.Length];
 

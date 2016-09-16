@@ -33,27 +33,23 @@ namespace Iridium.Core
 {
     public class JsonObject : IFormattable, IEnumerable<JsonObject>
     {
-        private static readonly JsonObject _emptyInstance = new JsonObject(empty:true);
-
         private readonly object _value;
-        private readonly bool _empty;
 
         internal JsonObject(object value = null, bool empty = false)
         {
             _value = value;
-            _empty = empty;
+            IsEmpty = empty;
         }
 
         public bool IsObject => _value is Dictionary<string, JsonObject>;
         public bool IsArray => _value is JsonObject[];
         public bool IsValue => !IsObject && !IsArray && !IsEmpty;
-        public bool IsEmpty => _empty;
-        public bool IsNull => _value == null && !_empty;
+        public bool IsEmpty { get; }
+        public bool IsNull => _value == null && !IsEmpty;
         public bool IsNullOrEmpty => _value == null;
-
         public object Value => IsValue ? _value : null;
 
-        public static JsonObject Empty => _emptyInstance;
+        public static JsonObject Empty { get; } = new JsonObject(empty:true);
 
         public object As(Type type)
         {
@@ -125,6 +121,11 @@ namespace Iridium.Core
             return jsonObject.AsArray();
         }
 
+        public static implicit operator string[] (JsonObject jsonObject)
+        {
+            return jsonObject.AsArray<string>();
+        }
+
         public JsonObject[] AsArray()
         {
             return _value as JsonObject[];
@@ -152,7 +153,7 @@ namespace Iridium.Core
             get
             {
                 if (!IsArray || index >= AsArray().Length)
-                    return _emptyInstance;
+                    return Empty;
 
                 return AsArray()[index];
             }
@@ -181,7 +182,7 @@ namespace Iridium.Core
         private static JsonObject ValueForExpression(JsonObject obj, string key)
         {
             if (!obj.IsObject)
-                return _emptyInstance;
+                return Empty;
 
             foreach (var keyPart in AllKeyParts(key).Reverse().ToArray())
             {
@@ -201,7 +202,7 @@ namespace Iridium.Core
 
             }
 
-            return _emptyInstance;
+            return Empty;
         }
 
         public IEnumerator<JsonObject> GetEnumerator()
