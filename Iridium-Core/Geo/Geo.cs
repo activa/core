@@ -28,25 +28,41 @@ using System;
 
 namespace Iridium.Core
 {
-    public class MonthlyScheduler : TimeOfDayScheduler
+    public static class Geo
     {
-        public bool[] MonthDays { get; }
-        
-        public MonthlyScheduler(string scheduleId, TimeSpan timeOfDay, params int[] daysOfMonth) : base(scheduleId, timeOfDay)
+        public static double DistanceMeters(string hash1, string hash2)
         {
-            MonthDays = new bool[32];
+            double[] latlon1 = Geohash.Decode(hash1);
+            double[] latlon2 = Geohash.Decode(hash2);
 
-            foreach(int m in daysOfMonth)
-                if (m > 0 && m <= 31)
-                    MonthDays[m] = true;
+            return DistanceMeters(latlon1[0], latlon1[1], latlon2[0], latlon2[1]);
         }
 
-        public override bool ShouldRun()
+        public static double DistanceMeters(double lat1, double lon1, double lat2, double lon2)
         {
-            if (MonthDays[TimeProvider.Now.Day])
-                return base.ShouldRun();
+            const double earthRadius = 6371008.8;
 
-            return false;
+            lat1 = lat1 / 180 * Math.PI;
+            lat2 = lat2 / 180 * Math.PI;
+            lon1 = lon1 / 180 * Math.PI;
+            lon2 = lon2 / 180 * Math.PI;
+
+            double angle = Haversine(lat2 - lat1) + Math.Cos(lat1) * Math.Cos(lat2) * Haversine(lon2 - lon1);
+
+            return 2 * earthRadius * Math.Asin(Math.Min(1, Math.Sqrt(angle)));
         }
+
+        public static double Distance(double lat1, double lon1, double lat2, double lon2, Unit unit)
+        {
+            double meters = DistanceMeters(lat1, lon1, lat2, lon2);
+
+            return meters.ConvertFrom(Unit.Meters).To(unit);
+        }
+
+        private static double Haversine(double dLat)
+        {
+            return (1 - Math.Cos(dLat)) / 2;
+        }
+
     }
 }

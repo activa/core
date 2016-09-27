@@ -24,30 +24,18 @@
 //=============================================================================
 #endregion
 
-using System;
-using System.IO;
-
 namespace Iridium.Core
 {
-    public interface IFileIOHandler
+    public static class UnitConverter
     {
-        string ReadAllText(string path);
-        string[] ReadAllLines(string path);
-        byte[] ReadAllBytes(string path);
-        void WriteAllText(string path, string s);
-        bool FileExists(string path);
-        void Delete(string path);
-        void CreateFolder(string path, bool deep = false);
-        void DeleteFolder(string path);
-        bool FolderExists(string path);
-        Stream OpenReadStream(string path, bool exclusive);
-        Stream OpenWriteStream(string path, bool exclusive, bool create);
-        void AppendAllText(string path, string s);
-    }
+        public static double Convert(double number, Unit from, Unit to)
+        {
+            return from.Convert(number, to);
+        }
 
-    public class FileIOException : Exception
-    {
-        public FileIOException(string message) : base(message) { }
-        public FileIOException(string message, Exception innException) : base(message, innException) { }
+        public static double Convert(NumberWithUnit number, Unit to)
+        {
+            return number.To(to);
+        }
     }
 }

@@ -1,4 +1,4 @@
-#region License
+﻿#region License
 //=============================================================================
 // Iridium-Core - Portable .NET Productivity Library 
 //
@@ -25,29 +25,49 @@
 #endregion
 
 using System;
-using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Iridium.Core
 {
-    public interface IFileIOHandler
+    public class ServiceRepository
     {
-        string ReadAllText(string path);
-        string[] ReadAllLines(string path);
-        byte[] ReadAllBytes(string path);
-        void WriteAllText(string path, string s);
-        bool FileExists(string path);
-        void Delete(string path);
-        void CreateFolder(string path, bool deep = false);
-        void DeleteFolder(string path);
-        bool FolderExists(string path);
-        Stream OpenReadStream(string path, bool exclusive);
-        Stream OpenWriteStream(string path, bool exclusive, bool create);
-        void AppendAllText(string path, string s);
-    }
+        private static readonly List<object> _services = new List<object>();
+        private static readonly Dictionary<Type,object> _cachedServices = new Dictionary<Type, object>();
 
-    public class FileIOException : Exception
-    {
-        public FileIOException(string message) : base(message) { }
-        public FileIOException(string message, Exception innException) : base(message, innException) { }
+        public static T Get<T>() where T:class
+        {
+            lock (_services)
+            {
+                object obj;
+
+                if (_cachedServices.TryGetValue(typeof(T), out obj))
+                    return (T) obj;
+
+                obj = _services.OfType<T>().FirstOrDefault();
+
+                if (obj == null)
+                    return null;
+
+                _cachedServices[typeof(T)] = obj;
+
+                return (T) obj;
+            }
+        }
+
+        public static void Register<T>(T service) where T:class
+        {
+            if (service == null)
+                throw new ArgumentNullException(nameof(service));
+
+            lock (_services)
+            {
+                if (_services.Contains(service))
+                    return;
+
+                _services.Add(service);
+                _cachedServices.Clear();
+            }
+        }
     }
 }

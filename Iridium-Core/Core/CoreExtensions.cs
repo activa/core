@@ -26,31 +26,61 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Iridium.Core
 {
-    public delegate TOutput Converter<in TInput, out TOutput>(TInput value);
-
     public static class CoreExtensions
     {
-        public static TOutput[] ConvertAll<TInput, TOutput>(this TInput[] array, Converter<TInput, TOutput> converter) 
-        {  
-            if (array == null)  
-                throw new ArgumentNullException(nameof(array));
-
-            var newArray = new TOutput[array.Length];
-
-            for (int i = 0; i < array.Length; i++)
-                newArray[i] = converter(array[i]);
-
-            return newArray;
-        } 
-
         public static void ForEach<T>(this IEnumerable<T> list, Action<T> action)
         {
             foreach (var item in list)
                 action(item);
         }
-    }
 
+        public static bool IsIn<T>(this T source, params T[] list)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return Array.IndexOf(list,source) >= 0;
+        }
+
+        public static bool IsIn<T>(this T source, IEnumerable<T> list)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return list.Contains(source);
+        }
+
+        public static int IndexIn<T>(this T source, params T[] list)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return Array.IndexOf(list, source);
+        }
+
+        public static int IndexIn<T>(this T source, IEnumerable<T> list)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if (list is IList<T>)
+                return ((IList<T>) list).IndexOf(source);
+
+            int idx = 0;
+
+            foreach (var item in list)
+            {
+                if (source.Equals(item))
+                    return idx;
+
+                idx++;
+            }
+
+            return -1;
+        }
+    }
 }

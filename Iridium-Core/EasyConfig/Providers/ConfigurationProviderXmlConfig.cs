@@ -63,10 +63,7 @@ namespace Iridium.Core
             return 1;
         }
 
-        public bool CanSave
-        {
-            get { return false; }
-        }
+        public bool CanSave => false;
 
         public string GetValue(string key, string environment)
         {

@@ -25,27 +25,26 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 
 namespace Iridium.Core
 {
-    public class DefaultHistoryStore : IScheduleHistoryStore
+    public class WeightUnit : Unit
     {
-        private readonly object _lock = new object();
-        private readonly Dictionary<string, DateTime> _lastRunTimes = new Dictionary<string, DateTime>();
+        private readonly double _gramsPerUnit;
 
-        public DateTime LastRun(string taskId)
+        public WeightUnit(double gramsPerUnit)
         {
-            DateTime lastRun;
-
-            lock (_lock)
-                return _lastRunTimes.TryGetValue(taskId, out lastRun) ? lastRun : DateTime.MinValue;
+            _gramsPerUnit = gramsPerUnit;
         }
 
-        public void SetLastRun(string taskId, DateTime lastRun)
+        public override double Convert(double number, Unit targetUnit)
         {
-            lock (_lock)
-                _lastRunTimes[taskId] = lastRun;
+            var targetWeightUnit = targetUnit as WeightUnit;
+
+            if (targetWeightUnit == null)
+                throw new ArithmeticException($"Can't convert {typeof(WeightUnit).Name} to {targetUnit.GetType().Name}");
+
+            return number * _gramsPerUnit / targetWeightUnit._gramsPerUnit;
         }
     }
 }

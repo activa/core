@@ -75,6 +75,7 @@
     <Compile Include="ConfigurationProviderAppConfig.cs" />
     <Compile Include="Tests\BinaryExtensionsTest.cs" />
     <Compile Include="Tests\ConfigTest.cs" />
+    <Compile Include="Tests\GeohashTest.cs" />
     <Compile Include="Tests\Json\JSONParserFixture.cs" />
     <Compile Include="Tests\Json\JsonSeralizerTestFixture.cs" />
     <Compile Include="Tests\MockTimeProvider.cs" />
@@ -82,7 +83,6 @@
     <Compile Include="Tests\ValueInspectorTest.cs" />
     <Compile Include="Tests\ObjectMappedTest.cs" />
     <Compile Include="Tests\SafeDictionaryTest.cs" />
-    <Compile Include="Tests\SchedulerTest.cs" />
     <Compile Include="Tests\SmartCache_Fixture.cs" />
     <Compile Include="Tests\ObjectConverter\ObjectConverterTest.cs" />
     <Compile Include="Tests\StringConverter\StringConverterPluginTest.cs" />

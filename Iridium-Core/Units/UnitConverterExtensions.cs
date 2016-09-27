@@ -24,30 +24,27 @@
 //=============================================================================
 #endregion
 
-using System;
-using System.IO;
-
 namespace Iridium.Core
 {
-    public interface IFileIOHandler
+    public static class UnitConverterExtensions
     {
-        string ReadAllText(string path);
-        string[] ReadAllLines(string path);
-        byte[] ReadAllBytes(string path);
-        void WriteAllText(string path, string s);
-        bool FileExists(string path);
-        void Delete(string path);
-        void CreateFolder(string path, bool deep = false);
-        void DeleteFolder(string path);
-        bool FolderExists(string path);
-        Stream OpenReadStream(string path, bool exclusive);
-        Stream OpenWriteStream(string path, bool exclusive, bool create);
-        void AppendAllText(string path, string s);
-    }
+        public static NumberWithUnit ConvertFrom(this double number, Unit fromUnit)
+        {
+            return new NumberWithUnit(number, fromUnit);
+        }
 
-    public class FileIOException : Exception
-    {
-        public FileIOException(string message) : base(message) { }
-        public FileIOException(string message, Exception innException) : base(message, innException) { }
+        public static double ConvertUnits(this double number, Unit fromUnit, Unit toUnit)
+        {
+            return fromUnit.Convert(number, toUnit);
+        }
+
+        public static NumberWithUnit In(this double number, Unit unit) => new NumberWithUnit(number,unit);
+        public static NumberWithUnit In(this int number, Unit unit) => new NumberWithUnit(number, unit);
+        public static NumberWithUnit In(this short number, Unit unit) => new NumberWithUnit(number, unit);
+        public static NumberWithUnit In(this ushort number, Unit unit) => new NumberWithUnit(number, unit);
+        public static NumberWithUnit In(this long number, Unit unit) => new NumberWithUnit(number, unit);
+        public static NumberWithUnit In(this uint number, Unit unit) => new NumberWithUnit(number, unit);
+        public static NumberWithUnit In(this ulong number, Unit unit) => new NumberWithUnit(number, unit);
+        public static NumberWithUnit In(this decimal number, Unit unit) => new NumberWithUnit((double) number, unit);
     }
 }

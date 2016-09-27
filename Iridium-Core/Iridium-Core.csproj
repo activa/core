@@ -38,6 +38,16 @@
   <ItemGroup>
     <Compile Include="Cache\SmartCache.cs" />
     <Compile Include="Core\IFileIOHandler.cs" />
+    <Compile Include="Core\ServiceRepository.cs" />
+    <Compile Include="Units\AngleUnit.cs" />
+    <Compile Include="Units\DistanceUnit.cs" />
+    <Compile Include="Geo\Geo.cs" />
+    <Compile Include="Geo\Geohash.cs" />
+    <Compile Include="Units\NumberWithUnit.cs" />
+    <Compile Include="Units\Unit.cs" />
+    <Compile Include="Units\UnitConverter.cs" />
+    <Compile Include="Units\UnitConverterExtensions.cs" />
+    <Compile Include="Units\WeightUnit.cs" />
     <Compile Include="PreserveAttribute.cs" />
     <Compile Include="Core\BinaryHelper.cs" />
     <Compile Include="Core\CoreExtensions.cs" />
@@ -72,8 +82,8 @@
     <Compile Include="Logger\LoggingProvider.cs" />
     <Compile Include="Logger\LogLevel.cs" />
     <Compile Include="Logger\Providers\LoggingProviderFile.cs" />
-    <Compile Include="Mocking\ITimeProvider.cs" />
-    <Compile Include="Mocking\RealTimeProvider.cs" />
+    <Compile Include="TimeMocking\ITimeProvider.cs" />
+    <Compile Include="TimeMocking\RealTimeProvider.cs" />
     <Compile Include="Notifier\ISubscription.cs" />
     <Compile Include="Notifier\Notification.cs" />
     <Compile Include="Notifier\Notifier.cs" />
@@ -88,18 +98,11 @@
     <Compile Include="Reflection\SmartBinder.cs" />
     <Compile Include="Reflection\ObjectMapper.cs" />
     <Compile Include="Reflection\ReflectionExtensions.cs" />
-    <Compile Include="Scheduler\CyclicScheduler.cs" />
-    <Compile Include="Scheduler\MonthlyScheduler.cs" />
-    <Compile Include="Scheduler\ScheduleHistory\DefaultHistoryStore.cs" />
-    <Compile Include="Scheduler\ScheduleHistory\IScheduleHistoryStore.cs" />
-    <Compile Include="Scheduler\Scheduler.cs" />
-    <Compile Include="Scheduler\TimeOfDayScheduler.cs" />
     <Compile Include="SmartConverter\DateConversionMethod.cs" />
     <Compile Include="SmartConverter\EnumConverter.cs" />
     <Compile Include="SmartConverter\IStringConverter.cs" />
     <Compile Include="SmartConverter\ObjectConverter.cs" />
     <Compile Include="SmartConverter\StringConverter.cs" />
-    <Compile Include="Scheduler\ScheduleHistory\FileHistoryStore.cs" />
     <Compile Include="Tokenizer\BaseMatchers\AnyCharMatcher.cs" />
     <Compile Include="Tokenizer\BaseMatchers\AnyOfMatcher.cs" />
     <Compile Include="Tokenizer\BaseMatchers\AnyOfStringMatcher.cs" />
@@ -122,6 +125,7 @@
     <Compile Include="Tokenizer\TokenizerState.cs" />
     <Compile Include="Tokenizer\TokenMatcher.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Target Name="BeforeBuild">
   </Target>

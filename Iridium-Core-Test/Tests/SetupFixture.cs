@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using NUnit.Framework;
 
 namespace Iridium.Core.Test
@@ -15,15 +16,51 @@ namespace Iridium.Core.Test
 
 			public virtual void Delete(string path)
 			{
-				File.Delete(path);
-			}
+			    try
+			    {
+			        File.Delete(path);
+			    }
+                catch (Exception ex)
+                {
+                    throw new FileIOException(ex.Message, ex);
+                }
+            }
 
-			public virtual bool FileExists(string path)
+            public void CreateFolder(string path, bool deep = false)
+		    {
+		        try
+		        {
+		            Directory.CreateDirectory(path);
+		        }
+		        catch (Exception ex)
+		        {
+		            throw new FileIOException(ex.Message, ex);
+		        }
+		    }
+
+		    public void DeleteFolder(string path)
+		    {
+		        try
+		        {
+		            Directory.Delete(path);
+		        }
+                catch (Exception ex)
+                {
+                    throw new FileIOException(ex.Message, ex);
+                }
+            }
+
+            public bool FolderExists(string path)
+            {
+                return Directory.Exists(path);
+            }
+
+		    public virtual bool FileExists(string path)
 			{
 				return File.Exists(path);
 			}
 
-			public virtual Stream OpenReadStream(string path, bool exclusive)
+		    public virtual Stream OpenReadStream(string path, bool exclusive)
 			{
 				return File.OpenRead(path);
 			}
@@ -38,7 +75,12 @@ namespace Iridium.Core.Test
 				return File.ReadAllLines(path);
 			}
 
-			public virtual string ReadAllText(string path)
+		    public byte[] ReadAllBytes(string path)
+		    {
+		        return File.ReadAllBytes(path);
+		    }
+
+		    public virtual string ReadAllText(string path)
 			{
 				return File.ReadAllText(path);
 			}

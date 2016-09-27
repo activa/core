@@ -28,33 +28,21 @@ using System;
 
 namespace Iridium.Core
 {
-    public abstract class Scheduler
+    public class AngleUnit : Unit
     {
-        private readonly string _schedulerId;
+        public static Unit Degrees = new AngleUnit();
+        public static Unit Radians = new AngleUnit();
 
-        public static IScheduleHistoryStore DefaultHistoryStore { private get; set; }
-        public IScheduleHistoryStore HistoryStore { get; set; }
-        public ITimeProvider TimeProvider { get; set; } = new RealTimeProvider();
-
-        public abstract bool ShouldRun();
-
-        protected Scheduler(string schedulerId)
+        public override double Convert(double number, Unit targetUnit)
         {
-            _schedulerId = schedulerId ?? Guid.NewGuid().ToString("N");
+            if (targetUnit == this)
+                return number;
+            if (targetUnit == Degrees && this == Radians)
+                return number*180.0/Math.PI;
+            if (targetUnit == Radians && this == Degrees)
+                return number/180.0*Math.PI;
 
-            HistoryStore = DefaultHistoryStore;
+            throw new ArithmeticException($"Can't convert {GetType().Name} to {targetUnit.GetType().Name}");
         }
-
-        static Scheduler()
-        {
-            DefaultHistoryStore = new DefaultHistoryStore();
-        }
-
-        public DateTime LastRun
-        {
-            get { return HistoryStore.LastRun(_schedulerId); } 
-            set { HistoryStore.SetLastRun(_schedulerId, value);}
-        }
-
     }
 }

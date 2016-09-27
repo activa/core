@@ -28,34 +28,23 @@ using System;
 
 namespace Iridium.Core
 {
-    public class TimeOfDayScheduler : Scheduler
+    public class DistanceUnit : Unit
     {
-        public TimeSpan TimeOfDay { get; set; }
+        private readonly double _metersPerUnit;
 
-        public TimeOfDayScheduler(string scheduleId, TimeSpan timeOfDay) : base(scheduleId)
+        public DistanceUnit(double metersPerUnit)
         {
-            TimeOfDay = timeOfDay;
+            _metersPerUnit = metersPerUnit;
         }
 
-        public override bool ShouldRun()
+        public override double Convert(double number, Unit targetUnit)
         {
-            DateTime lastRun = LastRun;
+            var targetDistanceUnit = targetUnit as DistanceUnit;
 
-            if (lastRun < (TimeProvider.Now.Date.AddDays(-1) + TimeOfDay))
-                lastRun = (TimeProvider.Now.Date.AddDays(-1) + TimeOfDay);
+            if (targetDistanceUnit == null)
+                throw new ArithmeticException($"Can't convert {typeof(DistanceUnit).Name} to {targetUnit.GetType().Name}");
 
-            DateTime nextRun = lastRun.Date + TimeOfDay;
-
-            if (lastRun.TimeOfDay >= TimeOfDay)
-                nextRun += new TimeSpan(24, 0, 0);
-
-            if (TimeProvider.Now >= nextRun)
-            {
-                LastRun = TimeProvider.Now;
-                return true;
-            }
-
-            return false;
+            return number*_metersPerUnit/targetDistanceUnit._metersPerUnit;
         }
     }
 }

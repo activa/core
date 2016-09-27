@@ -24,13 +24,38 @@
 //=============================================================================
 #endregion
 
-using System;
-
 namespace Iridium.Core
 {
-    public interface IScheduleHistoryStore
+    public class NumberWithUnit
     {
-        DateTime LastRun(string taskId);
-        void SetLastRun(string taskId, DateTime lastRun);
+        private readonly double _number;
+        private readonly Unit _unit;
+
+        public NumberWithUnit(double number, Unit unit)
+        {
+            _number = number;
+            _unit = unit;
+        }
+
+        public NumberWithUnit(NumberWithUnit other, Unit targetUnit)
+        {
+            _unit = targetUnit;
+            _number = other.To(targetUnit);
+        }
+
+        public double To(Unit toUnit)
+        {
+            return _unit.Convert(_number, toUnit);
+        }
+
+        public double In(Unit toUnit)
+        {
+            return _unit.Convert(_number, toUnit);
+        }
+
+        public double From(Unit fromUnit)
+        {
+            return fromUnit.Convert(_number, _unit);
+        }
     }
 }

@@ -24,30 +24,25 @@
 //=============================================================================
 #endregion
 
-using System;
-
 namespace Iridium.Core
 {
-    public class CyclicScheduler : Scheduler
+    public abstract class Unit
     {
-        public TimeSpan Interval { get; set; }
+        public static readonly Unit Meters = new DistanceUnit(1.0);
+        public static readonly Unit Centimeters = new DistanceUnit(0.01);
+        public static readonly Unit Millimeters = new DistanceUnit(0.001);
+        public static readonly Unit KiloMeters = new DistanceUnit(1000.0);
+        public static readonly Unit Miles = new DistanceUnit(1609.34);
+        public static readonly Unit NauticalMiles = new DistanceUnit(1852);
+        public static readonly Unit Yards = new DistanceUnit(0.9144);
+        public static readonly Unit Inches = new DistanceUnit(0.0254);
+        public static readonly Unit Feet = new DistanceUnit(0.3048);
 
-        public CyclicScheduler(string scheduleId, TimeSpan interval) : base(scheduleId)
-        {
-            Interval = interval;
-        }
+        public static readonly Unit Grams = new WeightUnit(1.0);
+        public static readonly Unit Kilograms = new WeightUnit(1000.0);
+        public static readonly Unit Pounds = new WeightUnit(0.454);
+        public static readonly Unit Ounces = new WeightUnit(0.454/16.0);
 
-        public override bool ShouldRun()
-        {
-            DateTime lastRun = LastRun;
-
-            if ((TimeProvider.Now - lastRun) >= Interval)
-            {
-                LastRun = TimeProvider.Now;
-                return true;
-            }
-
-            return false;
-        }
+        public abstract double Convert(double number, Unit targetUnit);
     }
 }

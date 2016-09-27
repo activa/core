@@ -82,9 +82,13 @@ namespace Iridium.Core
         {
             string   IFileIOHandler.ReadAllText(string path) { throw new NotSupportedException(); }
             string[] IFileIOHandler.ReadAllLines(string path) { throw new NotSupportedException(); }
+            byte[]   IFileIOHandler.ReadAllBytes(string path) { throw new NotSupportedException(); }
             void     IFileIOHandler.WriteAllText(string path, string s) { throw new NotSupportedException(); }
             bool     IFileIOHandler.FileExists(string path) { throw new NotSupportedException(); }
             void     IFileIOHandler.Delete(string path) { throw new NotSupportedException(); }
+            void     IFileIOHandler.CreateFolder(string path, bool deep = false) { throw new NotSupportedException(); }
+            void     IFileIOHandler.DeleteFolder(string path) { throw new NotSupportedException(); }
+            bool     IFileIOHandler.FolderExists(string path)  { throw new NotSupportedException(); }
             Stream   IFileIOHandler.OpenReadStream(string path, bool exclusive) { throw new NotSupportedException(); }
             Stream   IFileIOHandler.OpenWriteStream(string path, bool exclusive, bool create) { throw new NotSupportedException(); }
             void     IFileIOHandler.AppendAllText(string path, string s) { throw new NotSupportedException(); }
