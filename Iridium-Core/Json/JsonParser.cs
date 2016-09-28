@@ -1,35 +1,10 @@
-#region License
-//=============================================================================
-// Iridium-Core - Portable .NET Productivity Library 
-//
-// Copyright (c) 2008-2016 Philippe Leybaert
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy 
-// of this software and associated documentation files (the "Software"), to deal 
-// in the Software without restriction, including without limitation the rights 
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
-// copies of the Software, and to permit persons to whom the Software is 
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in 
-// all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
-//=============================================================================
-#endregion
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 
 namespace Iridium.Core
@@ -38,84 +13,61 @@ namespace Iridium.Core
     {
         public static JsonObject Parse(string json)
         {
-            return new JsonParser()._Parse(json);
+            return new JsonParser(json)._Parse();
         }
 
         public static JsonObject Parse(Stream stream)
         {
-            return new JsonParser()._Parse(stream);
+            return new JsonParser(stream)._Parse();
         }
 
         public static T Parse<T>(string json) where T : class, new()
         {
-            return new JsonParser()._Parse<T>(json);
+            return new JsonParser(json)._Parse<T>();
         }
 
         public static T Parse<T>(string json, T prototype) where T : class, new()
         {
-            return new JsonParser()._Parse<T>(json);
+            return new JsonParser(json)._Parse<T>();
         }
 
-        private Token[] _tokens;
-        private int _currentToken;
+        private JsonTokenizer _tokenizer;
 
-        private T _Parse<T>(string json) where T:class
+        public JsonParser(string s)
         {
-            Tokenize(json);
+            _tokenizer = new JsonTokenizer(s);
+        }
 
-            _currentToken = 0;
+        public JsonParser(Stream stream)
+        {
+            _tokenizer = new JsonTokenizer(stream);
+        }
+
+        private T _Parse<T>() where T:class
+        {
+            NextToken();
 
             return ParseObject(typeof(T)).As<T>();
         }
 
-        private JsonObject _Parse(string json)
+        private JsonObject _Parse()
         {
-            Tokenize(json);
-
-            _currentToken = 0;
+            NextToken();
 
             return ParseValue();
         }
 
-        private JsonObject _Parse(Stream stream)
-        {
-            using (var reader = new StreamReader(stream, Encoding.UTF8))
-            {
-                return _Parse(reader.ReadToEnd());
-            }
-        }
-
-        private void Tokenize(string json)
-        {
-            Tokenizer tokenizer = new JSONTokenizer();
-
-            List<Token> tokens = new List<Token>(tokenizer.Tokenize(json));
-
-            tokens.RemoveAll(token => token.TokenMatcher is WhiteSpaceMatcher);
-
-            _tokens = tokens.ToArray();
-        }
-
-        private Token CurrentToken()
-        {
-            return _currentToken < _tokens.Length ? _tokens[_currentToken] : null;
-        }
+        private JsonToken CurrentToken;
 
         private void NextToken()
         {
-            _currentToken++;
+            CurrentToken = _tokenizer.NextToken();
         }
 
+        
         private JsonObject ParseObject(Type objectType = null)
         {
-            if (CurrentToken().TokenMatcher is NullTokenMatcher)
-            {
-                NextToken();
-
-                return new JsonObject();
-            }
-
-            if (!(CurrentToken().TokenMatcher is ObjectStartTokenMatcher))
+            if (CurrentToken.Type != JsonTokenType.ObjectStart)
                 throw new Exception("Expected {");
 
             object obj;
@@ -134,17 +86,17 @@ namespace Iridium.Core
 
             for (; ; )
             {
-                if ((CurrentToken().TokenMatcher is ObjectEndTokenMatcher))
+                if (CurrentToken.Type == JsonTokenType.ObjectEnd)
                     break;
 
-                if (!(CurrentToken().TokenMatcher is StringTokenMatcher))
+                if (CurrentToken.Type != JsonTokenType.String)
                     throw new Exception("Expected property name");
 
-                string propName = CurrentToken().Text.Substring(1, CurrentToken().Text.Length - 2);
+                string propName = CurrentToken.Token;
 
                 NextToken();
 
-                if (!(CurrentToken().TokenMatcher is ColonTokenMatcher))
+                if (CurrentToken.Type != JsonTokenType.Colon)
                     throw new Exception("Expected colon");
 
                 NextToken();
@@ -175,13 +127,13 @@ namespace Iridium.Core
                     ((Dictionary<string, JsonObject>) obj)[propName] = ParseValue();
                 }
 
-                if (!(CurrentToken().TokenMatcher is CommaTokenMatcher))
+                if (CurrentToken.Type != JsonTokenType.Comma)
                     break;
 
                 NextToken();
             }
 
-            if (!(CurrentToken().TokenMatcher is ObjectEndTokenMatcher))
+            if (CurrentToken.Type != JsonTokenType.ObjectEnd)
                 throw new Exception("Expected }");
 
             NextToken();
@@ -193,8 +145,8 @@ namespace Iridium.Core
         {
             return type != null && (
                 type.Inspector().ImplementsOrInherits<IList>() 
-                    ||
-                   type.Inspector().ImplementsOrInherits(typeof (IList<>)));
+                ||
+                type.Inspector().ImplementsOrInherits(typeof (IList<>)));
         }
 
         private JsonObject ParseValue(Type type = null)
@@ -203,21 +155,34 @@ namespace Iridium.Core
 
             if (type == null)
             {
-                if (CurrentToken().TokenMatcher is StringTokenMatcher)
-                    type = typeof(string);
-                else if (CurrentToken().TokenMatcher is IntegerTokenMatcher)
-                    type = typeof(Int64);
-                else if (CurrentToken().TokenMatcher is FloatTokenMatcher)
-                    type = typeof(double);
-                else if (CurrentToken().TokenMatcher is TrueTokenMatcher || CurrentToken().TokenMatcher is FalseTokenMatcher)
-                    type = typeof(bool);
-                else if (CurrentToken().TokenMatcher is ArrayStartTokenMatcher)
-                    isArray = true;
-                else if (CurrentToken().TokenMatcher is ObjectStartTokenMatcher ||
-                         CurrentToken().TokenMatcher is NullTokenMatcher)
-                {}
-                else 
-                    throw new Exception("Unexpected token " + CurrentToken());
+                switch (CurrentToken.Type)
+                {
+                    case JsonTokenType.ObjectStart:
+                        break;
+                    case JsonTokenType.ArrayStart:
+                        isArray = true;
+                        break;
+                    case JsonTokenType.Null:
+                        NextToken();
+                        return new JsonObject();
+                    case JsonTokenType.True:
+                        type = typeof(bool);
+                        break;
+                    case JsonTokenType.False:
+                        type = typeof(bool);
+                        break;
+                    case JsonTokenType.Integer:
+                        type = typeof(long);
+                        break;
+                    case JsonTokenType.Float:
+                        type = typeof(double);
+                        break;
+                    case JsonTokenType.String:
+                        type = typeof(string);
+                        break;
+                    default:
+                        throw new Exception("Unexpected token " + CurrentToken);
+                }
             }
 
             if (isArray || IsArray(type))
@@ -231,7 +196,7 @@ namespace Iridium.Core
 
             if (type == typeof(bool))
             {
-                bool value = CurrentToken().TokenMatcher is TrueTokenMatcher;
+                bool value = CurrentToken.Type == JsonTokenType.True;
 
                 NextToken();
 
@@ -240,43 +205,40 @@ namespace Iridium.Core
 
             if (type == typeof(int) || type == typeof(short) || type == typeof(long) || type == typeof(double) || type == typeof(float) || type == typeof(decimal))
                 return ParseNumber(type);
-                        
+
             return ParseObject(type);
         }
 
         private JsonObject ParseNumber(Type type)
         {
-            if (!(CurrentToken().TokenMatcher is IntegerTokenMatcher) && !(CurrentToken().TokenMatcher is FloatTokenMatcher))
+            if (CurrentToken.Type != JsonTokenType.Float && CurrentToken.Type != JsonTokenType.Integer)
                 throw new Exception("Number expected");
 
             object n;
 
-            if (CurrentToken().TokenMatcher is IntegerTokenMatcher)
+            if (CurrentToken.Type == JsonTokenType.Integer)
             {
-                n = Int64.Parse(CurrentToken().Text, NumberFormatInfo.InvariantInfo);
+                n = Int64.Parse(CurrentToken.Token, NumberFormatInfo.InvariantInfo);
             }
             else
             {
-                n = Double.Parse(CurrentToken().Text, NumberFormatInfo.InvariantInfo);
+                n = Double.Parse(CurrentToken.Token, NumberFormatInfo.InvariantInfo);
             }
 
-            _currentToken++;
+            NextToken();
 
             return new JsonObject(Convert.ChangeType(n, type, null));
         }
 
-        
 
         private JsonObject ParseString()
         {
-            if (!(CurrentToken().TokenMatcher is StringTokenMatcher))
+            if (CurrentToken.Type != JsonTokenType.String)
                 throw new Exception("Expected string");
 
-            string s = CurrentToken().Text.Substring(1,CurrentToken().Text.Length-2);
+            string s = CurrentToken.Token;
 
-            //TODO: parse dates
-
-            _currentToken++;
+            NextToken();
 
             return new JsonObject(s);
         }
@@ -287,36 +249,36 @@ namespace Iridium.Core
 
             if (type != null && type.IsArray)
                 elementType = type.GetElementType();
-            
-            if (!(CurrentToken().TokenMatcher is ArrayStartTokenMatcher))
+
+            if (CurrentToken.Type != JsonTokenType.ArrayStart)
                 throw new Exception("Expected [");
 
-            _currentToken++;
-
+            NextToken();
+ 
             var list = new List<object>();
 
-            for(;;)
+            for (;;)
             {
-                if (CurrentToken().TokenMatcher is ArrayEndTokenMatcher)
+                if (CurrentToken.Type == JsonTokenType.ArrayEnd)
                     break;
 
                 list.Add(elementType == null ? ParseValue() : ParseValue().As(elementType));
 
-                if (!(CurrentToken().TokenMatcher is CommaTokenMatcher))
+                if (CurrentToken.Type != JsonTokenType.Comma)
                     break;
 
-                _currentToken++;
+                NextToken();
             }
 
-            if (!(CurrentToken().TokenMatcher is ArrayEndTokenMatcher))
+            if (CurrentToken.Type != JsonTokenType.ArrayEnd)
                 throw new Exception("Expected ]");
 
-            _currentToken++;
+            NextToken();
 
             Array array = Array.CreateInstance(elementType ?? typeof(JsonObject), list.Count);
 
-            for (int i = 0; i < array.Length; i++ )
-                array.SetValue(list[i],i);
+            for (int i = 0; i < array.Length; i++)
+                array.SetValue(list[i], i);
 
             return new JsonObject(array);
         }

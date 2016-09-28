@@ -120,7 +120,7 @@ namespace Iridium.Core.Test
             Assert.AreEqual("Jessica", person.children[1]);
         }
 
-        [Test]
+        [Test][Repeat(10000)]
         public void ComplexDictionary()
         {
             JsonObject jsonObject = JsonParser.Parse(_json3);
@@ -177,7 +177,7 @@ namespace Iridium.Core.Test
             Assert.IsTrue(jsonObject.IsObject && jsonObject.Keys.Length == 0);
         }
 
-        [Test]
+        [Test][Repeat(500)]
         public void IntValues()
         {
             string json = "{\"value1\":1, \"value2\":null }";

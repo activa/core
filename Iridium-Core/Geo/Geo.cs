@@ -41,11 +41,12 @@ namespace Iridium.Core
         public static double DistanceMeters(double lat1, double lon1, double lat2, double lon2)
         {
             const double earthRadius = 6371008.8;
+            const double f = Math.PI/180;
 
-            lat1 = lat1 / 180 * Math.PI;
-            lat2 = lat2 / 180 * Math.PI;
-            lon1 = lon1 / 180 * Math.PI;
-            lon2 = lon2 / 180 * Math.PI;
+            lat1 *= f;
+            lat2 *= f;
+            lon1 *= f;
+            lon2 *= f;
 
             double angle = Haversine(lat2 - lat1) + Math.Cos(lat1) * Math.Cos(lat2) * Haversine(lon2 - lon1);
 
@@ -59,9 +60,9 @@ namespace Iridium.Core
             return meters.ConvertFrom(Unit.Meters).To(unit);
         }
 
-        private static double Haversine(double dLat)
+        private static double Haversine(double angle)
         {
-            return (1 - Math.Cos(dLat)) / 2;
+            return (1 - Math.Cos(angle)) / 2;
         }
 
     }

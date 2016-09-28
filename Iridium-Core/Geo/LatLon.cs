@@ -26,42 +26,27 @@
 
 namespace Iridium.Core
 {
-    public class IntegerTokenMatcher : ITokenMatcher, ITokenProcessor
+    public class LatLon
     {
-        private bool _firstChar = true;
+        public double Lat { get; }
+        public double Lon { get; }
 
-        public ITokenProcessor CreateTokenProcessor()
+        public LatLon(double lat, double lon)
         {
-            return new IntegerTokenMatcher();
+            Lat = lat;
+            Lon = lon;
         }
 
-        public string TranslateToken(string originalToken, ITokenProcessor tokenProcessor)
+        public double Distance(LatLon p2, Unit unit)
         {
-            return originalToken;
+            return Geo.Distance(Lat, Lon, p2.Lat, p2.Lon, unit);
         }
 
-        public void ResetState()
+        public double DistanceMeters(LatLon p2)
         {
-            _firstChar = true;
+            return Geo.DistanceMeters(Lat, Lon, p2.Lat, p2.Lon);
         }
 
-        public TokenizerState ProcessChar(char c, string fullExpression, int currentIndex)
-        {
-            try
-            {
-                if (c == '-' && _firstChar)
-                    return TokenizerState.Valid;
-
-                if (char.IsDigit(c))
-                    return TokenizerState.Valid;
-
-                return _firstChar ? TokenizerState.Fail : TokenizerState.Success;
-            }
-            finally
-            {
-                _firstChar = false;
-            }
-        }
+        public string GeoHash(int precision) => Geohash.Encode(Lat, Lon, precision);
     }
-
 }
