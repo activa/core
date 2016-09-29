@@ -92,7 +92,7 @@ namespace Iridium.Core
 
         //private JsonToken _token;
 
-        private static Dictionary<char, JsonTokenType> _tokenTypes = new Dictionary<char, JsonTokenType>()
+        private static readonly Dictionary<char, JsonTokenType> _tokenTypes = new Dictionary<char, JsonTokenType>()
         {
             {'{', JsonTokenType.ObjectStart},
             {'}', JsonTokenType.ObjectEnd },
@@ -102,7 +102,7 @@ namespace Iridium.Core
             {':',JsonTokenType.Colon }
         };
 
-        private static Dictionary<string, JsonTokenType> _keywords = new Dictionary<string, JsonTokenType>()
+        private static readonly Dictionary<string, JsonTokenType> _keywords = new Dictionary<string, JsonTokenType>()
         {
             {"null", JsonTokenType.Null},
             {"true", JsonTokenType.True},
@@ -128,7 +128,7 @@ namespace Iridium.Core
                 {
                     return ReadStringToken();
                 }
-                if (char.IsDigit(c))
+                if (char.IsDigit(c) || c == '-')
                 {
                     return ReadNumber();
                 }
@@ -156,10 +156,12 @@ namespace Iridium.Core
                     return new JsonToken(match);
                 }
 
-                keyword += _charFeeder.Next();
+                c = _charFeeder.Next();
 
                 if (!char.IsLetter(c))
-                    throw new Exception();
+                    throw new Exception($"Invalid keyword {keyword}");
+
+                keyword += c;
             }
         }
 

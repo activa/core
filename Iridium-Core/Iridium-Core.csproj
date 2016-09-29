@@ -39,14 +39,11 @@
     <Compile Include="Cache\SmartCache.cs" />
     <Compile Include="Core\IFileIOHandler.cs" />
     <Compile Include="Core\ServiceRepository.cs" />
-    <Compile Include="Geo\LatLon.cs" />
     <Compile Include="Json\JsonParser.cs" />
     <Compile Include="Json\JsonToken.cs" />
     <Compile Include="Json\JsonTokenizer.cs" />
     <Compile Include="Units\AngleUnit.cs" />
     <Compile Include="Units\DistanceUnit.cs" />
-    <Compile Include="Geo\Geo.cs" />
-    <Compile Include="Geo\Geohash.cs" />
     <Compile Include="Units\NumberWithUnit.cs" />
     <Compile Include="Units\Unit.cs" />
     <Compile Include="Units\UnitConverter.cs" />

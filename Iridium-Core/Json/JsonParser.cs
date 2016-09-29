@@ -181,7 +181,7 @@ namespace Iridium.Core
                         type = typeof(string);
                         break;
                     default:
-                        throw new Exception("Unexpected token " + CurrentToken);
+                        throw new Exception("Unexpected token " + CurrentToken.Type);
                 }
             }
 

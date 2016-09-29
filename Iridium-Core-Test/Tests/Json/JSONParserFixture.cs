@@ -120,7 +120,7 @@ namespace Iridium.Core.Test
             Assert.AreEqual("Jessica", person.children[1]);
         }
 
-        [Test][Repeat(10000)]
+        [Test]
         public void ComplexDictionary()
         {
             JsonObject jsonObject = JsonParser.Parse(_json3);
@@ -177,10 +177,10 @@ namespace Iridium.Core.Test
             Assert.IsTrue(jsonObject.IsObject && jsonObject.Keys.Length == 0);
         }
 
-        [Test][Repeat(500)]
+        [Test]
         public void IntValues()
         {
-            string json = "{\"value1\":1, \"value2\":null }";
+            string json = "{\"value1\":1, \"value2\":null, \"value3\":-1, \"value4\":123, \"value5\":-123 }";
 
             JsonObject jsonObject = JsonParser.Parse(json);
 
@@ -191,6 +191,37 @@ namespace Iridium.Core.Test
             Assert.That(jsonObject["value2"].Value, Is.Null);
             Assert.That((int)jsonObject["value2"], Is.EqualTo(0));
             Assert.That((int?)jsonObject["value2"], Is.Null);
+
+            Assert.That(jsonObject["value3"], Is.InstanceOf<JsonObject>());
+            Assert.That(jsonObject["value3"].Value, Is.EqualTo(-1));
+            Assert.That((int)jsonObject["value3"], Is.EqualTo(-1));
+
+            Assert.That((int)jsonObject["value4"], Is.EqualTo(123));
+            Assert.That((int)jsonObject["value5"], Is.EqualTo(-123));
         }
+
+        [Test]
+        public void FloatValues()
+        {
+            string json = "{\"value1\":1.1, \"value2\":null, \"value3\":-1.1, \"value4\":123.0, \"value5\":-123.0 }";
+
+            JsonObject jsonObject = JsonParser.Parse(json);
+
+            Assert.That(jsonObject["value1"], Is.InstanceOf<JsonObject>());
+            Assert.That(jsonObject["value1"].Value, Is.EqualTo(1.1).Within(0.000001));
+            Assert.That((double)jsonObject["value1"], Is.EqualTo(1.1).Within(0.000001));
+
+            Assert.That(jsonObject["value2"].Value, Is.Null);
+            Assert.That((double)jsonObject["value2"], Is.EqualTo(0.0));
+            Assert.That((double?)jsonObject["value2"], Is.Null);
+
+            Assert.That(jsonObject["value3"], Is.InstanceOf<JsonObject>());
+            Assert.That(jsonObject["value3"].Value, Is.EqualTo(-1.1).Within(0.000001));
+            Assert.That((double)jsonObject["value3"], Is.EqualTo(-1.1).Within(0.000001));
+
+            Assert.That((double)jsonObject["value4"], Is.EqualTo(123.0).Within(0.000001));
+            Assert.That((double)jsonObject["value5"], Is.EqualTo(-123.0).Within(0.000001));
+        }
+
     }
 }

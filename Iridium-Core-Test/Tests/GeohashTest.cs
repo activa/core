@@ -2,6 +2,7 @@
 
 namespace Iridium.Core.Test
 {
+    /*
     [TestFixture]
     public class GeohashTest
     {
@@ -26,7 +27,7 @@ namespace Iridium.Core.Test
             Assert.That(Geohash.Neighbors(loc),Is.EquivalentTo(neighbors));
         }
     }
-
+    */
     [TestFixture]
     public class UnitsTest
     {
@@ -39,4 +40,5 @@ namespace Iridium.Core.Test
             Assert.That(1.0.In(Unit.Miles).In(Unit.Meters), Is.EqualTo(1609.34).Within(0.0001));
         }
     }
+    
 }
