@@ -13,6 +13,7 @@ pushAll.cmd
 
 _ReSharper*/
 *.[Rr]e[Ss]harper
+.vs/
 
 *.nupkg
 **/packages/*
