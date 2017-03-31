@@ -26,6 +26,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Iridium.Core
 {
@@ -72,9 +73,11 @@ namespace Iridium.Core
         private int _cacheSize;
         private TimeSpan _cleanupInterval = TimeSpan.FromSeconds(60);
         private DateTime _nextCleanup;
+        private readonly Action<T> _afterRemoveAction;
 
-        public SmartCache(int cacheSize) : this(cacheSize, new RealTimeProvider())
+        public SmartCache(int cacheSize, Action<T> afterRemoveAction = null) : this(cacheSize, new RealTimeProvider())
         {
+            _afterRemoveAction = afterRemoveAction;
         }
 
         internal SmartCache(int cacheSize, ITimeProvider timeProvider)
@@ -227,14 +230,23 @@ namespace Iridium.Core
         // make sure we have a lock when calling this
         private void RemoveOldest()
         {
-            Remove(_keys.Last);
+            var item = _keys.Last.Value;
+
+            _dic.Remove(item.Key);
+            _keys.RemoveLast();
+
+            _afterRemoveAction?.Invoke(item.Value);
         }
 
         // make sure we have a lock when calling this
         private void Remove(LinkedListNode<CachedItem> node)
         {
+            var item = node.Value;
+
             _keys.Remove(node);
             _dic.Remove(node.Value.Key);
+
+            _afterRemoveAction?.Invoke(item.Value);
         }
 
         // make sure we have a writer lock when calling this

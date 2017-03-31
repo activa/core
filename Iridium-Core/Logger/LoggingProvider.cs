@@ -40,8 +40,6 @@ namespace Iridium.Core
 
         public string TimeFormatString { get; set; }
 
-        public abstract void Dispose();
-
         public abstract void LogText(DateTime timeStamp, LogLevel logLevel, string s);
 
         public virtual void LogException(DateTime timeStamp, LogLevel logLevel, Exception e)
@@ -65,5 +63,16 @@ namespace Iridium.Core
         {
             return time.ToString(TimeFormatString);
         }
+
+        protected virtual void Dispose(bool disposing)
+        {
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
     }
+
+    
 }

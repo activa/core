@@ -146,6 +146,5 @@ namespace Iridium.Core
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         public TV DefaultValue { get; set; }
-
     }
 }

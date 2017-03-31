@@ -187,7 +187,7 @@ namespace Iridium.Core
 			return type;
 		}
 
-		private FieldOrPropertyInfo[] GetFields(Type type, bool staticMembers)
+		private MemberInspector[] GetFields(Type type, bool staticMembers)
 		{
 			BindingFlags bindingFlags = BindingFlags.Public;
 

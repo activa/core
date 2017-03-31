@@ -1,0 +1,22 @@
+﻿{
+  "Test1": "xx1",
+  "SubObject1": {
+    "TestInt1": 99
+  },
+  "StringValues": {
+    "ValX": "x",
+    "ValY": "y",
+    "ValZ": "z"
+  },
+  "IntValues": {
+    "Val1": 1,
+    "Val2": 2,
+    "Val3": 3
+  },
+  "Cfg": {
+    "Test1": "xx2",
+    "SubObject1": {
+      "TestInt1":  88 
+    } 
+  } 
+}

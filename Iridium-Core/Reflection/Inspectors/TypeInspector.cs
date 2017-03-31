@@ -273,9 +273,9 @@ namespace Iridium.Core
             return _typeInfo.DeclaredConstructors.ToArray();
         }
 
-        public MemberInfo[] GetMember(string propertyName)
+        public MemberInfo[] GetMember(string memberName)
         {
-            return WalkAndFindMultiple(t => t.GetTypeInfo().DeclaredMembers.Where(m => m.Name == propertyName));
+            return WalkAndFindMultiple(t => t.GetTypeInfo().DeclaredMembers.Where(m => m.Name == memberName));
         }
 
         public PropertyInfo GetIndexer(Type[] types)
@@ -298,9 +298,44 @@ namespace Iridium.Core
             return WalkAndFindSingle(t => t.GetTypeInfo().GetDeclaredProperty(propName));
         }
 
+        public PropertyInfo GetDeclaredProperty(string propName)
+        {
+            return _typeInfo.GetDeclaredProperty(propName);
+        }
+
         public FieldInfo GetField(string fieldName)
         {
             return WalkAndFindSingle(t => t.GetTypeInfo().GetDeclaredField(fieldName));
+        }
+
+        public FieldInfo GetDeclaredField(string fieldName)
+        {
+            return _typeInfo.GetDeclaredField(fieldName);
+        }
+
+        public MemberInfo GetFieldOrProperty(string fieldName)
+        {
+            return WalkAndFindSingle(t => (MemberInfo) t.GetTypeInfo().GetDeclaredField(fieldName) ?? (MemberInfo) t.GetTypeInfo().GetDeclaredProperty(fieldName));
+        }
+
+        public MemberInfo GetDeclaredFieldOrProperty(string fieldName)
+        {
+            return _typeInfo.GetDeclaredField(fieldName) ?? (MemberInfo) _typeInfo.GetDeclaredProperty(fieldName);
+        }
+
+        public MemberInfo[] GetDeclaredMembers(string memberName)
+        {
+            return _typeInfo.DeclaredMembers.Where(m => m.Name == memberName).ToArray();
+        }
+
+        public IEnumerable<Type> GetGenericInterfaces(Type type)
+        {
+            if (type.GetTypeInfo().IsGenericTypeDefinition && type.GetTypeInfo().IsInterface)
+            {
+                return _typeInfo.ImplementedInterfaces.Where(t => (t.GetTypeInfo().IsGenericType && t.GetTypeInfo().GetGenericTypeDefinition() == type));
+            }
+
+            return new Type[0];
         }
 
         public bool ImplementsOrInherits(Type type)
@@ -351,7 +386,7 @@ namespace Iridium.Core
 
         public Type[] GetInterfaces() => _typeInfo.ImplementedInterfaces.ToArray();
 
-        public FieldOrPropertyInfo[] GetFieldsAndProperties(BindingFlags bindingFlags)
+        public MemberInspector[] GetFieldsAndProperties(BindingFlags bindingFlags)
 		{
 			MemberInfo[] members;
 
@@ -360,7 +395,7 @@ namespace Iridium.Core
 			else
                 members = WalkAndFindMultiple(t => t.GetTypeInfo().DeclaredFields.Where(fi => fi.Inspector().MatchBindingFlags(bindingFlags)).Union<MemberInfo>(t.GetTypeInfo().DeclaredProperties.Where(pi => pi.Inspector().MatchBindingFlags(bindingFlags))));
 
-			return members.Select(m => new FieldOrPropertyInfo(m)).ToArray();
+			return members.Select(m => new MemberInspector(m)).ToArray();
 		}
 
 

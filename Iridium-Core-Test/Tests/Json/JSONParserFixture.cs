@@ -22,133 +22,35 @@
 // IN THE SOFTWARE.
 //=============================================================================
 
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using NUnit.Framework.Constraints;
 
 namespace Iridium.Core.Test
 {
     [TestFixture]
     public class JSONParserFixture
     {
-        private const string _json1 = @"
-{ 
-    ""name"" :""John Doe"" ,
-    ""salary"" : 4500.50
-}
-";
-
-        private const string _json = @"
-{ 
-    ""name"" :""John Doe"" ,
-    ""salary"" : 4500.20 ,
-    ""children"" : [ ""Sarah"", ""Jessica"" ]
-}
-";
-
-        private const string _json2 = @"
-
-{
-    ""glossary"": {
-        ""title"": ""example glossary"",
-		""GlossDiv"": {
-            ""title"": ""S"",
-			""GlossList"": {
-                ""GlossEntry"": {
-                    ""ID"": ""SGML"",
-					""SortAs"": ""SGML"",
-					""GlossTerm"": ""Standard Generalized Markup Language"",
-					""Acronym"": ""SGML"",
-					""Abbrev"": ""ISO 8879:1986"",
-					""GlossDef"": {
-                        ""para"": ""A meta-markup language, used to create markup languages such as DocBook."",
-						""GlossSeeAlso"": [""GML"", ""XML""]
-                    },
-					""GlossSee"": ""markup""
-                }
-            }
-        }
-    }
-}
-";
-
-        private const string _json3 = @"
-{""menu"": {
-    ""header"": ""SVG Viewer"",
-    ""items"": [
-        {""id"": ""Open""},
-        {""id"": ""OpenNew"", ""label"": ""Open New""},
-        null,
-        {""id"": ""ZoomIn"", ""label"": ""Zoom In""},
-        {""id"": ""ZoomOut"", ""label"": ""Zoom Out""},
-        {""id"": ""OriginalView"", ""label"": ""Original View""},
-        null,
-        {""id"": ""Quality""},
-        {""id"": ""Pause""},
-        {""id"": ""Mute""},
-        null,
-        {""id"": ""Find"", ""label"": ""Find...""},
-        {""id"": ""FindAgain"", ""label"": ""Find Again""},
-        {""id"": ""Copy""},
-        {""id"": ""CopyAgain"", ""label"": ""Copy Again""},
-        {""id"": ""CopySVG"", ""label"": ""Copy SVG""},
-        {""id"": ""ViewSVG"", ""label"": ""View SVG""},
-        {""id"": ""ViewSource"", ""label"": ""View Source""},
-        {""id"": ""SaveAs"", ""label"": ""Save As""},
-        null,
-        {""id"": ""Help""},
-        {""id"": ""About"", ""label"": ""About Adobe CVG Viewer...""}
-    ]
-}}
-";
-
-        private class Person
+        public class _BasicTypes
         {
-            public string name;
-            public decimal  salary;
-            public string[] children;
-        }
-
-        [Test]
-        public void SimpleTypedObject()
-        {
-            Person person = JsonParser.Parse<Person>(_json);
-
-            Assert.AreEqual("John Doe",person.name);
-            Assert.AreEqual(4500.20m,person.salary);
-            Assert.AreEqual(2,person.children.Length);
-            Assert.AreEqual("Sarah", person.children[0]);
-            Assert.AreEqual("Jessica", person.children[1]);
-        }
-
-        [Test]
-        public void ComplexDictionary()
-        {
-            JsonObject jsonObject = JsonParser.Parse(_json3);
-
-            Assert.IsTrue(jsonObject.IsObject);
-            Assert.IsTrue(jsonObject["menu"].IsObject);
-
-            Assert.AreEqual(2, jsonObject["menu"].Keys.Length);
-
-            Assert.AreEqual("SVG Viewer", jsonObject["menu.header"].As<string>());
-            Assert.AreEqual("SVG Viewer", jsonObject["menu"]["header"].As<string>());
-
-            Assert.AreEqual(22, jsonObject["menu"]["items"].AsArray().Length);
-            Assert.AreEqual(22, jsonObject["menu.items"].AsArray().Length);
-
-            Assert.AreEqual(22,jsonObject["menu.items"].Count());
-
-            Assert.AreEqual("OpenNew", jsonObject["menu"]["items"][1]["id"].As<string>());
-            Assert.IsTrue(jsonObject["menu"]["items"][2].IsNull);
+            public int[] IntArray;
         }
 
         [Test]
         public void EmptyArray()
         {
-            JsonObject jsonObject = JsonParser.Parse(@"{ ""array"" : [] }")["array"];
+            var json = @"{ ""IntArray"" : [] }";
+
+            JsonObject jsonObject = JsonParser.Parse(json)["IntArray"];
+            var typedObject = JsonParser.Parse<_BasicTypes>(json);
 
             Assert.IsTrue(jsonObject.IsArray);
-            Assert.AreEqual(0,jsonObject.AsArray<long>().Length);
+            Assert.AreEqual(0, jsonObject.AsArray<long>().Length);
+
+            Assert.That(typedObject.IntArray, Is.Not.Null);
+            Assert.That(typedObject.IntArray.Length, Is.Zero);
         }
 
         [Test]
@@ -156,10 +58,10 @@ namespace Iridium.Core.Test
         {
             JsonObject obj = JsonParser.Parse(@"{ ""s1"" : ""\n"", ""s2"" : ""\t"", ""s3"" : ""\\"" , ""s4"" : ""\u00aa"" }");
 
-            Assert.That((string)obj["s1"], Is.EqualTo("\n"));
-            Assert.That((string)obj["s2"], Is.EqualTo("\t"));
-            Assert.That((string)obj["s3"], Is.EqualTo("\\"));
-            Assert.That((string)obj["s4"], Is.EqualTo("\u00aa"));
+            Assert.That((string) obj["s1"], Is.EqualTo("\n"));
+            Assert.That((string) obj["s2"], Is.EqualTo("\t"));
+            Assert.That((string) obj["s3"], Is.EqualTo("\\"));
+            Assert.That((string) obj["s4"], Is.EqualTo("\u00aa"));
         }
 
         [Test]
@@ -177,50 +79,126 @@ namespace Iridium.Core.Test
             Assert.IsTrue(jsonObject.IsObject && jsonObject.Keys.Length == 0);
         }
 
-        [Test]
-        public void IntValues()
+
+        public class DeepClass
         {
-            string json = "{\"value1\":1, \"value2\":null, \"value3\":-1, \"value4\":123, \"value5\":-123 }";
+            public class _GenericSubClass<T>
+            {
+                public T Value1;
+                public T Value2 { get; set; }
+            }
 
-            JsonObject jsonObject = JsonParser.Parse(json);
+            public class _SubClass1
+            {
+                public string String1 { get; set; }
+                public string String2;
+                public int Int1 { get; set; }
+                public int Int2;
 
-            Assert.That(jsonObject["value1"], Is.InstanceOf<JsonObject>());
-            Assert.That(jsonObject["value1"].Value, Is.EqualTo(1));
-            Assert.That((int)jsonObject["value1"], Is.EqualTo(1));
+                public _SubClass1 SubObject1;
+                public _SubClass1 SubObject2 { get; set; }
 
-            Assert.That(jsonObject["value2"].Value, Is.Null);
-            Assert.That((int)jsonObject["value2"], Is.EqualTo(0));
-            Assert.That((int?)jsonObject["value2"], Is.Null);
+                public _GenericSubClass<int> SubObjectInt;
+                public _GenericSubClass<string> SubObjectString;
+                public _GenericSubClass<bool> SubObjectBool;
+                public _GenericSubClass<int[]> SubObjectIntArray;
+                public _GenericSubClass<string[]> SubObjectStringArray;
+            }
 
-            Assert.That(jsonObject["value3"], Is.InstanceOf<JsonObject>());
-            Assert.That(jsonObject["value3"].Value, Is.EqualTo(-1));
-            Assert.That((int)jsonObject["value3"], Is.EqualTo(-1));
+            public _SubClass1 SubObject1;
+            public _SubClass1 SubObject2 { get; set; }
 
-            Assert.That((int)jsonObject["value4"], Is.EqualTo(123));
-            Assert.That((int)jsonObject["value5"], Is.EqualTo(-123));
+            public string String1;
+            public string String2 { get; set; }
+        }
+
+        string _deepClassJson = @"
+{
+    ""String1"":""test1"",
+    ""String2"":""test2"",
+    ""SubObject1"": {
+        ""String1"":""test11"",
+        ""String2"":""test12"",
+    },
+    ""SubObject2"": {
+        ""String1"":""test21"",
+        ""String2"":""test22"",
+        ""SubObjectIntArray"": {
+            ""Value1"" : [1,2,3,4],
+            ""Value2"" : [11,22,33,44]
+        }
+    }
+}
+";
+
+        [Test]
+        public void TestDeepClassMapped()
+        {
+            DeepClass obj = JsonParser.Parse<DeepClass>(_deepClassJson);
+
+            Assert.That(obj.String1, Is.EqualTo("test1"));
+            Assert.That(obj.String2, Is.EqualTo("test2"));
+            Assert.That(obj.SubObject1.String1, Is.EqualTo("test11"));
+            Assert.That(obj.SubObject1.String2, Is.EqualTo("test12"));
+            Assert.That(obj.SubObject2.String1, Is.EqualTo("test21"));
+            Assert.That(obj.SubObject2.String2, Is.EqualTo("test22"));
+            Assert.That(obj.SubObject2.SubObjectIntArray.Value1, Is.EquivalentTo(new[] {1, 2, 3, 4}));
+            Assert.That(obj.SubObject2.SubObjectIntArray.Value2, Is.EquivalentTo(new[] {11, 22, 33, 44}));
         }
 
         [Test]
-        public void FloatValues()
+        public void TestDeepClassGeneric()
         {
-            string json = "{\"value1\":1.1, \"value2\":null, \"value3\":-1.1, \"value4\":123.0, \"value5\":-123.0 }";
+            var obj = JsonParser.Parse(_deepClassJson);
 
-            JsonObject jsonObject = JsonParser.Parse(json);
+            Assert.That((string)obj["String1"], Is.EqualTo("test1"));
+            Assert.That((string)obj["String2"], Is.EqualTo("test2"));
 
-            Assert.That(jsonObject["value1"], Is.InstanceOf<JsonObject>());
-            Assert.That(jsonObject["value1"].Value, Is.EqualTo(1.1).Within(0.000001));
-            Assert.That((double)jsonObject["value1"], Is.EqualTo(1.1).Within(0.000001));
+            Assert.That((string)obj["SubObject1"]["String1"], Is.EqualTo("test11"));
+            Assert.That((string)obj["SubObject1.String1"], Is.EqualTo("test11"));
 
-            Assert.That(jsonObject["value2"].Value, Is.Null);
-            Assert.That((double)jsonObject["value2"], Is.EqualTo(0.0));
-            Assert.That((double?)jsonObject["value2"], Is.Null);
+            Assert.That((string)obj["SubObject1"]["String2"], Is.EqualTo("test12"));
+            Assert.That((string)obj["SubObject1.String2"], Is.EqualTo("test12"));
 
-            Assert.That(jsonObject["value3"], Is.InstanceOf<JsonObject>());
-            Assert.That(jsonObject["value3"].Value, Is.EqualTo(-1.1).Within(0.000001));
-            Assert.That((double)jsonObject["value3"], Is.EqualTo(-1.1).Within(0.000001));
+            Assert.That((string)obj["SubObject2"]["String1"], Is.EqualTo("test21"));
+            Assert.That((string)obj["SubObject2.String1"], Is.EqualTo("test21"));
 
-            Assert.That((double)jsonObject["value4"], Is.EqualTo(123.0).Within(0.000001));
-            Assert.That((double)jsonObject["value5"], Is.EqualTo(-123.0).Within(0.000001));
+            Assert.That((string)obj["SubObject2"]["String2"], Is.EqualTo("test22"));
+            Assert.That((string)obj["SubObject2.String2"], Is.EqualTo("test22"));
+
+            Assert.That(obj["SubObject2"]["SubObjectIntArray"]["Value1"].Select(item => (int)item), Is.EquivalentTo(new[] { 1, 2, 3, 4 }));
+            Assert.That(obj["SubObject2"]["SubObjectIntArray"]["Value2"].Select(item => (int)item), Is.EquivalentTo(new[] { 11, 22, 33, 44 }));
+
+            Assert.That(obj["SubObject2"]["SubObjectIntArray.Value1"].Select(item => (int)item), Is.EquivalentTo(new[] { 1, 2, 3, 4 }));
+            Assert.That(obj["SubObject2.SubObjectIntArray.Value1"].Select(item => (int)item), Is.EquivalentTo(new[] { 1, 2, 3, 4 }));
+            Assert.That(obj["SubObject2.SubObjectIntArray"]["Value1"].Select(item => (int)item), Is.EquivalentTo(new[] { 1, 2, 3, 4 }));
+
+
+        }
+
+        [TestCaseSource(nameof(DataTypesSource))]
+        public void TestDataTypes(string json, Type type, object expectedResult)
+        {
+            var obj = JsonParser.Parse(json);
+
+            if (type != null)
+                Assert.That(obj["value"].Value, Is.TypeOf(type));
+
+            Assert.That(obj["value"].Value, Is.EqualTo(expectedResult));
+        }
+
+        public static IEnumerable<TestCaseData> DataTypesSource
+        {
+            get
+            {
+                yield return new TestCaseData("{\"value\":1}", typeof(int), 1);
+                yield return new TestCaseData("{\"value\":10000000000}", typeof(long), 10000000000);
+                yield return new TestCaseData("{\"value\":1.0}", typeof(double), 1.0);
+                yield return new TestCaseData("{\"value\":-1}", typeof(int), -1);
+                yield return new TestCaseData("{\"value\":-10000000000}", typeof(long), -10000000000);
+                yield return new TestCaseData("{\"value\":-1.0}", typeof(double), -1.0);
+                yield return new TestCaseData("{\"value\":null}", null, null);
+            }
         }
 
     }

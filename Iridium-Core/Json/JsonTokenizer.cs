@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace Iridium.Core
 {
-    public class JsonTokenizer
+    internal class JsonTokenizer
     {
         public JsonTokenizer(string s)
         {
@@ -20,7 +20,7 @@ namespace Iridium.Core
             _charFeeder = new StreamCharFeeder(stream);
         }
 
-        public abstract class CharFeeder
+        private abstract class CharFeeder
         {
             private bool _backTracked = false;
             private char _current;
@@ -54,7 +54,7 @@ namespace Iridium.Core
             }
         }
 
-        public class StringCharFeeder : CharFeeder
+        private class StringCharFeeder : CharFeeder
         {
             private string _s;
             private int _index;
@@ -71,7 +71,7 @@ namespace Iridium.Core
             }
         }
 
-        public class StreamCharFeeder : CharFeeder
+        private class StreamCharFeeder : CharFeeder
         {
             private readonly StreamReader _reader;
             private char _c;
@@ -96,10 +96,10 @@ namespace Iridium.Core
         {
             {'{', JsonTokenType.ObjectStart},
             {'}', JsonTokenType.ObjectEnd },
-            {'[',JsonTokenType.ArrayStart },
-            {']',JsonTokenType.ArrayEnd },
-            {',',JsonTokenType.Comma },
-            {':',JsonTokenType.Colon }
+            {'[', JsonTokenType.ArrayStart },
+            {']', JsonTokenType.ArrayEnd },
+            {',', JsonTokenType.Comma },
+            {':', JsonTokenType.Colon }
         };
 
         private static readonly Dictionary<string, JsonTokenType> _keywords = new Dictionary<string, JsonTokenType>()
@@ -239,23 +239,5 @@ namespace Iridium.Core
             }
         }
 
-    }
-
-    public enum JsonTokenType
-    {
-        ObjectStart,
-        ObjectEnd,
-        ArrayStart,
-        ArrayEnd,
-        Null,
-        True,
-        False,
-        Whitespace,
-        Comma,
-        Colon,
-        Integer,
-        Float,
-        String,
-        EOF
     }
 }

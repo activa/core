@@ -202,7 +202,7 @@ namespace Iridium.Core.Test
         public static IEnumerable<TSource> Prepend<TSource>(this IEnumerable<TSource> source, TSource item)
         {
             if (source == null)
-                throw new ArgumentNullException("source");
+                throw new ArgumentNullException(nameof(source));
 
             yield return item;
 

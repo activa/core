@@ -33,10 +33,6 @@ namespace Iridium.Core.Test
     [TestFixture]
     public class SmartCache_Fixture
     {
-        private object _exceptionCountLock = new object();
-        private int _exceptionCount;
-
-#if !PCL
         [Test]
         public void ThreadedTest()
         {
@@ -44,104 +40,101 @@ namespace Iridium.Core.Test
 
             Thread[] threads = new Thread[50];
 
-            _exceptionCount = 0;
+            int exceptionCount = 0;
+            object exceptionCountLock = new object();
 
             for (int i=0;i<50;i++)
             {
-                threads[i] = new Thread(trd);
+                threads[i] = new Thread(data =>
+                {
+                    try
+                    {
+                        for (int i1 = 0; i1 < 1000; i1++)
+                        {
+                            int x;
 
-                threads[i].Start(cache);
+                            if (!cache.TryGetValue(i1.ToString(), out x))
+                                cache.Add(i1.ToString(), i1);
+                        }
+                    }
+                    catch
+                    {
+                        lock (exceptionCountLock)
+                            exceptionCount++;
+
+                        throw;
+                    }
+                });
+
+                threads[i].Start();
             }
 
             for (int i = 0; i < 50; i++)
                 threads[i].Join();
 
             Assert.AreEqual(50,cache.ItemCount);
-            Assert.AreEqual(0, _exceptionCount);
+            Assert.AreEqual(0, exceptionCount);
         }
 
-        private void trd(object data)
-        {
-            SmartCache<int> cache = (SmartCache<int>) data;
-
-            try
-            {
-                for (int i = 0; i < 1000; i++)
-                {
-                    int x;
-
-                    if (!cache.TryGetValue(i.ToString(), out x))
-                        cache.Add(i.ToString(), i);
-                }
-            }
-            catch
-            {
-                lock (_exceptionCountLock)
-                    _exceptionCount++;
-
-                throw;
-            }
-        }
-
-                [Test]
+        [Test]
         public void ThreadedRemoveTest()
         {
             SmartCache<int> cache = new SmartCache<int>(50);
 
             Thread[] threads = new Thread[50];
 
-            _exceptionCount = 0;
+            int exceptionCount = 0;
+            object exceptionCountLock = new object();
+
+            ParameterizedThreadStart t = o =>
+            {
+                
+
+                try
+                {
+                    Random random = new Random();
+
+                    for (int i1 = 0; i1 < 10000; i1++)
+                    {
+                        int x;
+
+                        if (!cache.TryGetValue(i1.ToString(), out x))
+                        {
+                            if (random.Next() % 4 != 0)
+                                cache.Remove(i1.ToString());
+                            else
+                                cache.Add(i1.ToString(), i1);
+                        }
+                        else
+                        {
+                            if (random.Next() % 3 == 0)
+                                cache.Remove(i1.ToString());
+                        }
+                    }
+                }
+                catch
+                {
+                    lock (exceptionCountLock)
+                        exceptionCount++;
+
+                    throw;
+                }
+            };
 
             for (int i = 0; i < 50; i++)
             {
-                threads[i] = new Thread(ThreadCacheRemove);
+                
+                threads[i] = new Thread(t);
 
-                threads[i].Start(cache);
+                threads[i].Start();
             }
 
             for (int i = 0; i < 50; i++)
                 threads[i].Join();
 
             Assert.AreEqual(50, cache.ItemCount);
-            Assert.AreEqual(0, _exceptionCount);
+            Assert.AreEqual(0, exceptionCount);
         }
-
-        private void ThreadCacheRemove(object data)
-        {
-            SmartCache<int> cache = (SmartCache<int>)data;
-
-            try
-            {
-                Random random = new Random();
-
-                for (int i = 0; i < 10000; i++)
-                {
-                    int x;
-
-                    if (!cache.TryGetValue(i.ToString(), out x))
-                    {
-                        if (random.Next() % 4 != 0)
-                            cache.Remove(i.ToString());
-                        else
-                            cache.Add(i.ToString(), i);
-                    }
-                    else
-                    {
-                        if (random.Next() % 3 == 0)
-                            cache.Remove(i.ToString());
-                    }
-                }
-            }
-            catch
-            {
-                lock (_exceptionCountLock)
-                    _exceptionCount++;
-
-                throw;
-            }
-        }
-
-#endif
 
         [Test]
         public void Test_Expiring()

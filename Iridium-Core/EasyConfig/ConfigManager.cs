@@ -31,6 +31,7 @@ using System.Linq;
 
 namespace Iridium.Core
 {
+    [Obsolete]
     public class ConfigManager
     {
         private string _environment;
@@ -138,11 +139,11 @@ namespace Iridium.Core
                 bindingFlags |= BindingFlags.Static;
             }
 
-			FieldOrPropertyInfo[] members = type.Inspector().GetFieldsAndProperties(bindingFlags);
+			var members = type.Inspector().GetFieldsAndProperties(bindingFlags);
             
-            foreach (FieldOrPropertyInfo field in members)
+            foreach (var field in members)
             {
-                ConfigKeyAttribute[] attributes = field.GetCustomAttributes<ConfigKeyAttribute>(false);
+                ConfigKeyAttribute[] attributes = field.GetAttributes<ConfigKeyAttribute>(false);
 
                 string key = field.Name;
 
@@ -152,7 +153,7 @@ namespace Iridium.Core
                 Type fieldType = field.Type;
 
                 bool follow = (attributes.Length > 0 && attributes[0] is ConfigObjectAttribute) || fieldType.Inspector().ImplementsOrInherits<IConfigObject>();
-                bool ignore = field.IsDefined(typeof (ConfigIgnoreAttribute), false);
+                bool ignore = field.HasAttribute<ConfigIgnoreAttribute>(false);
                 
                 key = baseKey + key;
                 

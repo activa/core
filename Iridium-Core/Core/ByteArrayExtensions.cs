@@ -24,24 +24,20 @@
 //=============================================================================
 #endregion
 
-using System.Reflection;
+using System.Text;
 
-#if IRIDIUM_CORE_EMBEDDED
-namespace Iridium.DB.CoreUtil
-#else
 namespace Iridium.Core
-#endif
 {
-    public class PropertyInspector : MemberInspector
+	public static class ByteArrayExtensions
     {
-        private readonly PropertyInfo _propertyInfo;
-
-        public PropertyInspector(PropertyInfo propertyInfo) : base(propertyInfo)
+        public static string ToHex(this byte[] bytes, bool upperCase = false)
         {
-            _propertyInfo = propertyInfo;
-        }
+            var result = new StringBuilder(bytes.Length*2);
 
-        public bool CanRead => _propertyInfo.CanRead;
-        public bool CanWrite => _propertyInfo.CanWrite;
+            for (int i = 0; i < bytes.Length; i++)
+                result.Append(bytes[i].ToString(upperCase ? "X2" : "x2"));
+
+            return result.ToString();
+        }
     }
 }

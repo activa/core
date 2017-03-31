@@ -43,6 +43,23 @@ namespace Iridium.Core
             _memberInfo = memberInfo;
         }
 
+        private T Switch<T>(Func<FieldInfo, T> field = null, Func<PropertyInfo, T> prop = null, Func<MethodInfo, T> method = null, T defaultValue = default(T))
+        {
+            if (_memberInfo is FieldInfo)
+                return field == null ? defaultValue : field((FieldInfo) _memberInfo);
+            if (_memberInfo is PropertyInfo)
+                return prop == null ? defaultValue : prop((PropertyInfo)_memberInfo);
+            if (_memberInfo is MethodBase)
+                return method == null ? defaultValue : method((MethodInfo)_memberInfo);
+
+            return defaultValue;
+        }
+
+        public Type DeclaringType => _memberInfo.DeclaringType;
+        public Type Type => Switch(f => f.FieldType, p => p.PropertyType, m => m.ReturnType);
+        public string Name => Switch(f => f.Name, p => p.Name, m => m.Name);
+
+
         public bool HasAttribute(Type attributeType, bool inherit = false)
         {
             return _memberInfo.IsDefined(attributeType, inherit);
@@ -73,17 +90,18 @@ namespace Iridium.Core
             return (T[])GetAttributes(typeof(T), inherit);
         }
 
+        public bool CanRead => Switch(f => true, p => p.CanRead);
+        public bool CanWrite => Switch(f => !f.IsInitOnly, p => p.CanWrite);
+
         public bool IsStatic
         {
             get
             {
-                if (_memberInfo is PropertyInfo)
-                    return ((PropertyInfo) _memberInfo).GetMethod.IsStatic;
-                if (_memberInfo is FieldInfo)
-                    return ((FieldInfo) _memberInfo).IsStatic;
-                if (_memberInfo is MethodBase)
-                    return ((MethodBase) _memberInfo).IsStatic;
-                return false;
+                return Switch(
+                        field: f => f.IsStatic, 
+                        prop: p => p.CanRead && p.GetMethod.IsStatic || p.CanWrite && p.SetMethod.IsStatic, 
+                        method: m => m.IsStatic
+                        );
             }
         }
 
@@ -112,10 +130,11 @@ namespace Iridium.Core
                     return propertyInfo.SetMethod != null && propertyInfo.SetMethod.IsPublic;
                 }
 
-                return IsPublic;
+                throw new InvalidOperationException(nameof(IsWritePublic));
             }
             
         }
+
 
         internal bool MatchBindingFlags(BindingFlags flags)
         {
@@ -139,13 +158,10 @@ namespace Iridium.Core
 
         public object GetValue(object instance)
         {
-            if (_memberInfo is PropertyInfo)
-                return ((PropertyInfo) _memberInfo).GetValue(instance);
-            if (_memberInfo is FieldInfo)
-                return ((FieldInfo)_memberInfo).GetValue(instance);
-
-            throw new InvalidOperationException();
+            return Switch(f => f.GetValue(instance), p => p.GetValue(instance), m => m.GetParameters().Length == 0 ? m.Invoke(instance,new object[0]) : null);
         }
+
+        public T GetValue<T>(object instance) => GetValue(instance).Convert<T>();
 
         public void SetValue(object instance, object value)
         {
@@ -157,6 +173,15 @@ namespace Iridium.Core
                 throw new InvalidOperationException();
         }
 
+        public Action<object, object> Setter() => SetValue;
+        public Action<object> Setter(object target) => value => SetValue(target, value);
+        public Action<object, T> Setter<T>() => (target, value) => SetValue(target, value);
+        public Action<T> Setter<T>(object target) => value => SetValue(target, value);
+        public Func<object, object> Getter() => GetValue;
+        public Func<object, T> Getter<T>() => target => GetValue<T>(target);
+        public Func<object> Getter(object target) => () => GetValue(target);
+        public Func<T> Getter<T>(object target) => () => GetValue<T>(target);
 
+        public MemberWithObjectInspector WithObject(object obj) => new MemberWithObjectInspector(this, obj);
     }
 }

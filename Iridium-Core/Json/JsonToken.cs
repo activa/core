@@ -1,9 +1,9 @@
 namespace Iridium.Core
 {
-    public struct JsonToken
+    internal class JsonToken
     {
-        public JsonTokenType Type;
-        public string Token;
+        public JsonTokenType Type { get; }
+        public string Token { get; }
 
         public JsonToken(JsonTokenType type, string token)
         {

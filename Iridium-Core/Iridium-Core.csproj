@@ -23,6 +23,8 @@
     <DefineConstants>TRACE;DEBUG;PCL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +33,7 @@
     <DefineConstants>TRACE;PCL</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Iridium-Core.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <None Include="Iridium-Core.nuspec" />
@@ -42,6 +45,9 @@
     <Compile Include="Json\JsonParser.cs" />
     <Compile Include="Json\JsonToken.cs" />
     <Compile Include="Json\JsonTokenizer.cs" />
+    <Compile Include="Json\JsonTokenType.cs" />
+    <Compile Include="Logger\Providers\LoggingProviderDelegate.cs" />
+    <Compile Include="Reflection\Inspectors\MemberWithObjectInspector.cs" />
     <Compile Include="Units\AngleUnit.cs" />
     <Compile Include="Units\DistanceUnit.cs" />
     <Compile Include="Units\NumberWithUnit.cs" />
@@ -50,7 +56,7 @@
     <Compile Include="Units\UnitConverterExtensions.cs" />
     <Compile Include="Units\WeightUnit.cs" />
     <Compile Include="PreserveAttribute.cs" />
-    <Compile Include="Core\BinaryHelper.cs" />
+    <Compile Include="Core\ByteArrayExtensions.cs" />
     <Compile Include="Core\CoreExtensions.cs" />
     <Compile Include="Core\FileIO.cs" />
     <Compile Include="Core\SafeDictionary.cs" />
@@ -75,11 +81,9 @@
     <Compile Include="Notifier\Notification.cs" />
     <Compile Include="Notifier\Notifier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reflection\FieldOrPropertyInfo.cs" />
     <Compile Include="Reflection\Inspectors\AssemblyInspector.cs" />
     <Compile Include="Reflection\Inspectors\MemberInspector.cs" />
-    <Compile Include="Reflection\Inspectors\ValueInspector.cs" />
-    <Compile Include="Reflection\Inspectors\PropertyInspector.cs" />
+    <Compile Include="Reflection\Inspectors\DeepFieldInspector.cs" />
     <Compile Include="Reflection\Platform.cs" />
     <Compile Include="Reflection\Inspectors\TypeInspector.cs" />
     <Compile Include="Reflection\SmartBinder.cs" />

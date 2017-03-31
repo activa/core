@@ -149,10 +149,5 @@ namespace Iridium.Core
                 RemoveOldFiles();
             }
         }
-
-
-        public override void Dispose()
-        {
-        }
     }
 }

@@ -26,12 +26,12 @@ namespace Iridium.Core
             return new JsonParser(json)._Parse<T>();
         }
 
-        public static T Parse<T>(string json, T prototype) where T : class, new()
+        public static T Parse<T>(Stream stream) where T : class, new()
         {
-            return new JsonParser(json)._Parse<T>();
+            return new JsonParser(stream)._Parse<T>();
         }
 
-        private JsonTokenizer _tokenizer;
+        private readonly JsonTokenizer _tokenizer;
 
         public JsonParser(string s)
         {
@@ -71,13 +71,13 @@ namespace Iridium.Core
                 throw new Exception("Expected {");
 
             object obj;
-            bool isDictionary = false;
+            bool isTypeMapped = true;
 
             if (objectType == null)
             {
                 obj = new Dictionary<string, JsonObject>();
 
-                isDictionary = true;
+                isTypeMapped = false;
             }
             else
                 obj = Activator.CreateInstance(objectType);
@@ -101,21 +101,15 @@ namespace Iridium.Core
 
                 NextToken();
 
-                if (!isDictionary)
+                if (isTypeMapped)
                 {
-                    PropertyInfo property = objectType.Inspector().GetProperty(propName);
-                    FieldInfo field = objectType.Inspector().GetField(propName);
+                    var memberInfo = objectType.Inspector().GetFieldOrProperty(propName);
 
-                    if (property != null || field != null)
+                    if (memberInfo != null)
                     {
-                        Type fieldType = (property != null) ? property.PropertyType : field.FieldType;
+                        var field = memberInfo.Inspector();
 
-                        object fieldvalue = ParseValue(fieldType).As(fieldType);
-
-                        if (property != null)
-                            property.SetValue(obj, fieldvalue, null);
-                        else
-                            field.SetValue(obj, fieldvalue);
+                        field.SetValue(obj, ParseValue(field.Type).As(field.Type));
                     }
                     else
                     {
@@ -219,6 +213,12 @@ namespace Iridium.Core
             if (CurrentToken.Type == JsonTokenType.Integer)
             {
                 n = Int64.Parse(CurrentToken.Token, NumberFormatInfo.InvariantInfo);
+
+                if ((long) n > Int32.MinValue && (long) n < Int32.MaxValue)
+                {
+                    n = (int) (long) n;
+                    type = typeof(int);
+                }
             }
             else
             {

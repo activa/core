@@ -31,68 +31,54 @@ namespace Iridium.Core
 {
     public static class FileIO
     {
-        private static IFileIOHandler _handler = new DummyFileIOHandler();
+        private static IFileIOHandler _handler;
 
+        private static IFileIOHandler Handler => _handler ?? (_handler = ServiceRepository.Get<IFileIOHandler>());
+
+        [Obsolete("Use ServiceRespository.Register(ioHandler)")]
         public static void SetIOHandler(IFileIOHandler handler)
         {
-            _handler = handler;
+            ServiceRepository.Register(handler);
         }
 
         public static string ReadAllText(string path)
         {
-            return _handler.ReadAllText(path);
+            return Handler.ReadAllText(path);
         }
 
         public static string[] ReadAllLines(string path)
         {
-            return _handler.ReadAllLines(path);
+            return Handler.ReadAllLines(path);
         }
 
         public static void WriteAllText(string path, string s)
         {
-            _handler.WriteAllText(path, s);
+            Handler.WriteAllText(path, s);
         }
 
         public static bool FileExists(string path)
         {
-            return _handler.FileExists(path);
+            return Handler.FileExists(path);
         }
 
         public static void Delete(string path)
         {
-            _handler.Delete(path);
+            Handler.Delete(path);
         }
 
         public static Stream OpenReadStream(string path, bool exclusive)
         {
-            return _handler.OpenReadStream(path, exclusive);
+            return Handler.OpenReadStream(path, exclusive);
         }
 
         public static Stream OpenWriteStream(string path, bool exclusive, bool create)
         {
-            return _handler.OpenWriteStream(path, exclusive, create);
+            return Handler.OpenWriteStream(path, exclusive, create);
         }
 
         public static void AppendAllText(string path, string s)
         {
-            _handler.AppendAllText(path, s);            
+            Handler.AppendAllText(path, s);            
         }
-
-        public class DummyFileIOHandler : IFileIOHandler
-        {
-            string   IFileIOHandler.ReadAllText(string path) { throw new NotSupportedException(); }
-            string[] IFileIOHandler.ReadAllLines(string path) { throw new NotSupportedException(); }
-            byte[]   IFileIOHandler.ReadAllBytes(string path) { throw new NotSupportedException(); }
-            void     IFileIOHandler.WriteAllText(string path, string s) { throw new NotSupportedException(); }
-            bool     IFileIOHandler.FileExists(string path) { throw new NotSupportedException(); }
-            void     IFileIOHandler.Delete(string path) { throw new NotSupportedException(); }
-            void     IFileIOHandler.CreateFolder(string path, bool deep = false) { throw new NotSupportedException(); }
-            void     IFileIOHandler.DeleteFolder(string path) { throw new NotSupportedException(); }
-            bool     IFileIOHandler.FolderExists(string path)  { throw new NotSupportedException(); }
-            Stream   IFileIOHandler.OpenReadStream(string path, bool exclusive) { throw new NotSupportedException(); }
-            Stream   IFileIOHandler.OpenWriteStream(string path, bool exclusive, bool create) { throw new NotSupportedException(); }
-            void     IFileIOHandler.AppendAllText(string path, string s) { throw new NotSupportedException(); }
-        }
-
     }
 }

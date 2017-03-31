@@ -58,19 +58,35 @@ namespace Iridium.Core
 	        return new MemberInspector(memberInfo);
 	    }
 
-	    public static PropertyInspector Inspector(this PropertyInfo propertyInfo)
+	    public static MemberInspector Inspector(this PropertyInfo propertyInfo)
 	    {
-	        return new PropertyInspector(propertyInfo);
+	        return new MemberInspector(propertyInfo);
 	    }
 
-	    public static AssemblyInspector Inspector(this Assembly assembly)
+        public static MemberInspector Inspector(this FieldInfo fieldInfo)
+        {
+            return new MemberInspector(fieldInfo);
+        }
+
+        public static AssemblyInspector Inspector(this Assembly assembly)
 	    {
 	        return new AssemblyInspector(assembly);
 	    }
 
-	    public static ValueInspector ValueInspector(this object obj)
+        [Obsolete]
+	    public static DeepFieldInspector ValueInspector(this object obj)
 	    {
-	        return new ValueInspector(obj);
+	        return new DeepFieldInspector(obj);
 	    }
+
+        public static DeepFieldInspector DeepFieldInspector(this object obj)
+        {
+            return new DeepFieldInspector(obj);
+        }
+
+        public static MemberWithObjectInspector DeepFieldInspector(this object obj, string path)
+        {
+            return new DeepFieldInspector(obj).ForPath(path);
+        }
     }
 }

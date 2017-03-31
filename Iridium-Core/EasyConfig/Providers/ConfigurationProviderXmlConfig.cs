@@ -96,5 +96,4 @@ namespace Iridium.Core
             throw new NotSupportedException();
         }
     }
-
 }

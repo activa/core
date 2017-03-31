@@ -26,6 +26,7 @@
 
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using NUnit.Framework;
@@ -205,5 +206,26 @@ namespace Iridium.Core.Test
             Assert.AreEqual("yeah", config.SubGroupProp1.SubProp4);
         }
 
+    }
+
+    [TestFixture]
+    public class LoggerTest
+    {
+        [Test]
+        public void TestSimpleLogger()
+        {
+            StringBuilder logBuffer = new StringBuilder();
+
+            Logger logger = new Logger();
+
+            logger.AddProvider(s => logBuffer.Append(s) );
+
+            logger.Log("Test {0}",1);
+
+            Assert.That(logBuffer.ToString(), Is.EqualTo("Test 1"));
+
+            
+        }
+        
     }
 }

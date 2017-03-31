@@ -55,6 +55,26 @@ namespace Iridium.Core
                 _loggingProviders.Add(provider);
         }
 
+        public void AddProvider(Action<string> logger, bool logTime = false)
+        {
+            AddProvider(new LoggingProviderDelegate((level, s) => logger(s), logTime));
+        }
+
+        public void AddProvider(Action<DateTime,string> logger)
+        {
+            AddProvider(new LoggingProviderDelegate((time, level, s) => logger(time,s)));
+        }
+
+        public void AddProvider(Action<LogLevel, string> logger, bool logTime = false)
+        {
+            AddProvider(new LoggingProviderDelegate(logger, logTime));
+        }
+
+        public void AddProvider(Action<DateTime, LogLevel, string> logger)
+        {
+            AddProvider(new LoggingProviderDelegate(logger));
+        }
+
         public void Log(string formatString, params object[] p)
         {
             Log(LogLevel.Information, formatString, p);
