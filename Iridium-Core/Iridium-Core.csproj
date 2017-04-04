@@ -42,6 +42,7 @@
     <Compile Include="Cache\SmartCache.cs" />
     <Compile Include="Core\IFileIOHandler.cs" />
     <Compile Include="Core\ServiceRepository.cs" />
+    <Compile Include="Json\Json2.cs" />
     <Compile Include="Json\JsonParser.cs" />
     <Compile Include="Json\JsonToken.cs" />
     <Compile Include="Json\JsonTokenizer.cs" />
