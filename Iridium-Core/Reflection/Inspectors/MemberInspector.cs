@@ -36,43 +36,47 @@ namespace Iridium.Core
 {
     public class MemberInspector
     {
-        private readonly MemberInfo _memberInfo;
+        public Type Type { get; }
+        public MemberInfo MemberInfo { get; }
 
         public MemberInspector(MemberInfo memberInfo)
         {
-            _memberInfo = memberInfo;
+            MemberInfo = memberInfo;
+
+            Type = Switch(f => f.FieldType, p => p.PropertyType, m => m.ReturnType);
         }
 
         private T Switch<T>(Func<FieldInfo, T> field = null, Func<PropertyInfo, T> prop = null, Func<MethodInfo, T> method = null, T defaultValue = default(T))
         {
-            if (_memberInfo is FieldInfo)
-                return field == null ? defaultValue : field((FieldInfo) _memberInfo);
-            if (_memberInfo is PropertyInfo)
-                return prop == null ? defaultValue : prop((PropertyInfo)_memberInfo);
-            if (_memberInfo is MethodBase)
-                return method == null ? defaultValue : method((MethodInfo)_memberInfo);
+            if (MemberInfo is FieldInfo)
+                return field == null ? defaultValue : field((FieldInfo) MemberInfo);
+            if (MemberInfo is PropertyInfo)
+                return prop == null ? defaultValue : prop((PropertyInfo)MemberInfo);
+            if (MemberInfo is MethodBase)
+                return method == null ? defaultValue : method((MethodInfo)MemberInfo);
 
             return defaultValue;
         }
 
-        public Type DeclaringType => _memberInfo.DeclaringType;
-        public Type Type => Switch(f => f.FieldType, p => p.PropertyType, m => m.ReturnType);
+        public Type DeclaringType => MemberInfo.DeclaringType;
         public string Name => Switch(f => f.Name, p => p.Name, m => m.Name);
-
+        public bool IsField => MemberInfo is FieldInfo;
+        public bool IsProperty => MemberInfo is PropertyInfo;
+        public bool IsMethod => MemberInfo is MethodBase;
 
         public bool HasAttribute(Type attributeType, bool inherit = false)
         {
-            return _memberInfo.IsDefined(attributeType, inherit);
+            return MemberInfo.IsDefined(attributeType, inherit);
         }
 
         public bool HasAttribute<T>(bool inherit = false) where T : Attribute
         {
-            return _memberInfo.IsDefined(typeof(T), inherit);
+            return MemberInfo.IsDefined(typeof(T), inherit);
         }
 
         public Attribute[] GetAttributes(Type attributeType, bool inherit = false)
         {
-            return (Attribute[]) _memberInfo.GetCustomAttributes(attributeType, inherit);
+            return (Attribute[]) MemberInfo.GetCustomAttributes(attributeType, inherit);
         }
 
         public Attribute GetAttribute(Type attributeType, bool inherit = false)
@@ -93,39 +97,25 @@ namespace Iridium.Core
         public bool CanRead => Switch(f => true, p => p.CanRead);
         public bool CanWrite => Switch(f => !f.IsInitOnly, p => p.CanWrite);
 
-        public bool IsStatic
-        {
-            get
-            {
-                return Switch(
-                        field: f => f.IsStatic, 
-                        prop: p => p.CanRead && p.GetMethod.IsStatic || p.CanWrite && p.SetMethod.IsStatic, 
-                        method: m => m.IsStatic
-                        );
-            }
-        }
+        public bool IsStatic => Switch(
+            field: f => f.IsStatic, 
+            prop: p => p.CanRead && p.GetMethod.IsStatic || p.CanWrite && p.SetMethod.IsStatic, 
+            method: m => m.IsStatic
+        );
 
-        public bool IsPublic
-        {
-            get
-            {
-                if (_memberInfo is PropertyInfo)
-                    return ((PropertyInfo) _memberInfo).GetMethod.IsPublic;
-                if (_memberInfo is FieldInfo)
-                    return ((FieldInfo) _memberInfo).IsPublic;
-                if (_memberInfo is MethodBase)
-                    return ((MethodBase) _memberInfo).IsPublic;
-                return false;
-            }
-        }
+        public bool IsPublic => Switch(
+            field: f => f.IsPublic,
+            prop: p => p.GetMethod.IsPublic,
+            method: m => m.IsPublic
+        );
 
         public bool IsWritePublic
         {
             get
             {
-                if (_memberInfo is PropertyInfo)
+                if (MemberInfo is PropertyInfo)
                 {
-                    var propertyInfo = ((PropertyInfo) _memberInfo);
+                    var propertyInfo = ((PropertyInfo) MemberInfo);
 
                     return propertyInfo.SetMethod != null && propertyInfo.SetMethod.IsPublic;
                 }
@@ -165,10 +155,10 @@ namespace Iridium.Core
 
         public void SetValue(object instance, object value)
         {
-            if (_memberInfo is PropertyInfo)
-                ((PropertyInfo)_memberInfo).SetValue(instance, value);
-            else if (_memberInfo is FieldInfo)
-                ((FieldInfo)_memberInfo).SetValue(instance, value);
+            if (MemberInfo is PropertyInfo)
+                ((PropertyInfo)MemberInfo).SetValue(instance, value);
+            else if (MemberInfo is FieldInfo)
+                ((FieldInfo)MemberInfo).SetValue(instance, value);
             else
                 throw new InvalidOperationException();
         }
