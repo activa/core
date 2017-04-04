@@ -34,38 +34,35 @@ namespace Iridium.Core
     {
         public static void ForEach<T>(this IEnumerable<T> list, Action<T> action)
         {
+            if (list == null)
+                throw new ArgumentNullException(nameof(list));
+
             foreach (var item in list)
                 action(item);
         }
 
         public static bool IsIn<T>(this T source, params T[] list)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
             return Array.IndexOf(list,source) >= 0;
         }
 
         public static bool IsIn<T>(this T source, IEnumerable<T> list)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            if (list == null)
+                throw new ArgumentNullException(nameof(list));
 
             return list.Contains(source);
         }
 
         public static int IndexIn<T>(this T source, params T[] list)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
             return Array.IndexOf(list, source);
         }
 
         public static int IndexIn<T>(this T source, IEnumerable<T> list)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            if (list == null)
+                throw new ArgumentNullException(nameof(list));
 
             if (list is IList<T>)
                 return ((IList<T>) list).IndexOf(source);

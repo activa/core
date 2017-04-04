@@ -146,6 +146,16 @@ namespace Iridium.Core.Test
         }
 
         [Test]
+        public void TestSerializeJsonObject()
+        {
+            var jsonText = JsonSerializer.ToJson(new TestClass2());
+
+            var json = JsonParser.Parse(jsonText);
+
+            Assert.That(JsonSerializer.ToJson(json), Is.EqualTo(jsonText));
+        }
+
+        [Test]
         public void TestCircularReferences()
         {
             json_ParentClass obj1 = new json_ParentClass();

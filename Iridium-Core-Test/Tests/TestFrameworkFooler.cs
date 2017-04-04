@@ -1,5 +1,0 @@
-﻿namespace Iridium.Core.Test
-{
-}
-
-

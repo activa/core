@@ -24,7 +24,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
 
@@ -79,6 +81,90 @@ namespace Iridium.Core.Test
             Assert.IsTrue(jsonObject.IsObject && jsonObject.Keys.Length == 0);
         }
 
+        [Test]
+        public void NullOrEmpty()
+        {
+            JsonObject json = JsonParser.Parse("{\"x\":null,\"y\":1}");
+
+            Assert.That(json["x"].IsNull, Is.True);
+            Assert.That(json["x"].IsNullOrEmpty, Is.True);
+            Assert.That(json["x"].IsEmpty, Is.False);
+
+            Assert.That(json["y"].IsNull, Is.False);
+            Assert.That(json["y"].IsNullOrEmpty, Is.False);
+            Assert.That(json["y"].IsEmpty, Is.False);
+
+            Assert.That(json["z"].IsNull, Is.False);
+            Assert.That(json["z"].IsNullOrEmpty, Is.True);
+            Assert.That(json["z"].IsEmpty, Is.True);
+
+        }
+
+
+        [Test]
+        public void StreamInput()
+        {
+            using (MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes("{}")))
+            {
+                var jsonObject = JsonParser.Parse(stream);
+
+                Assert.IsTrue(jsonObject.IsObject && jsonObject.Keys.Length == 0);
+            }
+
+            
+        }
+
+        [Test]
+        public void ImplicitCasts()
+        {
+            Func<string, JsonObject> j = JsonParser.Parse;
+
+            JsonObject json = JsonParser.Parse("{\"i\":123,\"s\":\"abc\",\"f\":123.0,\"b\":true}");
+
+            int i1;
+            int? i2;
+            long l1;
+            long? l2;
+            bool b1;
+            bool? b2;
+            string s;
+
+            i1 = json["i"]; Assert.That(i1, Is.EqualTo(123));
+            i1 = json["s"]; Assert.That(i1, Is.EqualTo(0));
+            i1 = json["f"]; Assert.That(i1, Is.EqualTo(123));
+            i1 = json["b"]; Assert.That(i1, Is.EqualTo(1));
+
+            i2 = json["i"]; Assert.That(i2, Is.EqualTo(123));
+            i2 = json["s"]; Assert.That(i2, Is.Null);
+            i2 = json["f"]; Assert.That(i2, Is.EqualTo(123));
+            i2 = json["b"]; Assert.That(i2, Is.EqualTo(1));
+
+            s = json["i"]; Assert.That(s, Is.EqualTo("123"));
+            s = json["s"]; Assert.That(s, Is.EqualTo("abc"));
+            s = json["f"]; Assert.That(s, Is.EqualTo("123"));
+            s = json["b"]; Assert.That(s, Is.EqualTo("True"));
+
+            l1 = json["i"]; Assert.That(l1, Is.EqualTo(123L));
+            l1 = json["s"]; Assert.That(l1, Is.EqualTo(0L));
+            l1 = json["f"]; Assert.That(l1, Is.EqualTo(123L));
+            l1 = json["b"]; Assert.That(l1, Is.EqualTo(1L));
+
+            l2 = json["i"]; Assert.That(l2, Is.EqualTo(123L));
+            l2 = json["s"]; Assert.That(l2, Is.Null);
+            l2 = json["f"]; Assert.That(l2, Is.EqualTo(123L));
+            l2 = json["b"]; Assert.That(l2, Is.EqualTo(1L));
+
+            b1 = json["i"]; Assert.That(b1, Is.True);
+            b1 = json["s"]; Assert.That(b1, Is.False);
+            b1 = json["f"]; Assert.That(b1, Is.True);
+            b1 = json["b"]; Assert.That(b1, Is.True);
+
+            b2 = json["i"]; Assert.That(b2, Is.True);
+            b2 = json["s"]; Assert.That(b2, Is.False);
+            b2 = json["f"]; Assert.That(b2, Is.True);
+            b2 = json["b"]; Assert.That(b2, Is.True);
+
+        }
 
         public class DeepClass
         {
@@ -166,6 +252,9 @@ namespace Iridium.Core.Test
             Assert.That((string)obj["SubObject2"]["String2"], Is.EqualTo("test22"));
             Assert.That((string)obj["SubObject2.String2"], Is.EqualTo("test22"));
 
+            Assert.That(obj["XXXXXX"].IsEmpty, Is.True);
+            Assert.That(obj["XXXXXX.String2"].IsEmpty, Is.True);
+
             Assert.That(obj["SubObject2"]["SubObjectIntArray"]["Value1"].Select(item => (int)item), Is.EquivalentTo(new[] { 1, 2, 3, 4 }));
             Assert.That(obj["SubObject2"]["SubObjectIntArray"]["Value2"].Select(item => (int)item), Is.EquivalentTo(new[] { 11, 22, 33, 44 }));
 
@@ -198,6 +287,8 @@ namespace Iridium.Core.Test
                 yield return new TestCaseData("{\"value\":-10000000000}", typeof(long), -10000000000);
                 yield return new TestCaseData("{\"value\":-1.0}", typeof(double), -1.0);
                 yield return new TestCaseData("{\"value\":null}", null, null);
+                yield return new TestCaseData("{\"value\":true}", typeof(bool), true);
+                yield return new TestCaseData("{\"value\":false}", typeof(bool), false);
             }
         }
 

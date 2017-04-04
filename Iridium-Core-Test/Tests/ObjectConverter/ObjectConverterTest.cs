@@ -191,11 +191,9 @@ namespace Iridium.Core.Test
         }
 
         [Test]
-        public void X()
+        public void ArrayConversions()
         {
-            TypeFlags typeFlags = default(TypeFlags);
-
-            string s = typeFlags.ToString();
+            Assert.That(new[] {1,2,3}.Convert<string[]>(), Is.EquivalentTo(new[] {"1","2","3"}));
         }
     }
 }

@@ -27,47 +27,91 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Iridium.Core
 {
     public class ServiceRepository
     {
-        private static readonly List<object> _services = new List<object>();
-        private static readonly Dictionary<Type,object> _cachedServices = new Dictionary<Type, object>();
+        public static ServiceRepository Default = new ServiceRepository();
 
-        public static T Get<T>() where T:class
+        private class ServiceDefinition
         {
-            lock (_services)
+            public ServiceDefinition(Type type, bool singleton)
             {
-                object obj;
+                Type = type;
+                Singleton = singleton;
 
-                if (_cachedServices.TryGetValue(typeof(T), out obj))
-                    return (T) obj;
-
-                obj = _services.OfType<T>().FirstOrDefault();
-
-                if (obj == null)
-                    return null;
-
-                _cachedServices[typeof(T)] = obj;
-
-                return (T) obj;
+                Constructors = (from c in Type.Inspector().GetConstructors()
+                    let paramCount = c.GetParameters().Length
+                    orderby paramCount descending 
+                    select c).ToArray();
             }
+
+            public ServiceDefinition(Type type, object obj)
+            {
+                Type = type;
+                Object = obj;
+                Singleton = true;
+            }
+
+            public readonly Type Type;
+            public object Object;
+            public readonly bool Singleton;
+            public readonly ConstructorInfo[] Constructors;
         }
 
-        public static void Register<T>(T service) where T:class
+        private readonly List<ServiceDefinition> _services = new List<ServiceDefinition>();
+        
+
+        public T Get<T>() where T:class
+        {
+            return (T) Get(typeof(T));
+        }
+
+
+        private bool CanResolve(Type type)
+        {
+            return _services.Any(service => type.Inspector().IsAssignableFrom(service.Type));
+        }
+
+        public object Get(Type type)
+        {
+
+            foreach (var service in _services.Where(svc => type.Inspector().IsAssignableFrom(svc.Type)))
+            {
+                object obj = service.Object;
+
+                if (obj != null)
+                    return obj;
+
+                var constructor = service.Constructors.FirstOrDefault(c => c.GetParameters().All(p => CanResolve(p.ParameterType)));
+
+                if (constructor != null)
+                {
+                    obj = constructor.Invoke(constructor.GetParameters().Select(p => Get(p.ParameterType)).ToArray());
+
+                    if (service.Singleton)
+                        service.Object = obj;
+
+                    return obj;
+                }
+            }
+
+            return null;
+        }
+
+        public void Register<T>(bool singleton = true) where T : class
+        {
+            _services.Add(new ServiceDefinition(typeof(T), singleton));
+        }
+
+        public void Register<T>(T service) where T:class
         {
             if (service == null)
                 throw new ArgumentNullException(nameof(service));
 
-            lock (_services)
-            {
-                if (_services.Contains(service))
-                    return;
-
-                _services.Add(service);
-                _cachedServices.Clear();
-            }
+            _services.Add(new ServiceDefinition(typeof(T), service));
         }
     }
 }

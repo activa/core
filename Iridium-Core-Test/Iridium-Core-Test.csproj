@@ -88,7 +88,7 @@
     <Compile Include="Tests\StringConverter\StringConverterPluginTest.cs" />
     <Compile Include="Tests\StringConverter\StringConverterTest.cs" />
     <Compile Include="Tests\StringExtensionsTest.cs" />
-    <Compile Include="Tests\TestFrameworkFooler.cs" />
+    <Compile Include="Tests\ServiceRepositoryTest.cs" />
     <Compile Include="Tests\Tokenizer_Fixture.cs" />
     <Compile Include="Tests\TypeExtensionsTest.cs" />
     <Compile Include="Tests\SetupFixture.cs" />

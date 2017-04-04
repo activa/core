@@ -33,12 +33,12 @@ namespace Iridium.Core
     {
         private static IFileIOHandler _handler;
 
-        private static IFileIOHandler Handler => _handler ?? (_handler = ServiceRepository.Get<IFileIOHandler>());
+        private static IFileIOHandler Handler => _handler ?? (_handler = ServiceRepository.Default.Get<IFileIOHandler>());
 
         [Obsolete("Use ServiceRespository.Register(ioHandler)")]
         public static void SetIOHandler(IFileIOHandler handler)
         {
-            ServiceRepository.Register(handler);
+            ServiceRepository.Default.Register(handler);
         }
 
         public static string ReadAllText(string path)

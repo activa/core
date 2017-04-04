@@ -7,13 +7,13 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Iridium-Core")]
-[assembly: AssemblyCopyright("Copyright © 2008-2016 Philippe Leybaert")]
+[assembly: AssemblyCopyright("Copyright © 2008-2017 Philippe Leybaert")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
 
 [assembly:InternalsVisibleTo("Iridium-Core.Test")]
 
-[assembly: AssemblyVersion("1.1.3.*")]
+[assembly: AssemblyVersion("1.2.0.*")]
 
 
