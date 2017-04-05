@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using NUnit.Framework;
 
 namespace Iridium.Core.Test
@@ -31,11 +29,11 @@ namespace Iridium.Core.Test
 
         private class Service2A : IService2
         {
-            public IService1 _service1;
+            public IService1 Svc1;
 
             public Service2A(IService1 service1)
             {
-                _service1 = service1;
+                Svc1 = service1;
             }
 
             public Service2A(int x)
@@ -44,14 +42,47 @@ namespace Iridium.Core.Test
             }
         }
 
+        private class Service3
+        {
+            public IService1 Svc1;
+
+            public Service3()
+            {
+                
+            }
+
+            public Service3(IService1 svc)
+            {
+                Svc1 = svc;
+            }
+        }
+
+        private class Service4
+        {
+            public IService2 Svc2;
+
+            public Service4(IService2 svc)
+            {
+                Svc2 = svc;
+            }
+        }
+
+        public class Service12A : IService1, IService2
+        {
+        }
+
+        public class Service12B : IService1, IService2
+        {
+        }
+
 
         [Test]
         public void SimpleInterface()
         {
             ServiceRepository repo = new ServiceRepository();
 
-            repo.Register<Service2A>(singleton: false);
-            repo.Register<Service1A>(singleton:false);
+            repo.Register<Service2A>();
+            repo.Register<Service1A>();
 
             var s1 = repo.Get<IService1>();
             var s2 = repo.Get<IService1>();
@@ -68,7 +99,7 @@ namespace Iridium.Core.Test
         {
             ServiceRepository repo = new ServiceRepository();
 
-            repo.Register<Service1A>(singleton:true);
+            repo.Register<Service1A>().Singleton();
 
             var s1 = repo.Get<IService1>();
             var s2 = repo.Get<IService1>();
@@ -83,18 +114,18 @@ namespace Iridium.Core.Test
         {
             ServiceRepository repo = new ServiceRepository();
 
-            repo.Register<Service2A>(singleton: false);
+            repo.Register<Service2A>();
 
             var s1 = repo.Get<IService2>();
 
             Assert.That(s1, Is.Null);
 
-            repo.Register<Service1A>(singleton: false);
+            Assert.That(repo.Register<Service1A>().RegisteredAsType, Is.EqualTo(typeof(Service1A)));
 
             s1 = repo.Get<IService2>();
 
             Assert.That(s1, Is.InstanceOf<Service2A>());
-            Assert.That(((Service2A)s1)._service1, Is.InstanceOf<Service1A>());
+            Assert.That(((Service2A)s1).Svc1, Is.InstanceOf<Service1A>());
         }
 
         [Test]
@@ -102,9 +133,124 @@ namespace Iridium.Core.Test
         {
             ServiceRepository repo = new ServiceRepository();
 
-            repo.Register(new Service1B());
+            var svc = new Service1B();
 
-            Assert.That(repo.Get<IService1>(), Is.InstanceOf<Service1B>());
+            repo.Register(svc);
+
+            Assert.That(repo.Get<IService1>(), Is.SameAs(svc));
+        }
+
+        [Test]
+        public void MultiInstance1()
+        {
+            Service12A svc12a = new Service12A();
+            Service12A svc12b= new Service12A();
+
+            ServiceRepository repo = new ServiceRepository();
+
+            repo.Register<IService1>(svc12a);
+            repo.Register<IService2>(svc12b);
+
+            Assert.That(repo.Get<IService1>(), Is.SameAs(svc12a));
+            Assert.That(repo.Get<IService2>(), Is.SameAs(svc12b));
+        }
+
+        [Test]
+        public void MultiInstance2()
+        {
+            Service12A svc12a = new Service12A();
+            Service12A svc12b = new Service12A();
+
+            ServiceRepository repo = new ServiceRepository();
+
+            Assert.That(repo.Register(svc12a).As<IService1>().RegisteredAsType, Is.EqualTo(typeof(IService1)));
+            Assert.That(repo.Register(svc12b).As<IService2>().RegisteredAsType, Is.EqualTo(typeof(IService2)));
+
+            Assert.That(repo.Get<IService1>(), Is.SameAs(svc12a));
+            Assert.That(repo.Get<IService2>(), Is.SameAs(svc12b));
+        }
+
+        [Test]
+        public void MultiInterface()
+        {
+            ServiceRepository repo = new ServiceRepository();
+
+            repo.Register<Service12A>().As<IService1>();
+            repo.Register<Service12B>().As<IService2>();
+
+            Assert.That(repo.Get<IService1>(), Is.InstanceOf<Service12A>());
+            Assert.That(repo.Get<IService2>(), Is.InstanceOf<Service12B>());
+        }
+
+
+        [Test]
+        public void Create1()
+        {
+            ServiceRepository repo = new ServiceRepository();
+
+            var svc1 = new Service1A();
+
+            repo.Register(svc1);
+
+            var svc3 = repo.Create<Service3>();
+
+            Assert.That(svc3, Is.Not.Null);
+            Assert.That(svc3.Svc1, Is.SameAs(svc1));
+        }
+
+        [Test]
+        public void Create2()
+        {
+            ServiceRepository repo = new ServiceRepository();
+
+            repo.Register<Service1A>();
+            repo.Register<Service2A>();
+
+            var svc3 = repo.Create<Service3>();
+            var svc4 = repo.Create<Service4>();
+
+            Assert.That(svc3, Is.Not.Null);
+            Assert.That(svc4, Is.Not.Null);
+            Assert.That(svc3.Svc1, Is.InstanceOf<Service1A>());
+            Assert.That(svc4.Svc2, Is.InstanceOf<Service2A>());
+            Assert.That(((Service2A)svc4.Svc2).Svc1, Is.InstanceOf<Service1A>());
+        }
+
+        [Test]
+        public void Create3()
+        {
+            ServiceRepository repo = new ServiceRepository();
+
+            repo.Register<Service2A>();
+
+            var svc3 = repo.Create<Service3>();
+
+            Assert.That(svc3, Is.Not.Null);
+            Assert.That(svc3.Svc1, Is.Null);
+        }
+
+        [Test]
+        public void Create4()
+        {
+            ServiceRepository repo = new ServiceRepository();
+
+            repo.Register<Service1A>();
+
+            var svc4 = repo.Create<Service4>();
+
+            Assert.That(svc4, Is.Null);
+        }
+
+        [Test]
+        public void Create_Fail()
+        {
+            ServiceRepository repo = new ServiceRepository();
+
+            repo.Register<Service1A>();
+
+            var svc3 = repo.Create<IService3>();
+
+            Assert.That(svc3, Is.Null);
         }
 
         [Test]
@@ -112,49 +258,11 @@ namespace Iridium.Core.Test
         {
             Assert.Catch<ArgumentNullException>(() => new ServiceRepository().Register<IService1>(null));
         }
-    }
-
-    [TestFixture]
-    public class CoreExtensionsTest
-    {
-        [Test]
-        public void IsIn_Params()
-        {
-            Assert.That(5.IsIn(3, 4, 5), Is.True);
-            Assert.That(6.IsIn(3, 4, 5), Is.False);
-            Assert.That(((string)null).IsIn("a","b","c"), Is.False);
-            Assert.That(((string)null).IsIn("a",null, "c"), Is.True);
-        }
 
         [Test]
-        public void IsIn_List()
+        public void RegisterFail()
         {
-            Assert.That(5.IsIn(Enumerable.Range(3,3)), Is.True);
-            Assert.That(6.IsIn(Enumerable.Range(3, 3)), Is.False);
-            Assert.That(((string)null).IsIn(new [] { "a", "b", "c" }), Is.False);
-            Assert.That(((string)null).IsIn(new[] { "a", null, "c" }), Is.True);
-
-            Assert.Throws<ArgumentNullException>(() => "x".IsIn((IEnumerable<string>)null));
-        }
-
-        [Test]
-        public void IndexIn_Params()
-        {
-            Assert.That(5.IndexIn(3, 4, 5), Is.EqualTo(2));
-            Assert.That(6.IndexIn(3, 4, 5), Is.LessThan(0));
-            Assert.That(((string)null).IndexIn("a", "b", "c"), Is.LessThan(0));
-            Assert.That(((string)null).IndexIn("a", null, "c"), Is.EqualTo(1));
-        }
-
-        [Test]
-        public void IndexIn_List()
-        {
-            Assert.That(5.IndexIn(Enumerable.Range(3, 3)), Is.EqualTo(2));
-            Assert.That(6.IndexIn(Enumerable.Range(3, 3)), Is.LessThan(0));
-            Assert.That(((string)null).IndexIn(new[] { "a", "b", "c" }), Is.LessThan(0));
-            Assert.That(((string)null).IndexIn(new[] { "a", null, "c" }), Is.EqualTo(1));
-
-            Assert.Throws<ArgumentNullException>(() => "x".IndexIn((IEnumerable<string>)null));
+            Assert.Catch<ArgumentException>(() => new ServiceRepository().Register<Service1A>().As<IService2>());
         }
 
     }

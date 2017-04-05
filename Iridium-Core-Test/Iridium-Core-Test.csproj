@@ -75,6 +75,7 @@
     <Compile Include="ConfigurationProviderAppConfig.cs" />
     <Compile Include="Tests\BinaryExtensionsTest.cs" />
     <Compile Include="Tests\ConfigTest.cs" />
+    <Compile Include="Tests\CoreExtensionsTest.cs" />
     <Compile Include="Tests\GeohashTest.cs" />
     <Compile Include="Tests\Json\Json2Test.cs" />
     <Compile Include="Tests\Json\JSONParserFixture.cs" />

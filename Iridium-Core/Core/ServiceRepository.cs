@@ -37,10 +37,11 @@ namespace Iridium.Core
 
         private class ServiceDefinition
         {
-            public ServiceDefinition(Type type, bool singleton)
+            public ServiceDefinition(Type type)
             {
+                RegistrationType = type;
                 Type = type;
-                Singleton = singleton;
+                Singleton = false;
 
                 Constructors = (from c in Type.Inspector().GetConstructors()
                     let paramCount = c.GetParameters().Length
@@ -48,16 +49,18 @@ namespace Iridium.Core
                     select c).ToArray();
             }
 
-            public ServiceDefinition(Type type, object obj)
+            public ServiceDefinition(Type registrationType, object obj)
             {
-                Type = type;
+                RegistrationType = registrationType;
+                Type = obj.GetType();
                 Object = obj;
                 Singleton = true;
             }
 
             public readonly Type Type;
+            public Type RegistrationType;
             public object Object;
-            public readonly bool Singleton;
+            public bool Singleton;
             public readonly ConstructorInfo[] Constructors;
         }
 
@@ -72,13 +75,12 @@ namespace Iridium.Core
 
         private bool CanResolve(Type type)
         {
-            return _services.Any(service => type.Inspector().IsAssignableFrom(service.Type));
+            return _services.Any(service => type.Inspector().IsAssignableFrom(service.RegistrationType));
         }
 
         public object Get(Type type)
         {
-
-            foreach (var service in _services.Where(svc => type.Inspector().IsAssignableFrom(svc.Type)))
+            foreach (var service in _services.Where(svc => type.Inspector().IsAssignableFrom(svc.RegistrationType)))
             {
                 object obj = service.Object;
 
@@ -101,17 +103,71 @@ namespace Iridium.Core
             return null;
         }
 
-        public void Register<T>(bool singleton = true) where T : class
+        public T Create<T>() where T:class
         {
-            _services.Add(new ServiceDefinition(typeof(T), singleton));
+            var service = new ServiceDefinition(typeof(T));
+
+            var constructor = service.Constructors.FirstOrDefault(c => c.GetParameters().All(p => CanResolve(p.ParameterType)));
+
+            return (T) constructor?.Invoke(constructor.GetParameters().Select(p => Get(p.ParameterType)).ToArray());
         }
 
-        public void Register<T>(T service) where T:class
+        public IRegistrationResult Register<T>() where T : class
+        {
+            var serviceDefinition = new ServiceDefinition(typeof(T));
+
+            _services.Add(serviceDefinition);
+
+            return new RegistrationResult(serviceDefinition);
+        }
+
+        public IRegistrationResult Register<T>(T service) where T:class
         {
             if (service == null)
                 throw new ArgumentNullException(nameof(service));
 
-            _services.Add(new ServiceDefinition(typeof(T), service));
+            var serviceDefinition = new ServiceDefinition(typeof(T), service);
+
+            _services.Add(serviceDefinition);
+
+            return new RegistrationResult(serviceDefinition);
+        }
+
+        private class RegistrationResult : IRegistrationResult
+        {
+            private ServiceDefinition Svc { get; }
+
+            public RegistrationResult(ServiceDefinition svc)
+            {
+                Svc = svc;
+            }
+
+            public IRegistrationResult As<T>()
+            {
+                if (!typeof(T).GetTypeInfo().IsAssignableFrom(Svc.Type.GetTypeInfo()))
+                    throw new ArgumentException("Type is not compatible");
+
+                Svc.RegistrationType = typeof(T);
+
+                return this;
+            }
+
+            public IRegistrationResult Singleton()
+            {
+                Svc.Singleton = true;
+
+                return this;
+            }
+
+            public Type RegisteredAsType => Svc.RegistrationType;
+        }
+
+        public interface IRegistrationResult
+        {
+            IRegistrationResult As<T>();
+            IRegistrationResult Singleton();
+
+            Type RegisteredAsType { get; }
         }
     }
 }
