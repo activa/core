@@ -24,45 +24,16 @@
 //=============================================================================
 #endregion
 
+using System;
+
 namespace Iridium.Core
 {
-    public class CharMatcher : ITokenMatcher, ITokenProcessor
+    public interface IServiceRegistrationResult
     {
-        private bool _seen;
-        private readonly char _char;
+        IServiceRegistrationResult As<T>();
+        IServiceRegistrationResult As(Type type);
+        IServiceRegistrationResult Singleton();
 
-        public CharMatcher(char c)
-        {
-            _char = c;
-        }
-
-        public ITokenProcessor CreateTokenProcessor()
-        {
-            return new CharMatcher(_char);
-        }
-
-        public void ResetState()
-        {
-            _seen = false;
-        }
-
-        public TokenizerState ProcessChar(char c, string fullExpression, int currentIndex)
-        {
-            if (_seen)
-                return TokenizerState.Success;
-
-            if (c != _char)
-                return TokenizerState.Fail;
-
-            _seen = true;
-
-            return TokenizerState.Valid;
-        }
-
-        public string TranslateToken(string originalToken, ITokenProcessor tokenProcessor)
-        {
-            return originalToken;
-        }
-
+        Type RegisteredAsType { get; }
     }
 }

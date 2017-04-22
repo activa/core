@@ -82,6 +82,7 @@
     <Compile Include="Tests\Json\JsonSeralizerTestFixture.cs" />
     <Compile Include="Tests\MockTimeProvider.cs" />
     <Compile Include="Tests\NotifierTest.cs" />
+    <Compile Include="Tests\ServiceRepositoryGenericTest.cs" />
     <Compile Include="Tests\ValueInspectorTest.cs" />
     <Compile Include="Tests\ObjectMappedTest.cs" />
     <Compile Include="Tests\SafeDictionaryTest.cs" />

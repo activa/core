@@ -2,7 +2,7 @@
 //=============================================================================
 // Iridium-Core - Portable .NET Productivity Library 
 //
-// Copyright (c) 2008-2016 Philippe Leybaert
+// Copyright (c) 2008-2017 Philippe Leybaert
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy 
 // of this software and associated documentation files (the "Software"), to deal 
@@ -33,52 +33,49 @@ namespace Iridium.Core
     {
         private static IFileIOHandler _handler;
 
-        private static IFileIOHandler Handler => _handler ?? (_handler = ServiceRepository.Default.Get<IFileIOHandler>());
-
-        [Obsolete("Use ServiceRespository.Register(ioHandler)")]
         public static void SetIOHandler(IFileIOHandler handler)
         {
-            ServiceRepository.Default.Register(handler);
+            _handler = handler;
         }
 
         public static string ReadAllText(string path)
         {
-            return Handler.ReadAllText(path);
+            return _handler.ReadAllText(path);
         }
 
         public static string[] ReadAllLines(string path)
         {
-            return Handler.ReadAllLines(path);
+            return _handler.ReadAllLines(path);
         }
 
         public static void WriteAllText(string path, string s)
         {
-            Handler.WriteAllText(path, s);
+            _handler.WriteAllText(path, s);
         }
 
         public static bool FileExists(string path)
         {
-            return Handler.FileExists(path);
+            return _handler.FileExists(path);
         }
 
         public static void Delete(string path)
         {
-            Handler.Delete(path);
+            _handler.Delete(path);
         }
 
         public static Stream OpenReadStream(string path, bool exclusive)
         {
-            return Handler.OpenReadStream(path, exclusive);
+            return _handler.OpenReadStream(path, exclusive);
         }
 
         public static Stream OpenWriteStream(string path, bool exclusive, bool create)
         {
-            return Handler.OpenWriteStream(path, exclusive, create);
+            return _handler.OpenWriteStream(path, exclusive, create);
         }
 
         public static void AppendAllText(string path, string s)
         {
-            Handler.AppendAllText(path, s);            
+            _handler.AppendAllText(path, s);            
         }
     }
 }

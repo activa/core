@@ -1,10 +1,6 @@
 using System;
 
-#if IRIDIUM_CORE_EMBEDDED
-namespace Iridium.DB.CoreUtil
-#else
 namespace Iridium.Core
-#endif
 {
     public class MemberWithObjectInspector
     {

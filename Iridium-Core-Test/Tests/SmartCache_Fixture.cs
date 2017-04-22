@@ -2,7 +2,7 @@
 //=============================================================================
 // Iridium-Core - Portable .NET Productivity Library 
 //
-// Copyright (c) 2008-2016 Philippe Leybaert
+// Copyright (c) 2008-2017 Philippe Leybaert
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy 
 // of this software and associated documentation files (the "Software"), to deal 
@@ -141,7 +141,7 @@ namespace Iridium.Core.Test
         {
             MockTimeProvider time = new MockTimeProvider();
 
-            time.Now = new DateTime(2000, 1, 1);
+            time.UtcNow = new DateTime(2000, 1, 1);
 
             SmartCache<int> cache = new SmartCache<int>(5, time);
 
@@ -154,21 +154,21 @@ namespace Iridium.Core.Test
             Assert.IsTrue(cache.TryGetValue("1", out item));
             Assert.AreEqual(3, cache.ItemCount);
 
-            time.Now += TimeSpan.FromMinutes(150);
+            time.UtcNow += TimeSpan.FromMinutes(150);
 
             Assert.IsFalse(cache.TryGetValue("1", out item));
             Assert.IsTrue(cache.TryGetValue("2", out item));
             Assert.IsTrue(cache.TryGetValue("3", out item));
             Assert.AreEqual(2, cache.ItemCount);
 
-            time.Now += TimeSpan.FromMinutes(100);
+            time.UtcNow += TimeSpan.FromMinutes(100);
 
             Assert.IsFalse(cache.TryGetValue("1", out item));
             Assert.IsFalse(cache.TryGetValue("2", out item));
             Assert.IsTrue(cache.TryGetValue("3", out item));
             Assert.AreEqual(1, cache.ItemCount);
 
-            time.Now += TimeSpan.FromMinutes(100);
+            time.UtcNow += TimeSpan.FromMinutes(100);
 
             Assert.IsFalse(cache.TryGetValue("1", out item));
             Assert.IsFalse(cache.TryGetValue("2", out item));
@@ -243,7 +243,7 @@ namespace Iridium.Core.Test
         {
             MockTimeProvider time = new MockTimeProvider();
 
-            time.Now = new DateTime(2000, 1, 1);
+            time.UtcNow = new DateTime(2000, 1, 1);
 
             SmartCache<int> cache = new SmartCache<int>(5, time);
 
@@ -253,18 +253,18 @@ namespace Iridium.Core.Test
             cache.Add("2", 2, TimeSpan.FromMinutes(200));
             cache.Add("3", 3, TimeSpan.FromMinutes(300));
 
-            time.Now += TimeSpan.FromMinutes(20);
+            time.UtcNow += TimeSpan.FromMinutes(20);
 
             Assert.IsTrue(cache.TryGetValue("1", out item));
             Assert.AreEqual(3, cache.ItemCount);
 
-            time.Now += TimeSpan.FromMinutes(150);
+            time.UtcNow += TimeSpan.FromMinutes(150);
 
             Assert.IsFalse(cache.TryGetValue("1", out item));
             Assert.IsTrue(cache.TryGetValue("2", out item));
             Assert.AreEqual(2, cache.ItemCount);
 
-            time.Now += TimeSpan.FromDays(1);
+            time.UtcNow += TimeSpan.FromDays(1);
 
             Assert.IsFalse(cache.TryGetValue("1", out item));
             Assert.IsFalse(cache.TryGetValue("2", out item));

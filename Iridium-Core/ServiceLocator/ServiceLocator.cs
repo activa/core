@@ -24,44 +24,40 @@
 //=============================================================================
 #endregion
 
+using System;
+
 namespace Iridium.Core
 {
-    public class CharMatcher : ITokenMatcher, ITokenProcessor
+    public static class ServiceLocator
     {
-        private bool _seen;
-        private readonly char _char;
-
-        public CharMatcher(char c)
+        public static T Get<T>()
         {
-            _char = c;
+            return ServiceRepository.Default.Get<T>();
         }
 
-        public ITokenProcessor CreateTokenProcessor()
+        public static object Get(Type type)
         {
-            return new CharMatcher(_char);
+            return ServiceRepository.Default.Get(type);
         }
 
-        public void ResetState()
+        public static T Create<T>()
         {
-            _seen = false;
+            return ServiceRepository.Default.Create<T>();
         }
 
-        public TokenizerState ProcessChar(char c, string fullExpression, int currentIndex)
+        public static IServiceRegistrationResult Register<T>()
         {
-            if (_seen)
-                return TokenizerState.Success;
-
-            if (c != _char)
-                return TokenizerState.Fail;
-
-            _seen = true;
-
-            return TokenizerState.Valid;
+            return ServiceRepository.Default.Register<T>();
         }
 
-        public string TranslateToken(string originalToken, ITokenProcessor tokenProcessor)
+        public static IServiceRegistrationResult Register(Type type)
         {
-            return originalToken;
+            return ServiceRepository.Default.Register(type);
+        }
+
+        public static IServiceRegistrationResult Register<T>(T service)
+        {
+            return ServiceRepository.Default.Register<T>(service);
         }
 
     }

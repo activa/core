@@ -2,7 +2,7 @@
 //=============================================================================
 // Iridium-Core - Portable .NET Productivity Library 
 //
-// Copyright (c) 2008-2016 Philippe Leybaert
+// Copyright (c) 2008-2017 Philippe Leybaert
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy 
 // of this software and associated documentation files (the "Software"), to deal 
@@ -27,11 +27,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-#if IRIDIUM_CORE_EMBEDDED
-namespace Iridium.DB.Core
-#else
 namespace Iridium.Core
-#endif
 {
     public class SafeDictionary<TK, TV> : IDictionary<TK, TV>
     {

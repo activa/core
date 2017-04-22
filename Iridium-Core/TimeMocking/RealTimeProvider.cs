@@ -2,7 +2,7 @@
 //=============================================================================
 // Iridium-Core - Portable .NET Productivity Library 
 //
-// Copyright (c) 2008-2016 Philippe Leybaert
+// Copyright (c) 2008-2017 Philippe Leybaert
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy 
 // of this software and associated documentation files (the "Software"), to deal 
@@ -31,5 +31,6 @@ namespace Iridium.Core
     public class RealTimeProvider : ITimeProvider
     {
         public DateTime Now => DateTime.Now;
+        public DateTime UtcNow => DateTime.UtcNow;
     }
 }

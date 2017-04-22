@@ -2,7 +2,7 @@
 //=============================================================================
 // Iridium-Core - Portable .NET Productivity Library 
 //
-// Copyright (c) 2008-2016 Philippe Leybaert
+// Copyright (c) 2008-2017 Philippe Leybaert
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy 
 // of this software and associated documentation files (the "Software"), to deal 
@@ -43,10 +43,15 @@ namespace Iridium.Core
                 Type = type;
                 Singleton = false;
 
-                Constructors = (from c in Type.Inspector().GetConstructors()
-                    let paramCount = c.GetParameters().Length
-                    orderby paramCount descending 
-                    select c).ToArray();
+                IsUnboundGenericType = !Type.IsConstructedGenericType && Type.GetTypeInfo().IsGenericTypeDefinition;
+
+                if (!IsUnboundGenericType)
+                {
+                    Constructors = (from c in Type.Inspector().GetConstructors()
+                        let paramCount = c.GetParameters().Length
+                        orderby paramCount descending
+                        select c).ToArray();
+                }
             }
 
             public ServiceDefinition(Type registrationType, object obj)
@@ -61,13 +66,39 @@ namespace Iridium.Core
             public Type RegistrationType;
             public object Object;
             public bool Singleton;
+            public readonly bool IsUnboundGenericType;
             public readonly ConstructorInfo[] Constructors;
+
+            public bool IsMatch(Type type)
+            {
+                if (!IsUnboundGenericType)
+                    return type.Inspector().IsAssignableFrom(RegistrationType);
+
+                if (!type.IsConstructedGenericType)
+                    return false;
+
+                return type.Inspector().IsAssignableFrom(Type.MakeGenericType(type.GenericTypeArguments));
+            }
+
+            public ConstructorInfo[] MatchingConstructors(Type type)
+            {
+                if (!IsUnboundGenericType)
+                    return Constructors;
+
+                if (!type.IsConstructedGenericType)
+                    return new ConstructorInfo[0];
+
+                return (from c in Type.MakeGenericType(type.GenericTypeArguments).Inspector().GetConstructors()
+                    let paramCount = c.GetParameters().Length
+                    orderby paramCount descending
+                    select c).ToArray();
+            }
         }
 
         private readonly List<ServiceDefinition> _services = new List<ServiceDefinition>();
         
 
-        public T Get<T>() where T:class
+        public T Get<T>()
         {
             return (T) Get(typeof(T));
         }
@@ -75,19 +106,19 @@ namespace Iridium.Core
 
         private bool CanResolve(Type type)
         {
-            return _services.Any(service => type.Inspector().IsAssignableFrom(service.RegistrationType));
+            return _services.Any(service => service.IsMatch(type));
         }
 
         public object Get(Type type)
         {
-            foreach (var service in _services.Where(svc => type.Inspector().IsAssignableFrom(svc.RegistrationType)))
+            foreach (var service in _services.Where(svc => svc.IsMatch(type)))
             {
                 object obj = service.Object;
 
                 if (obj != null)
                     return obj;
 
-                var constructor = service.Constructors.FirstOrDefault(c => c.GetParameters().All(p => CanResolve(p.ParameterType)));
+                var constructor = service.MatchingConstructors(type).FirstOrDefault(c => c.GetParameters().All(p => CanResolve(p.ParameterType)));
 
                 if (constructor != null)
                 {
@@ -103,7 +134,7 @@ namespace Iridium.Core
             return null;
         }
 
-        public T Create<T>() where T:class
+        public T Create<T>()
         {
             var service = new ServiceDefinition(typeof(T));
 
@@ -112,7 +143,7 @@ namespace Iridium.Core
             return (T) constructor?.Invoke(constructor.GetParameters().Select(p => Get(p.ParameterType)).ToArray());
         }
 
-        public IRegistrationResult Register<T>() where T : class
+        public IServiceRegistrationResult Register<T>()
         {
             var serviceDefinition = new ServiceDefinition(typeof(T));
 
@@ -121,7 +152,16 @@ namespace Iridium.Core
             return new RegistrationResult(serviceDefinition);
         }
 
-        public IRegistrationResult Register<T>(T service) where T:class
+        public IServiceRegistrationResult Register(Type type)
+        {
+            var serviceDefinition = new ServiceDefinition(type);
+
+            _services.Add(serviceDefinition);
+
+            return new RegistrationResult(serviceDefinition);
+        }
+
+        public IServiceRegistrationResult Register<T>(T service)
         {
             if (service == null)
                 throw new ArgumentNullException(nameof(service));
@@ -133,7 +173,7 @@ namespace Iridium.Core
             return new RegistrationResult(serviceDefinition);
         }
 
-        private class RegistrationResult : IRegistrationResult
+        private class RegistrationResult : IServiceRegistrationResult
         {
             private ServiceDefinition Svc { get; }
 
@@ -142,17 +182,22 @@ namespace Iridium.Core
                 Svc = svc;
             }
 
-            public IRegistrationResult As<T>()
+            public IServiceRegistrationResult As<T>()
             {
-                if (!typeof(T).GetTypeInfo().IsAssignableFrom(Svc.Type.GetTypeInfo()))
+                return As(typeof(T));
+            }
+
+            public IServiceRegistrationResult As(Type type)
+            {
+                if (!Svc.IsUnboundGenericType && !type.GetTypeInfo().IsAssignableFrom(Svc.Type.GetTypeInfo()))
                     throw new ArgumentException("Type is not compatible");
 
-                Svc.RegistrationType = typeof(T);
+                Svc.RegistrationType = type;
 
                 return this;
             }
 
-            public IRegistrationResult Singleton()
+            public IServiceRegistrationResult Singleton()
             {
                 Svc.Singleton = true;
 
@@ -160,14 +205,6 @@ namespace Iridium.Core
             }
 
             public Type RegisteredAsType => Svc.RegistrationType;
-        }
-
-        public interface IRegistrationResult
-        {
-            IRegistrationResult As<T>();
-            IRegistrationResult Singleton();
-
-            Type RegisteredAsType { get; }
         }
     }
 }

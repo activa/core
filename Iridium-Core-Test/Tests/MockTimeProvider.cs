@@ -2,7 +2,7 @@
 //=============================================================================
 // Iridium-Core - Portable .NET Productivity Library 
 //
-// Copyright (c) 2008-2016 Philippe Leybaert
+// Copyright (c) 2008-2017 Philippe Leybaert
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy 
 // of this software and associated documentation files (the "Software"), to deal 
@@ -30,12 +30,14 @@ namespace Iridium.Core.Test
 {
     public class MockTimeProvider : ITimeProvider
     {
-        private DateTime _dateTime = DateTime.Now;
+        private DateTime _utcNow = DateTime.UtcNow;
 
-        public DateTime Now
+        public DateTime Now => _utcNow.ToLocalTime();
+
+        public DateTime UtcNow
         {
-            get { return _dateTime; }
-            set { _dateTime = value; }
+            get { return _utcNow; }
+            set { _utcNow = value; }
         }
     }
 }

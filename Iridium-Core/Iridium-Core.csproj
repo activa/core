@@ -41,7 +41,9 @@
   <ItemGroup>
     <Compile Include="Cache\SmartCache.cs" />
     <Compile Include="Core\IFileIOHandler.cs" />
-    <Compile Include="Core\ServiceRepository.cs" />
+    <Compile Include="ServiceLocator\IServiceRegistrationResult.cs" />
+    <Compile Include="ServiceLocator\ServiceLocator.cs" />
+    <Compile Include="ServiceLocator\ServiceRepository.cs" />
     <Compile Include="Json\Json2.cs" />
     <Compile Include="Json\JsonParser.cs" />
     <Compile Include="Json\JsonToken.cs" />

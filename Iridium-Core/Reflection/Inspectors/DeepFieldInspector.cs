@@ -2,11 +2,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-#if IRIDIUM_CORE_EMBEDDED
-namespace Iridium.DB.CoreUtil
-#else
 namespace Iridium.Core
-#endif
 {
     /// <summary>
     /// Provides methods to retrieve values of public fields or properties at runtime
