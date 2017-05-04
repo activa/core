@@ -33,6 +33,8 @@ namespace Iridium.Core
         IServiceRegistrationResult As<T>();
         IServiceRegistrationResult As(Type type);
         IServiceRegistrationResult Singleton();
+        IServiceRegistrationResult Replace<T>();
+        IServiceRegistrationResult Replace(Type type);
 
         Type RegisteredAsType { get; }
     }

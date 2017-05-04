@@ -1,0 +1,443 @@
+<Type Name="ObjectMapper" FullName="Iridium.Core.ObjectMapper">
+  <TypeSignature Language="C#" Value="public class ObjectMapper" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi beforefieldinit ObjectMapper extends System.Object" />
+  <AssemblyInfo>
+    <AssemblyName>Iridium-Core</AssemblyName>
+    <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public ObjectMapper (bool includePrivate = false, bool includeInherited = false, bool ignoreCase = false);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor(bool includePrivate, bool includeInherited, bool ignoreCase) cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters>
+        <Parameter Name="includePrivate" Type="System.Boolean" />
+        <Parameter Name="includeInherited" Type="System.Boolean" />
+        <Parameter Name="ignoreCase" Type="System.Boolean" />
+      </Parameters>
+      <Docs>
+        <param name="includePrivate">To be added.</param>
+        <param name="includeInherited">To be added.</param>
+        <param name="ignoreCase">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Comparer">
+      <MemberSignature Language="C#" Value="public System.Collections.Generic.IEqualityComparer&lt;string&gt; Comparer { set; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance class System.Collections.Generic.IEqualityComparer`1&lt;string&gt; Comparer" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Collections.Generic.IEqualityComparer&lt;System.String&gt;</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="CreateObject&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public T CreateObject&lt;T&gt; (System.Collections.Generic.Dictionary&lt;string,object&gt; values) where T : new();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance !!T CreateObject&lt;.ctor T&gt;(class System.Collections.Generic.Dictionary`2&lt;string, object&gt; values) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>T</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T">
+          <Constraints>
+            <ParameterAttribute>DefaultConstructorConstraint</ParameterAttribute>
+          </Constraints>
+        </TypeParameter>
+      </TypeParameters>
+      <Parameters>
+        <Parameter Name="values" Type="System.Collections.Generic.Dictionary&lt;System.String,System.Object&gt;" />
+      </Parameters>
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <param name="values">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="CreateObject&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public T CreateObject&lt;T&gt; (System.Collections.Generic.IEnumerable&lt;Tuple&lt;string,object&gt;&gt; values) where T : new();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance !!T CreateObject&lt;.ctor T&gt;(class System.Collections.Generic.IEnumerable`1&lt;class System.Tuple`2&lt;string, object&gt;&gt; values) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>T</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T">
+          <Constraints>
+            <ParameterAttribute>DefaultConstructorConstraint</ParameterAttribute>
+          </Constraints>
+        </TypeParameter>
+      </TypeParameters>
+      <Parameters>
+        <Parameter Name="values" Type="System.Collections.Generic.IEnumerable&lt;System.Tuple&lt;System.String,System.Object&gt;&gt;" />
+      </Parameters>
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <param name="values">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="CreateObject&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public T CreateObject&lt;T&gt; (Func&lt;string,Tuple&lt;object,bool&gt;&gt; valueProvider) where T : new();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance !!T CreateObject&lt;.ctor T&gt;(class System.Func`2&lt;string, class System.Tuple`2&lt;object, bool&gt;&gt; valueProvider) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>T</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T">
+          <Constraints>
+            <ParameterAttribute>DefaultConstructorConstraint</ParameterAttribute>
+          </Constraints>
+        </TypeParameter>
+      </TypeParameters>
+      <Parameters>
+        <Parameter Name="valueProvider" Type="System.Func&lt;System.String,System.Tuple&lt;System.Object,System.Boolean&gt;&gt;" />
+      </Parameters>
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <param name="valueProvider">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="FillObject">
+      <MemberSignature Language="C#" Value="public object FillObject (object o, System.Collections.Generic.IEnumerable&lt;Tuple&lt;string,object&gt;&gt; values);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance object FillObject(object o, class System.Collections.Generic.IEnumerable`1&lt;class System.Tuple`2&lt;string, object&gt;&gt; values) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Object</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="o" Type="System.Object" />
+        <Parameter Name="values" Type="System.Collections.Generic.IEnumerable&lt;System.Tuple&lt;System.String,System.Object&gt;&gt;" />
+      </Parameters>
+      <Docs>
+        <param name="o">To be added.</param>
+        <param name="values">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="FillObject">
+      <MemberSignature Language="C#" Value="public object FillObject (object o, Func&lt;string,Tuple&lt;object,bool&gt;&gt; valueProvider);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance object FillObject(object o, class System.Func`2&lt;string, class System.Tuple`2&lt;object, bool&gt;&gt; valueProvider) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Object</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="o" Type="System.Object" />
+        <Parameter Name="valueProvider" Type="System.Func&lt;System.String,System.Tuple&lt;System.Object,System.Boolean&gt;&gt;" />
+      </Parameters>
+      <Docs>
+        <param name="o">To be added.</param>
+        <param name="valueProvider">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="FillObject">
+      <MemberSignature Language="C#" Value="public void FillObject (Type t, System.Collections.Generic.Dictionary&lt;string,object&gt; values);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance void FillObject(class System.Type t, class System.Collections.Generic.Dictionary`2&lt;string, object&gt; values) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="t" Type="System.Type" />
+        <Parameter Name="values" Type="System.Collections.Generic.Dictionary&lt;System.String,System.Object&gt;" />
+      </Parameters>
+      <Docs>
+        <param name="t">To be added.</param>
+        <param name="values">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="FillObject">
+      <MemberSignature Language="C#" Value="public void FillObject (Type t, Func&lt;string,Tuple&lt;object,bool&gt;&gt; valueProvider);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance void FillObject(class System.Type t, class System.Func`2&lt;string, class System.Tuple`2&lt;object, bool&gt;&gt; valueProvider) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="t" Type="System.Type" />
+        <Parameter Name="valueProvider" Type="System.Func&lt;System.String,System.Tuple&lt;System.Object,System.Boolean&gt;&gt;" />
+      </Parameters>
+      <Docs>
+        <param name="t">To be added.</param>
+        <param name="valueProvider">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="FillObject&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public void FillObject&lt;T&gt; (System.Collections.Generic.Dictionary&lt;string,object&gt; values);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance void FillObject&lt;T&gt;(class System.Collections.Generic.Dictionary`2&lt;string, object&gt; values) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T" />
+      </TypeParameters>
+      <Parameters>
+        <Parameter Name="values" Type="System.Collections.Generic.Dictionary&lt;System.String,System.Object&gt;" />
+      </Parameters>
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <param name="values">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="FillObject&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public void FillObject&lt;T&gt; (System.Collections.Generic.IEnumerable&lt;Tuple&lt;string,object&gt;&gt; values);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance void FillObject&lt;T&gt;(class System.Collections.Generic.IEnumerable`1&lt;class System.Tuple`2&lt;string, object&gt;&gt; values) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T" />
+      </TypeParameters>
+      <Parameters>
+        <Parameter Name="values" Type="System.Collections.Generic.IEnumerable&lt;System.Tuple&lt;System.String,System.Object&gt;&gt;" />
+      </Parameters>
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <param name="values">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="FillObject&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public void FillObject&lt;T&gt; (Func&lt;string,Tuple&lt;object,bool&gt;&gt; valueProvider);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance void FillObject&lt;T&gt;(class System.Func`2&lt;string, class System.Tuple`2&lt;object, bool&gt;&gt; valueProvider) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T" />
+      </TypeParameters>
+      <Parameters>
+        <Parameter Name="valueProvider" Type="System.Func&lt;System.String,System.Tuple&lt;System.Object,System.Boolean&gt;&gt;" />
+      </Parameters>
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <param name="valueProvider">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="FillObject&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public T FillObject&lt;T&gt; (T o, System.Collections.Generic.Dictionary&lt;string,object&gt; values);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance !!T FillObject&lt;T&gt;(!!T o, class System.Collections.Generic.Dictionary`2&lt;string, object&gt; values) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>T</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T" />
+      </TypeParameters>
+      <Parameters>
+        <Parameter Name="o" Type="T" />
+        <Parameter Name="values" Type="System.Collections.Generic.Dictionary&lt;System.String,System.Object&gt;" />
+      </Parameters>
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <param name="o">To be added.</param>
+        <param name="values">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="FillObject&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public T FillObject&lt;T&gt; (T o, System.Collections.Generic.IEnumerable&lt;Tuple&lt;string,object&gt;&gt; values);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance !!T FillObject&lt;T&gt;(!!T o, class System.Collections.Generic.IEnumerable`1&lt;class System.Tuple`2&lt;string, object&gt;&gt; values) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>T</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T" />
+      </TypeParameters>
+      <Parameters>
+        <Parameter Name="o" Type="T" />
+        <Parameter Name="values" Type="System.Collections.Generic.IEnumerable&lt;System.Tuple&lt;System.String,System.Object&gt;&gt;" />
+      </Parameters>
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <param name="o">To be added.</param>
+        <param name="values">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="FillObject&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public T FillObject&lt;T&gt; (T o, Func&lt;string,Tuple&lt;object,bool&gt;&gt; valueProvider);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig instance !!T FillObject&lt;T&gt;(!!T o, class System.Func`2&lt;string, class System.Tuple`2&lt;object, bool&gt;&gt; valueProvider) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>T</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T" />
+      </TypeParameters>
+      <Parameters>
+        <Parameter Name="o" Type="T" />
+        <Parameter Name="valueProvider" Type="System.Func&lt;System.String,System.Tuple&lt;System.Object,System.Boolean&gt;&gt;" />
+      </Parameters>
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <param name="o">To be added.</param>
+        <param name="valueProvider">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="IgnoreCase">
+      <MemberSignature Language="C#" Value="public bool IgnoreCase { set; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance bool IgnoreCase" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="IncludeInherited">
+      <MemberSignature Language="C#" Value="public bool IncludeInherited { get; set; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance bool IncludeInherited" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="IncludePrivate">
+      <MemberSignature Language="C#" Value="public bool IncludePrivate { get; set; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance bool IncludePrivate" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Boolean</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Mapper">
+      <MemberSignature Language="C#" Value="public static Iridium.Core.ObjectMapper Mapper (bool includePrivate = false, bool includeInherited = false, bool ignoreCase = false);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig class Iridium.Core.ObjectMapper Mapper(bool includePrivate, bool includeInherited, bool ignoreCase) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>Iridium.Core.ObjectMapper</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="includePrivate" Type="System.Boolean" />
+        <Parameter Name="includeInherited" Type="System.Boolean" />
+        <Parameter Name="ignoreCase" Type="System.Boolean" />
+      </Parameters>
+      <Docs>
+        <param name="includePrivate">To be added.</param>
+        <param name="includeInherited">To be added.</param>
+        <param name="ignoreCase">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

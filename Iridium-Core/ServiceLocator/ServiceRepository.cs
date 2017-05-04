@@ -143,13 +143,23 @@ namespace Iridium.Core
             return (T) constructor?.Invoke(constructor.GetParameters().Select(p => Get(p.ParameterType)).ToArray());
         }
 
+        public void UnRegister<T>()
+        {
+            UnRegister(typeof(T));
+        }
+
+        public void UnRegister(Type type)
+        {
+            _services.RemoveAll(svc => svc.IsMatch(type));
+        }
+
         public IServiceRegistrationResult Register<T>()
         {
             var serviceDefinition = new ServiceDefinition(typeof(T));
 
             _services.Add(serviceDefinition);
 
-            return new RegistrationResult(serviceDefinition);
+            return new RegistrationResult(this, serviceDefinition);
         }
 
         public IServiceRegistrationResult Register(Type type)
@@ -158,7 +168,7 @@ namespace Iridium.Core
 
             _services.Add(serviceDefinition);
 
-            return new RegistrationResult(serviceDefinition);
+            return new RegistrationResult(this, serviceDefinition);
         }
 
         public IServiceRegistrationResult Register<T>(T service)
@@ -170,15 +180,22 @@ namespace Iridium.Core
 
             _services.Add(serviceDefinition);
 
-            return new RegistrationResult(serviceDefinition);
+            return new RegistrationResult(this, serviceDefinition);
+        }
+
+        private void RemoveConflicting(Type registrationType, ServiceDefinition svcDef)
+        {
+            _services.RemoveAll(svc => !ReferenceEquals(svcDef,svc) && svc.IsMatch(registrationType));
         }
 
         private class RegistrationResult : IServiceRegistrationResult
         {
             private ServiceDefinition Svc { get; }
+            private ServiceRepository Repository { get; }
 
-            public RegistrationResult(ServiceDefinition svc)
+            public RegistrationResult(ServiceRepository repo, ServiceDefinition svc)
             {
+                Repository = repo;
                 Svc = svc;
             }
 
@@ -200,6 +217,20 @@ namespace Iridium.Core
             public IServiceRegistrationResult Singleton()
             {
                 Svc.Singleton = true;
+
+                return this;
+            }
+
+            public IServiceRegistrationResult Replace<T>()
+            {
+                Repository.RemoveConflicting(typeof(T),Svc);
+
+                return this;
+            }
+
+            public IServiceRegistrationResult Replace(Type type)
+            {
+                Repository.RemoveConflicting(type, Svc);
 
                 return this;
             }

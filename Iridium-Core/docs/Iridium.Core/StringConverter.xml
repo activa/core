@@ -1,0 +1,265 @@
+<Type Name="StringConverter" FullName="Iridium.Core.StringConverter">
+  <TypeSignature Language="C#" Value="public static class StringConverter" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi abstract sealed beforefieldinit StringConverter extends System.Object" />
+  <AssemblyInfo>
+    <AssemblyName>Iridium-Core</AssemblyName>
+    <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Object</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName="Convert">
+      <MemberSignature Language="C#" Value="public static object Convert (this string stringValue, Type targetType, string[] dateFormats);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig object Convert(string stringValue, class System.Type targetType, string[] dateFormats) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Object</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="stringValue" Type="System.String" RefType="this" />
+        <Parameter Name="targetType" Type="System.Type" />
+        <Parameter Name="dateFormats" Type="System.String[]">
+          <Attributes>
+            <Attribute>
+              <AttributeName>System.ParamArray</AttributeName>
+            </Attribute>
+          </Attributes>
+        </Parameter>
+      </Parameters>
+      <Docs>
+        <param name="stringValue">To be added.</param>
+        <param name="targetType">To be added.</param>
+        <param name="dateFormats">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Convert&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public static T Convert&lt;T&gt; (this string stringValue, string[] dateFormats);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig !!T Convert&lt;T&gt;(string stringValue, string[] dateFormats) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>T</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T" />
+      </TypeParameters>
+      <Parameters>
+        <Parameter Name="stringValue" Type="System.String" RefType="this" />
+        <Parameter Name="dateFormats" Type="System.String[]">
+          <Attributes>
+            <Attribute>
+              <AttributeName>System.ParamArray</AttributeName>
+            </Attribute>
+          </Attributes>
+        </Parameter>
+      </Parameters>
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <param name="stringValue">To be added.</param>
+        <param name="dateFormats">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="RegisterDateFormat">
+      <MemberSignature Language="C#" Value="public static void RegisterDateFormat (string dateFormat, bool replace = false);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void RegisterDateFormat(string dateFormat, bool replace) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="dateFormat" Type="System.String" />
+        <Parameter Name="replace" Type="System.Boolean" />
+      </Parameters>
+      <Docs>
+        <param name="dateFormat">To be added.</param>
+        <param name="replace">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="RegisterDateFormats">
+      <MemberSignature Language="C#" Value="public static void RegisterDateFormats (string[] dateFormats);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void RegisterDateFormats(string[] dateFormats) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="dateFormats" Type="System.String[]">
+          <Attributes>
+            <Attribute>
+              <AttributeName>System.ParamArray</AttributeName>
+            </Attribute>
+          </Attributes>
+        </Parameter>
+      </Parameters>
+      <Docs>
+        <param name="dateFormats">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="RegisterStringConverter">
+      <MemberSignature Language="C#" Value="public static void RegisterStringConverter (Iridium.Core.IStringConverter stringConverter);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void RegisterStringConverter(class Iridium.Core.IStringConverter stringConverter) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="stringConverter" Type="Iridium.Core.IStringConverter" />
+      </Parameters>
+      <Docs>
+        <param name="stringConverter">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="RegisterStringConverter&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public static void RegisterStringConverter&lt;T&gt; (Iridium.Core.IStringConverter&lt;T&gt; stringConverter);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void RegisterStringConverter&lt;T&gt;(class Iridium.Core.IStringConverter`1&lt;!!T&gt; stringConverter) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T" />
+      </TypeParameters>
+      <Parameters>
+        <Parameter Name="stringConverter" Type="Iridium.Core.IStringConverter&lt;T&gt;" />
+      </Parameters>
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <param name="stringConverter">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="To">
+      <MemberSignature Language="C#" Value="public static object To (this string stringValue, Type targetType, string[] dateFormats);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig object To(string stringValue, class System.Type targetType, string[] dateFormats) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Object</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="stringValue" Type="System.String" RefType="this" />
+        <Parameter Name="targetType" Type="System.Type" />
+        <Parameter Name="dateFormats" Type="System.String[]">
+          <Attributes>
+            <Attribute>
+              <AttributeName>System.ParamArray</AttributeName>
+            </Attribute>
+          </Attributes>
+        </Parameter>
+      </Parameters>
+      <Docs>
+        <param name="stringValue">To be added.</param>
+        <param name="targetType">To be added.</param>
+        <param name="dateFormats">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="To&lt;T&gt;">
+      <MemberSignature Language="C#" Value="public static T To&lt;T&gt; (this string stringValue, string[] dateFormats);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig !!T To&lt;T&gt;(string stringValue, string[] dateFormats) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>T</ReturnType>
+      </ReturnValue>
+      <TypeParameters>
+        <TypeParameter Name="T" />
+      </TypeParameters>
+      <Parameters>
+        <Parameter Name="stringValue" Type="System.String" RefType="this" />
+        <Parameter Name="dateFormats" Type="System.String[]">
+          <Attributes>
+            <Attribute>
+              <AttributeName>System.ParamArray</AttributeName>
+            </Attribute>
+          </Attributes>
+        </Parameter>
+      </Parameters>
+      <Docs>
+        <typeparam name="T">To be added.</typeparam>
+        <param name="stringValue">To be added.</param>
+        <param name="dateFormats">To be added.</param>
+        <summary>To be added.</summary>
+        <returns>To be added.</returns>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="UnregisterAllStringConverters">
+      <MemberSignature Language="C#" Value="public static void UnregisterAllStringConverters ();" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void UnregisterAllStringConverters() cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="UnregisterStringConverter">
+      <MemberSignature Language="C#" Value="public static void UnregisterStringConverter (Iridium.Core.IStringConverter stringConverter);" />
+      <MemberSignature Language="ILAsm" Value=".method public static hidebysig void UnregisterStringConverter(class Iridium.Core.IStringConverter stringConverter) cil managed" />
+      <MemberType>Method</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>System.Void</ReturnType>
+      </ReturnValue>
+      <Parameters>
+        <Parameter Name="stringConverter" Type="Iridium.Core.IStringConverter" />
+      </Parameters>
+      <Docs>
+        <param name="stringConverter">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

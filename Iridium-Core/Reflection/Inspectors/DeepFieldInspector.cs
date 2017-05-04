@@ -4,9 +4,6 @@ using System.Reflection;
 
 namespace Iridium.Core
 {
-    /// <summary>
-    /// Provides methods to retrieve values of public fields or properties at runtime
-    /// </summary>
     public class DeepFieldInspector
     {
         private readonly object _obj;
@@ -18,11 +15,6 @@ namespace Iridium.Core
 
         public MemberWithObjectInspector ForPath(string path) => GetMember(path, _obj);
 
-        /// <summary>
-        /// Gets the value of a property of the object. 
-        /// </summary>
-        /// <param name="path">Name of the field/property. This can have embedded periods, allowing access to properties of child objects</param>
-        /// <returns>The value of the field or property. If the property was not found, null is returned</returns>
         public object GetValue(string path)
         {
             return ForPath(path).GetValue();
@@ -33,12 +25,6 @@ namespace Iridium.Core
             ForPath(path).SetValue(value);
         }
 
-        /// <summary>
-        /// Gets the value of a property of the object. 
-        /// </summary>
-        /// <typeparam name="T">The type of the property/field</typeparam>
-        /// <param name="path">Name of the field/property. This can have embedded periods, allowing access to properties of child objects</param>
-        /// <returns>The value of the field or property. If the property was not found, the default value for the type is returned</returns>
         public T GetValue<T>(string path)
         {
             return ForPath(path).GetValue<T>();
@@ -91,17 +77,9 @@ namespace Iridium.Core
             return GetMember(subField, fieldInspector.GetValue(obj));
         }
 
-        /*
-        public Action<object, object> Setter() => SetValue;
-        public Action<object> Setter(object target) => value => SetValue(target, value);
-        public Action<object, T> Setter<T>() => (target, value) => SetValue(target, value);
-        public Action<T> Setter<T>(object target) => value => SetValue(target, value);
-        */
         public Func<string, object> Getter() => GetValue;
         public Func<string, T> Getter<T>() => path => GetValue<T>(path);
         public Func<object> Getter(string path) => () => GetValue(path);
         public Func<T> Getter<T>(string path) => () => GetValue<T>(path);
-
-
     }
 }

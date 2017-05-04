@@ -256,6 +256,73 @@ namespace Iridium.Core.Test
         }
 
         [Test]
+        public void UnregisterMultiple()
+        {
+            ServiceRepository repo = new ServiceRepository();
+
+            repo.Register<Service1A>();
+            repo.Register<Service1B>();
+
+            repo.UnRegister<Service1A>();
+
+            Assert.That(repo.Get<IService1>(), Is.InstanceOf<Service1B>());
+        }
+
+        [Test]
+        public void UnregisterSingle()
+        {
+            ServiceRepository repo = new ServiceRepository();
+
+            repo.Register<Service1A>();
+
+            repo.UnRegister<Service1A>();
+
+            Assert.That(repo.Get<IService1>(), Is.Null);
+        }
+
+        [Test]
+        public void Multiple1()
+        {
+            ServiceRepository repo = new ServiceRepository();
+
+            repo.Register<Service1A>();
+            repo.Register<Service1B>();
+
+            Assert.That(repo.Get<IService1>(), Is.InstanceOf<Service1A>());
+
+            repo.UnRegister<IService1>();
+
+            Assert.That(repo.Get<IService1>(), Is.Null);
+        }
+
+        [Test]
+        public void Multiple2()
+        {
+            ServiceRepository repo = new ServiceRepository();
+
+            repo.Register<Service1B>();
+            repo.Register<Service1A>();
+
+            Assert.That(repo.Get<IService1>(), Is.InstanceOf<Service1B>());
+        }
+
+        [Test]
+        public void Multiple_Replace()
+        {
+            ServiceRepository repo = new ServiceRepository();
+
+            repo.Register<Service1B>();
+            repo.Register<Service1A>().Replace<IService1>();
+
+            Assert.That(repo.Get<IService1>(), Is.InstanceOf<Service1A>());
+
+            repo = new ServiceRepository();
+
+            repo.Register<Service1B>();
+            repo.Register<Service1A>().Replace(typeof(IService1));
+        }
+
+        [Test]
         public void RegisterNull()
         {
             Assert.Catch<ArgumentNullException>(() => new ServiceRepository().Register<IService1>(null));

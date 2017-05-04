@@ -1,0 +1,101 @@
+<Type Name="JsonDateFormat" FullName="Iridium.Core.JsonDateFormat">
+  <TypeSignature Language="C#" Value="public enum JsonDateFormat" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi sealed JsonDateFormat extends System.Enum" />
+  <AssemblyInfo>
+    <AssemblyName>Iridium-Core</AssemblyName>
+    <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>System.Enum</BaseTypeName>
+  </Base>
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName="Date">
+      <MemberSignature Language="C#" Value="Date" />
+      <MemberSignature Language="ILAsm" Value=".field public static literal valuetype Iridium.Core.JsonDateFormat Date = int32(3)" />
+      <MemberType>Field</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>Iridium.Core.JsonDateFormat</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+      </Docs>
+    </Member>
+    <Member MemberName="EscapedSlashDate">
+      <MemberSignature Language="C#" Value="EscapedSlashDate" />
+      <MemberSignature Language="ILAsm" Value=".field public static literal valuetype Iridium.Core.JsonDateFormat EscapedSlashDate = int32(1)" />
+      <MemberType>Field</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>Iridium.Core.JsonDateFormat</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+      </Docs>
+    </Member>
+    <Member MemberName="LocalISO">
+      <MemberSignature Language="C#" Value="LocalISO" />
+      <MemberSignature Language="ILAsm" Value=".field public static literal valuetype Iridium.Core.JsonDateFormat LocalISO = int32(5)" />
+      <MemberType>Field</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>Iridium.Core.JsonDateFormat</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+      </Docs>
+    </Member>
+    <Member MemberName="NewDate">
+      <MemberSignature Language="C#" Value="NewDate" />
+      <MemberSignature Language="ILAsm" Value=".field public static literal valuetype Iridium.Core.JsonDateFormat NewDate = int32(2)" />
+      <MemberType>Field</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>Iridium.Core.JsonDateFormat</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+      </Docs>
+    </Member>
+    <Member MemberName="SlashDate">
+      <MemberSignature Language="C#" Value="SlashDate" />
+      <MemberSignature Language="ILAsm" Value=".field public static literal valuetype Iridium.Core.JsonDateFormat SlashDate = int32(0)" />
+      <MemberType>Field</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>Iridium.Core.JsonDateFormat</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+      </Docs>
+    </Member>
+    <Member MemberName="UtcISO">
+      <MemberSignature Language="C#" Value="UtcISO" />
+      <MemberSignature Language="ILAsm" Value=".field public static literal valuetype Iridium.Core.JsonDateFormat UtcISO = int32(4)" />
+      <MemberType>Field</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>Iridium.Core.JsonDateFormat</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

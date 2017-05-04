@@ -45,6 +45,16 @@ namespace Iridium.Core
             return ServiceRepository.Default.Create<T>();
         }
 
+        public static void UnRegister<T>()
+        {
+            ServiceRepository.Default.UnRegister<T>();
+        }
+
+        public static void UnRegister(Type type)
+        {
+            ServiceRepository.Default.UnRegister(type);
+        }
+
         public static IServiceRegistrationResult Register<T>()
         {
             return ServiceRepository.Default.Register<T>();
