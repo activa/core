@@ -264,7 +264,7 @@ namespace Iridium.Core.Test
             repo.Register<Service1B>();
 
             repo.UnRegister<Service1A>();
-
+            
             Assert.That(repo.Get<IService1>(), Is.InstanceOf<Service1B>());
         }
 

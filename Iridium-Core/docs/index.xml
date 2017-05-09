@@ -1,6 +1,6 @@
 <Overview>
   <Assemblies>
-    <Assembly Name="Iridium-Core" Version="1.3.1.30062">
+    <Assembly Name="Iridium-Core" Version="1.3.2.16888">
       <Attributes>
         <Attribute>
           <AttributeName>System.Diagnostics.Debuggable(System.Diagnostics.DebuggableAttribute+DebuggingModes.Default | System.Diagnostics.DebuggableAttribute+DebuggingModes.DisableOptimizations | System.Diagnostics.DebuggableAttribute+DebuggingModes.IgnoreSymbolStoreSequencePoints | System.Diagnostics.DebuggableAttribute+DebuggingModes.EnableEditAndContinue)</AttributeName>

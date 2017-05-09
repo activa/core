@@ -40,7 +40,7 @@ namespace Iridium.Core
             return ServiceRepository.Default.Get(type);
         }
 
-        public static T Create<T>()
+        public static T Create<T>() where T:class
         {
             return ServiceRepository.Default.Create<T>();
         }

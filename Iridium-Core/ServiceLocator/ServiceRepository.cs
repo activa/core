@@ -134,13 +134,19 @@ namespace Iridium.Core
             return null;
         }
 
-        public T Create<T>()
+        public object Create(Type type)
         {
-            var service = new ServiceDefinition(typeof(T));
+            var constructor = new ServiceDefinition(type).Constructors.FirstOrDefault(c => c.GetParameters().All(p => CanResolve(p.ParameterType)));
 
-            var constructor = service.Constructors.FirstOrDefault(c => c.GetParameters().All(p => CanResolve(p.ParameterType)));
+            if (constructor == null)
+                return null;
 
-            return (T) constructor?.Invoke(constructor.GetParameters().Select(p => Get(p.ParameterType)).ToArray());
+            return constructor.Invoke(constructor.GetParameters().Select(p => Get(p.ParameterType)).ToArray());
+        }
+
+        public T Create<T>() where T:class
+        {
+            return (T) Create(typeof(T));
         }
 
         public void UnRegister<T>()
