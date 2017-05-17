@@ -168,27 +168,36 @@ namespace Iridium.Core
         private JsonToken ReadNumber()
         {
             bool hasDot = false;
+            bool hasExp = false;
+
             string s = new string(_charFeeder.Current,1);
 
             for (;;)
             {
                 char c = _charFeeder.Next();
 
-                if (c == '.' && !hasDot)
+                if ((c == 'e' || c == 'E') && !hasExp)
+                {
+                    hasExp = true;
+                }
+                else if ((c == '+' || c == '-') && hasExp)
+                {
+                }
+                else if (c == '.' && !hasDot)
                 {
                     hasDot = true;
-                    s += c;
                 }
                 else if (char.IsDigit(c))
                 {
-                    s += c;
                 }
                 else
                 {
                     _charFeeder.Backtrack();
 
-                    return new JsonToken(hasDot ? JsonTokenType.Float : JsonTokenType.Integer, s);
+                    return new JsonToken((hasDot || hasExp) ? JsonTokenType.Float : JsonTokenType.Integer, s);
                 }
+
+                s += c;
             }
         }
 
