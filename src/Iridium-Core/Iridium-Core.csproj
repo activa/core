@@ -4,6 +4,7 @@
     <TargetFramework>netstandard1.0</TargetFramework>
     <AssemblyName>Iridium-Core</AssemblyName>
     <RootNamespace>Iridium.Core</RootNamespace>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
   </PropertyGroup>
 
 </Project>
