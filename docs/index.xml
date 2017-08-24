@@ -1,0 +1,986 @@
+<Overview>
+  <Assemblies>
+    <Assembly Name="Iridium-Core" Version="1.0.0.0">
+      <Attributes>
+        <Attribute>
+          <AttributeName>System.Diagnostics.Debuggable(System.Diagnostics.DebuggableAttribute+DebuggingModes.Default | System.Diagnostics.DebuggableAttribute+DebuggingModes.DisableOptimizations | System.Diagnostics.DebuggableAttribute+DebuggingModes.IgnoreSymbolStoreSequencePoints | System.Diagnostics.DebuggableAttribute+DebuggingModes.EnableEditAndContinue)</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyCompany("Iridium-Core")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyConfiguration("Debug")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyDescription("Package Description")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyFileVersion("1.0.0.0")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyInformationalVersion("1.0.0")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyProduct("Iridium-Core")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Reflection.AssemblyTitle("Iridium-Core")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Runtime.CompilerServices.CompilationRelaxations(8)</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Runtime.CompilerServices.InternalsVisibleTo("Iridium-Core.Test")</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Runtime.CompilerServices.RuntimeCompatibility(WrapNonExceptionThrows=true)</AttributeName>
+        </Attribute>
+        <Attribute>
+          <AttributeName>System.Runtime.Versioning.TargetFramework(".NETStandard,Version=v1.0", FrameworkDisplayName="")</AttributeName>
+        </Attribute>
+      </Attributes>
+    </Assembly>
+  </Assemblies>
+  <Remarks>To be added.</Remarks>
+  <Copyright>To be added.</Copyright>
+  <Types>
+    <Namespace Name="Iridium.Core">
+      <Type Name="AngleUnit" Kind="Class" />
+      <Type Name="AnyCharMatcher" Kind="Class" />
+      <Type Name="AnyOfMatcher" Kind="Class" />
+      <Type Name="AnyOfStringMatcher" Kind="Class" />
+      <Type Name="AssemblyInspector" Kind="Class" />
+      <Type Name="BindingFlags" Kind="Enumeration" />
+      <Type Name="ByteArrayExtensions" Kind="Class" />
+      <Type Name="CharHelper" Kind="Class" />
+      <Type Name="CharMatcher" Kind="Class" />
+      <Type Name="CompositeMatcher" Kind="Class" />
+      <Type Name="CompositeMatcher+CompositeTokenProcessor" Kind="Class" />
+      <Type Name="ConfigIgnoreAttribute" Kind="Class" />
+      <Type Name="ConfigKeyAttribute" Kind="Class" />
+      <Type Name="ConfigManager" Kind="Class" />
+      <Type Name="ConfigObjectAttribute" Kind="Class" />
+      <Type Name="ConfigurationProviderXmlConfig" Kind="Class" />
+      <Type Name="CoreExtensions" Kind="Class" />
+      <Type Name="DateConversionMethod" Kind="Enumeration" />
+      <Type Name="DeepFieldInspector" Kind="Class" />
+      <Type Name="DistanceUnit" Kind="Class" />
+      <Type Name="EnumConverter" Kind="Class" />
+      <Type Name="FileIO" Kind="Class" />
+      <Type Name="FileIOException" Kind="Class" />
+      <Type Name="IConfigObject" Kind="Interface" />
+      <Type Name="IConfigurationProvider" Kind="Interface" />
+      <Type Name="IFileIOHandler" Kind="Interface" />
+      <Type Name="IServiceRegistrationResult" Kind="Interface" />
+      <Type Name="IStringConverter" Kind="Interface" />
+      <Type Name="IStringConverter`1" DisplayName="IStringConverter&lt;T&gt;" Kind="Interface" />
+      <Type Name="ISubscription" Kind="Interface" />
+      <Type Name="ISubscription`1" DisplayName="ISubscription&lt;T&gt;" Kind="Interface" />
+      <Type Name="ITimeProvider" Kind="Interface" />
+      <Type Name="ITokenMatcher" Kind="Interface" />
+      <Type Name="ITokenProcessor" Kind="Interface" />
+      <Type Name="JsonDateFormat" Kind="Enumeration" />
+      <Type Name="JsonObject" Kind="Class" />
+      <Type Name="JsonParser" Kind="Class" />
+      <Type Name="JsonSerializer" Kind="Class" />
+      <Type Name="Logger" Kind="Class" />
+      <Type Name="LoggingProvider" Kind="Class" />
+      <Type Name="LoggingProviderDelegate" Kind="Class" />
+      <Type Name="LoggingProviderFile" Kind="Class" />
+      <Type Name="LogLevel" Kind="Enumeration" />
+      <Type Name="MemberInspector" Kind="Class" />
+      <Type Name="MemberWithObjectInspector" Kind="Class" />
+      <Type Name="Notification" Kind="Class" />
+      <Type Name="Notification`1" DisplayName="Notification&lt;T&gt;" Kind="Class" />
+      <Type Name="NotificationDelegate" Kind="Delegate" />
+      <Type Name="NotificationDelegate`1" DisplayName="NotificationDelegate&lt;T&gt;" Kind="Delegate" />
+      <Type Name="Notifier" Kind="Class" />
+      <Type Name="NumberWithUnit" Kind="Class" />
+      <Type Name="ObjectConverter" Kind="Class" />
+      <Type Name="ObjectMapper" Kind="Class" />
+      <Type Name="Platform" Kind="Class" />
+      <Type Name="Platform+Architecture" Kind="Enumeration" />
+      <Type Name="Platform+PlatformProperties" Kind="Class" />
+      <Type Name="Platform+RuntimeEnv" Kind="Enumeration" />
+      <Type Name="PreserveAttribute" Kind="Class" />
+      <Type Name="RealTimeProvider" Kind="Class" />
+      <Type Name="ReflectionExtensions" Kind="Class" />
+      <Type Name="RegexMatcher" Kind="Class" />
+      <Type Name="SafeDictionary`2" DisplayName="SafeDictionary&lt;TK,TV&gt;" Kind="Class" />
+      <Type Name="SafeStringDictionary`1" DisplayName="SafeStringDictionary&lt;T&gt;" Kind="Class" />
+      <Type Name="SequenceOfAnyCharMatcher" Kind="Class" />
+      <Type Name="SequenceOfCharRangeMatcher" Kind="Class" />
+      <Type Name="ServiceLocator" Kind="Class" />
+      <Type Name="ServiceRepository" Kind="Class" />
+      <Type Name="SmartBinder" Kind="Class" />
+      <Type Name="SmartCache`1" DisplayName="SmartCache&lt;T&gt;" Kind="Class" />
+      <Type Name="StartsAndEndsWithMatcher" Kind="Class" />
+      <Type Name="StringConverter" Kind="Class" />
+      <Type Name="StringExtensions" Kind="Class" />
+      <Type Name="StringMatcher" Kind="Class" />
+      <Type Name="Token" Kind="Class" />
+      <Type Name="Tokenizer" Kind="Class" />
+      <Type Name="Tokenizer`1" DisplayName="Tokenizer&lt;T&gt;" Kind="Class" />
+      <Type Name="TokenizerException" Kind="Class" />
+      <Type Name="TokenizerState" Kind="Enumeration" />
+      <Type Name="TypeFlags" Kind="Enumeration" />
+      <Type Name="TypeInspector" Kind="Class" />
+      <Type Name="Unit" Kind="Class" />
+      <Type Name="UnitConverter" Kind="Class" />
+      <Type Name="UnitConverterExtensions" Kind="Class" />
+      <Type Name="UnknownTokenException" Kind="Class" />
+      <Type Name="WeightUnit" Kind="Class" />
+      <Type Name="WhiteSpaceMatcher" Kind="Class" />
+      <Type Name="WhiteSpacePaddedMatcher" Kind="Class" />
+    </Namespace>
+  </Types>
+  <Title>Iridium-Core</Title>
+  <ExtensionMethods>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Byte[]" />
+      </Targets>
+      <Member MemberName="ToHex">
+        <MemberSignature Language="C#" Value="public static string ToHex (this byte[] bytes, bool upperCase = false);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig string ToHex(unsigned int8[] bytes, bool upperCase) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>System.String</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="bytes" Type="System.Byte[]" RefType="this" />
+          <Parameter Name="upperCase" Type="System.Boolean" />
+        </Parameters>
+        <Docs>
+          <param name="bytes">To be added.</param>
+          <param name="upperCase">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.ByteArrayExtensions" Member="M:Iridium.Core.ByteArrayExtensions.ToHex(System.Byte[],System.Boolean)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Collections.Generic.IEnumerable`1" />
+      </Targets>
+      <Member MemberName="ForEach&lt;T&gt;">
+        <MemberSignature Language="C#" Value="public static void ForEach&lt;T&gt; (this System.Collections.Generic.IEnumerable&lt;T&gt; list, Action&lt;T&gt; action);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig void ForEach&lt;T&gt;(class System.Collections.Generic.IEnumerable`1&lt;!!T&gt; list, class System.Action`1&lt;!!T&gt; action) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>System.Void</ReturnType>
+        </ReturnValue>
+        <TypeParameters>
+          <TypeParameter Name="T" />
+        </TypeParameters>
+        <Parameters>
+          <Parameter Name="list" Type="System.Collections.Generic.IEnumerable&lt;T&gt;" RefType="this" />
+          <Parameter Name="action" Type="System.Action&lt;T&gt;" />
+        </Parameters>
+        <Docs>
+          <typeparam name="T">To be added.</typeparam>
+          <param name="list">To be added.</param>
+          <param name="action">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.CoreExtensions" Member="M:Iridium.Core.CoreExtensions.ForEach``1(System.Collections.Generic.IEnumerable{``0},System.Action{``0})" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="System.Object" />
+      </Targets>
+      <Member MemberName="IndexIn&lt;T&gt;">
+        <MemberSignature Language="C#" Value="public static int IndexIn&lt;T&gt; (this T source, T[] list);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig int32 IndexIn&lt;T&gt;(!!T source, !!T[] list) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>System.Int32</ReturnType>
+        </ReturnValue>
+        <TypeParameters>
+          <TypeParameter Name="T" />
+        </TypeParameters>
+        <Parameters>
+          <Parameter Name="source" Type="T" RefType="this" />
+          <Parameter Name="list" Type="T[]">
+            <Attributes>
+              <Attribute>
+                <AttributeName>System.ParamArray</AttributeName>
+              </Attribute>
+            </Attributes>
+          </Parameter>
+        </Parameters>
+        <Docs>
+          <typeparam name="T">To be added.</typeparam>
+          <param name="source">To be added.</param>
+          <param name="list">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.CoreExtensions" Member="M:Iridium.Core.CoreExtensions.IndexIn``1(``0,``0[])" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="System.Object" />
+      </Targets>
+      <Member MemberName="IndexIn&lt;T&gt;">
+        <MemberSignature Language="C#" Value="public static int IndexIn&lt;T&gt; (this T source, System.Collections.Generic.IEnumerable&lt;T&gt; list);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig int32 IndexIn&lt;T&gt;(!!T source, class System.Collections.Generic.IEnumerable`1&lt;!!T&gt; list) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>System.Int32</ReturnType>
+        </ReturnValue>
+        <TypeParameters>
+          <TypeParameter Name="T" />
+        </TypeParameters>
+        <Parameters>
+          <Parameter Name="source" Type="T" RefType="this" />
+          <Parameter Name="list" Type="System.Collections.Generic.IEnumerable&lt;T&gt;" />
+        </Parameters>
+        <Docs>
+          <typeparam name="T">To be added.</typeparam>
+          <param name="source">To be added.</param>
+          <param name="list">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.CoreExtensions" Member="M:Iridium.Core.CoreExtensions.IndexIn``1(``0,System.Collections.Generic.IEnumerable{``0})" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="System.Object" />
+      </Targets>
+      <Member MemberName="IsIn&lt;T&gt;">
+        <MemberSignature Language="C#" Value="public static bool IsIn&lt;T&gt; (this T source, T[] list);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig bool IsIn&lt;T&gt;(!!T source, !!T[] list) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>System.Boolean</ReturnType>
+        </ReturnValue>
+        <TypeParameters>
+          <TypeParameter Name="T" />
+        </TypeParameters>
+        <Parameters>
+          <Parameter Name="source" Type="T" RefType="this" />
+          <Parameter Name="list" Type="T[]">
+            <Attributes>
+              <Attribute>
+                <AttributeName>System.ParamArray</AttributeName>
+              </Attribute>
+            </Attributes>
+          </Parameter>
+        </Parameters>
+        <Docs>
+          <typeparam name="T">To be added.</typeparam>
+          <param name="source">To be added.</param>
+          <param name="list">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.CoreExtensions" Member="M:Iridium.Core.CoreExtensions.IsIn``1(``0,``0[])" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="System.Object" />
+      </Targets>
+      <Member MemberName="IsIn&lt;T&gt;">
+        <MemberSignature Language="C#" Value="public static bool IsIn&lt;T&gt; (this T source, System.Collections.Generic.IEnumerable&lt;T&gt; list);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig bool IsIn&lt;T&gt;(!!T source, class System.Collections.Generic.IEnumerable`1&lt;!!T&gt; list) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>System.Boolean</ReturnType>
+        </ReturnValue>
+        <TypeParameters>
+          <TypeParameter Name="T" />
+        </TypeParameters>
+        <Parameters>
+          <Parameter Name="source" Type="T" RefType="this" />
+          <Parameter Name="list" Type="System.Collections.Generic.IEnumerable&lt;T&gt;" />
+        </Parameters>
+        <Docs>
+          <typeparam name="T">To be added.</typeparam>
+          <param name="source">To be added.</param>
+          <param name="list">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.CoreExtensions" Member="M:Iridium.Core.CoreExtensions.IsIn``1(``0,System.Collections.Generic.IEnumerable{``0})" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Int32" />
+      </Targets>
+      <Member MemberName="ToEnum&lt;T&gt;">
+        <MemberSignature Language="C#" Value="public static T ToEnum&lt;T&gt; (this int value);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig !!T ToEnum&lt;T&gt;(int32 value) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>T</ReturnType>
+        </ReturnValue>
+        <TypeParameters>
+          <TypeParameter Name="T" />
+        </TypeParameters>
+        <Parameters>
+          <Parameter Name="value" Type="System.Int32" RefType="this" />
+        </Parameters>
+        <Docs>
+          <typeparam name="T">To be added.</typeparam>
+          <param name="value">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.EnumConverter" Member="M:Iridium.Core.EnumConverter.ToEnum``1(System.Int32)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Int32" />
+      </Targets>
+      <Member MemberName="ToEnum&lt;T&gt;">
+        <MemberSignature Language="C#" Value="public static T ToEnum&lt;T&gt; (this int value, T defaultValue);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig !!T ToEnum&lt;T&gt;(int32 value, !!T defaultValue) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>T</ReturnType>
+        </ReturnValue>
+        <TypeParameters>
+          <TypeParameter Name="T" />
+        </TypeParameters>
+        <Parameters>
+          <Parameter Name="value" Type="System.Int32" RefType="this" />
+          <Parameter Name="defaultValue" Type="T" />
+        </Parameters>
+        <Docs>
+          <typeparam name="T">To be added.</typeparam>
+          <param name="value">To be added.</param>
+          <param name="defaultValue">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.EnumConverter" Member="M:Iridium.Core.EnumConverter.ToEnum``1(System.Int32,``0)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Object" />
+      </Targets>
+      <Member MemberName="Convert">
+        <MemberSignature Language="C#" Value="public static object Convert (this object value, Type targetType);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig object Convert(object value, class System.Type targetType) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>System.Object</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="value" Type="System.Object" RefType="this" />
+          <Parameter Name="targetType" Type="System.Type" />
+        </Parameters>
+        <Docs>
+          <param name="value">To be added.</param>
+          <param name="targetType">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.ObjectConverter" Member="M:Iridium.Core.ObjectConverter.Convert(System.Object,System.Type)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Object" />
+      </Targets>
+      <Member MemberName="Convert&lt;T&gt;">
+        <MemberSignature Language="C#" Value="public static T Convert&lt;T&gt; (this object value);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig !!T Convert&lt;T&gt;(object value) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>T</ReturnType>
+        </ReturnValue>
+        <TypeParameters>
+          <TypeParameter Name="T" />
+        </TypeParameters>
+        <Parameters>
+          <Parameter Name="value" Type="System.Object" RefType="this" />
+        </Parameters>
+        <Docs>
+          <typeparam name="T">To be added.</typeparam>
+          <param name="value">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.ObjectConverter" Member="M:Iridium.Core.ObjectConverter.Convert``1(System.Object)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Object" />
+      </Targets>
+      <Member MemberName="DeepFieldInspector">
+        <MemberSignature Language="C#" Value="public static Iridium.Core.DeepFieldInspector DeepFieldInspector (this object obj);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig class Iridium.Core.DeepFieldInspector DeepFieldInspector(object obj) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>Iridium.Core.DeepFieldInspector</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="obj" Type="System.Object" RefType="this" />
+        </Parameters>
+        <Docs>
+          <param name="obj">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.ReflectionExtensions" Member="M:Iridium.Core.ReflectionExtensions.DeepFieldInspector(System.Object)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Object" />
+      </Targets>
+      <Member MemberName="DeepFieldInspector">
+        <MemberSignature Language="C#" Value="public static Iridium.Core.MemberWithObjectInspector DeepFieldInspector (this object obj, string path);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig class Iridium.Core.MemberWithObjectInspector DeepFieldInspector(object obj, string path) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>Iridium.Core.MemberWithObjectInspector</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="obj" Type="System.Object" RefType="this" />
+          <Parameter Name="path" Type="System.String" />
+        </Parameters>
+        <Docs>
+          <param name="obj">To be added.</param>
+          <param name="path">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.ReflectionExtensions" Member="M:Iridium.Core.ReflectionExtensions.DeepFieldInspector(System.Object,System.String)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Reflection.Assembly" />
+      </Targets>
+      <Member MemberName="Inspector">
+        <MemberSignature Language="C#" Value="public static Iridium.Core.AssemblyInspector Inspector (this System.Reflection.Assembly assembly);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig class Iridium.Core.AssemblyInspector Inspector(class System.Reflection.Assembly assembly) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>Iridium.Core.AssemblyInspector</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="assembly" Type="System.Reflection.Assembly" RefType="this" />
+        </Parameters>
+        <Docs>
+          <param name="assembly">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.ReflectionExtensions" Member="M:Iridium.Core.ReflectionExtensions.Inspector(System.Reflection.Assembly)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Reflection.FieldInfo" />
+      </Targets>
+      <Member MemberName="Inspector">
+        <MemberSignature Language="C#" Value="public static Iridium.Core.MemberInspector Inspector (this System.Reflection.FieldInfo fieldInfo);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig class Iridium.Core.MemberInspector Inspector(class System.Reflection.FieldInfo fieldInfo) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>Iridium.Core.MemberInspector</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="fieldInfo" Type="System.Reflection.FieldInfo" RefType="this" />
+        </Parameters>
+        <Docs>
+          <param name="fieldInfo">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.ReflectionExtensions" Member="M:Iridium.Core.ReflectionExtensions.Inspector(System.Reflection.FieldInfo)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Reflection.MemberInfo" />
+      </Targets>
+      <Member MemberName="Inspector">
+        <MemberSignature Language="C#" Value="public static Iridium.Core.MemberInspector Inspector (this System.Reflection.MemberInfo memberInfo);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig class Iridium.Core.MemberInspector Inspector(class System.Reflection.MemberInfo memberInfo) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>Iridium.Core.MemberInspector</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="memberInfo" Type="System.Reflection.MemberInfo" RefType="this" />
+        </Parameters>
+        <Docs>
+          <param name="memberInfo">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.ReflectionExtensions" Member="M:Iridium.Core.ReflectionExtensions.Inspector(System.Reflection.MemberInfo)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Reflection.PropertyInfo" />
+      </Targets>
+      <Member MemberName="Inspector">
+        <MemberSignature Language="C#" Value="public static Iridium.Core.MemberInspector Inspector (this System.Reflection.PropertyInfo propertyInfo);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig class Iridium.Core.MemberInspector Inspector(class System.Reflection.PropertyInfo propertyInfo) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>Iridium.Core.MemberInspector</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="propertyInfo" Type="System.Reflection.PropertyInfo" RefType="this" />
+        </Parameters>
+        <Docs>
+          <param name="propertyInfo">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.ReflectionExtensions" Member="M:Iridium.Core.ReflectionExtensions.Inspector(System.Reflection.PropertyInfo)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Type" />
+      </Targets>
+      <Member MemberName="Inspector">
+        <MemberSignature Language="C#" Value="public static Iridium.Core.TypeInspector Inspector (this Type type);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig class Iridium.Core.TypeInspector Inspector(class System.Type type) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>Iridium.Core.TypeInspector</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="type" Type="System.Type" RefType="this" />
+        </Parameters>
+        <Docs>
+          <param name="type">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.ReflectionExtensions" Member="M:Iridium.Core.ReflectionExtensions.Inspector(System.Type)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Object" />
+      </Targets>
+      <Member MemberName="ValueInspector">
+        <MemberSignature Language="C#" Value="public static Iridium.Core.DeepFieldInspector ValueInspector (this object obj);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig class Iridium.Core.DeepFieldInspector ValueInspector(object obj) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>Iridium.Core.DeepFieldInspector</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="obj" Type="System.Object" RefType="this" />
+        </Parameters>
+        <Docs>
+          <param name="obj">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.ReflectionExtensions" Member="M:Iridium.Core.ReflectionExtensions.ValueInspector(System.Object)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.String" />
+      </Targets>
+      <Member MemberName="Convert">
+        <MemberSignature Language="C#" Value="public static object Convert (this string stringValue, Type targetType, string[] dateFormats);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig object Convert(string stringValue, class System.Type targetType, string[] dateFormats) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>System.Object</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="stringValue" Type="System.String" RefType="this" />
+          <Parameter Name="targetType" Type="System.Type" />
+          <Parameter Name="dateFormats" Type="System.String[]">
+            <Attributes>
+              <Attribute>
+                <AttributeName>System.ParamArray</AttributeName>
+              </Attribute>
+            </Attributes>
+          </Parameter>
+        </Parameters>
+        <Docs>
+          <param name="stringValue">To be added.</param>
+          <param name="targetType">To be added.</param>
+          <param name="dateFormats">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.StringConverter" Member="M:Iridium.Core.StringConverter.Convert(System.String,System.Type,System.String[])" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.String" />
+      </Targets>
+      <Member MemberName="Convert&lt;T&gt;">
+        <MemberSignature Language="C#" Value="public static T Convert&lt;T&gt; (this string stringValue, string[] dateFormats);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig !!T Convert&lt;T&gt;(string stringValue, string[] dateFormats) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>T</ReturnType>
+        </ReturnValue>
+        <TypeParameters>
+          <TypeParameter Name="T" />
+        </TypeParameters>
+        <Parameters>
+          <Parameter Name="stringValue" Type="System.String" RefType="this" />
+          <Parameter Name="dateFormats" Type="System.String[]">
+            <Attributes>
+              <Attribute>
+                <AttributeName>System.ParamArray</AttributeName>
+              </Attribute>
+            </Attributes>
+          </Parameter>
+        </Parameters>
+        <Docs>
+          <typeparam name="T">To be added.</typeparam>
+          <param name="stringValue">To be added.</param>
+          <param name="dateFormats">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.StringConverter" Member="M:Iridium.Core.StringConverter.Convert``1(System.String,System.String[])" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.String" />
+      </Targets>
+      <Member MemberName="To">
+        <MemberSignature Language="C#" Value="public static object To (this string stringValue, Type targetType, string[] dateFormats);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig object To(string stringValue, class System.Type targetType, string[] dateFormats) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>System.Object</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="stringValue" Type="System.String" RefType="this" />
+          <Parameter Name="targetType" Type="System.Type" />
+          <Parameter Name="dateFormats" Type="System.String[]">
+            <Attributes>
+              <Attribute>
+                <AttributeName>System.ParamArray</AttributeName>
+              </Attribute>
+            </Attributes>
+          </Parameter>
+        </Parameters>
+        <Docs>
+          <param name="stringValue">To be added.</param>
+          <param name="targetType">To be added.</param>
+          <param name="dateFormats">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.StringConverter" Member="M:Iridium.Core.StringConverter.To(System.String,System.Type,System.String[])" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.String" />
+      </Targets>
+      <Member MemberName="To&lt;T&gt;">
+        <MemberSignature Language="C#" Value="public static T To&lt;T&gt; (this string stringValue, string[] dateFormats);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig !!T To&lt;T&gt;(string stringValue, string[] dateFormats) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>T</ReturnType>
+        </ReturnValue>
+        <TypeParameters>
+          <TypeParameter Name="T" />
+        </TypeParameters>
+        <Parameters>
+          <Parameter Name="stringValue" Type="System.String" RefType="this" />
+          <Parameter Name="dateFormats" Type="System.String[]">
+            <Attributes>
+              <Attribute>
+                <AttributeName>System.ParamArray</AttributeName>
+              </Attribute>
+            </Attributes>
+          </Parameter>
+        </Parameters>
+        <Docs>
+          <typeparam name="T">To be added.</typeparam>
+          <param name="stringValue">To be added.</param>
+          <param name="dateFormats">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.StringConverter" Member="M:Iridium.Core.StringConverter.To``1(System.String,System.String[])" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.String" />
+      </Targets>
+      <Member MemberName="Left">
+        <MemberSignature Language="C#" Value="public static string Left (this string s, int num);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig string Left(string s, int32 num) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>System.String</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="s" Type="System.String" RefType="this" />
+          <Parameter Name="num" Type="System.Int32" />
+        </Parameters>
+        <Docs>
+          <param name="s">To be added.</param>
+          <param name="num">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.StringExtensions" Member="M:Iridium.Core.StringExtensions.Left(System.String,System.Int32)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.String" />
+      </Targets>
+      <Member MemberName="Right">
+        <MemberSignature Language="C#" Value="public static string Right (this string s, int num);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig string Right(string s, int32 num) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>System.String</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="s" Type="System.String" RefType="this" />
+          <Parameter Name="num" Type="System.Int32" />
+        </Parameters>
+        <Docs>
+          <param name="s">To be added.</param>
+          <param name="num">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.StringExtensions" Member="M:Iridium.Core.StringExtensions.Right(System.String,System.Int32)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Double" />
+      </Targets>
+      <Member MemberName="ConvertFrom">
+        <MemberSignature Language="C#" Value="public static Iridium.Core.NumberWithUnit ConvertFrom (this double number, Iridium.Core.Unit fromUnit);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig class Iridium.Core.NumberWithUnit ConvertFrom(float64 number, class Iridium.Core.Unit fromUnit) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>Iridium.Core.NumberWithUnit</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="number" Type="System.Double" RefType="this" />
+          <Parameter Name="fromUnit" Type="Iridium.Core.Unit" />
+        </Parameters>
+        <Docs>
+          <param name="number">To be added.</param>
+          <param name="fromUnit">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.UnitConverterExtensions" Member="M:Iridium.Core.UnitConverterExtensions.ConvertFrom(System.Double,Iridium.Core.Unit)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Double" />
+      </Targets>
+      <Member MemberName="ConvertUnits">
+        <MemberSignature Language="C#" Value="public static double ConvertUnits (this double number, Iridium.Core.Unit fromUnit, Iridium.Core.Unit toUnit);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig float64 ConvertUnits(float64 number, class Iridium.Core.Unit fromUnit, class Iridium.Core.Unit toUnit) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>System.Double</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="number" Type="System.Double" RefType="this" />
+          <Parameter Name="fromUnit" Type="Iridium.Core.Unit" />
+          <Parameter Name="toUnit" Type="Iridium.Core.Unit" />
+        </Parameters>
+        <Docs>
+          <param name="number">To be added.</param>
+          <param name="fromUnit">To be added.</param>
+          <param name="toUnit">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.UnitConverterExtensions" Member="M:Iridium.Core.UnitConverterExtensions.ConvertUnits(System.Double,Iridium.Core.Unit,Iridium.Core.Unit)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Decimal" />
+      </Targets>
+      <Member MemberName="In">
+        <MemberSignature Language="C#" Value="public static Iridium.Core.NumberWithUnit In (this decimal number, Iridium.Core.Unit unit);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig class Iridium.Core.NumberWithUnit In(valuetype System.Decimal number, class Iridium.Core.Unit unit) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>Iridium.Core.NumberWithUnit</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="number" Type="System.Decimal" RefType="this" />
+          <Parameter Name="unit" Type="Iridium.Core.Unit" />
+        </Parameters>
+        <Docs>
+          <param name="number">To be added.</param>
+          <param name="unit">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.UnitConverterExtensions" Member="M:Iridium.Core.UnitConverterExtensions.In(System.Decimal,Iridium.Core.Unit)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Double" />
+      </Targets>
+      <Member MemberName="In">
+        <MemberSignature Language="C#" Value="public static Iridium.Core.NumberWithUnit In (this double number, Iridium.Core.Unit unit);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig class Iridium.Core.NumberWithUnit In(float64 number, class Iridium.Core.Unit unit) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>Iridium.Core.NumberWithUnit</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="number" Type="System.Double" RefType="this" />
+          <Parameter Name="unit" Type="Iridium.Core.Unit" />
+        </Parameters>
+        <Docs>
+          <param name="number">To be added.</param>
+          <param name="unit">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.UnitConverterExtensions" Member="M:Iridium.Core.UnitConverterExtensions.In(System.Double,Iridium.Core.Unit)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Int16" />
+      </Targets>
+      <Member MemberName="In">
+        <MemberSignature Language="C#" Value="public static Iridium.Core.NumberWithUnit In (this short number, Iridium.Core.Unit unit);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig class Iridium.Core.NumberWithUnit In(int16 number, class Iridium.Core.Unit unit) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>Iridium.Core.NumberWithUnit</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="number" Type="System.Int16" RefType="this" />
+          <Parameter Name="unit" Type="Iridium.Core.Unit" />
+        </Parameters>
+        <Docs>
+          <param name="number">To be added.</param>
+          <param name="unit">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.UnitConverterExtensions" Member="M:Iridium.Core.UnitConverterExtensions.In(System.Int16,Iridium.Core.Unit)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Int32" />
+      </Targets>
+      <Member MemberName="In">
+        <MemberSignature Language="C#" Value="public static Iridium.Core.NumberWithUnit In (this int number, Iridium.Core.Unit unit);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig class Iridium.Core.NumberWithUnit In(int32 number, class Iridium.Core.Unit unit) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>Iridium.Core.NumberWithUnit</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="number" Type="System.Int32" RefType="this" />
+          <Parameter Name="unit" Type="Iridium.Core.Unit" />
+        </Parameters>
+        <Docs>
+          <param name="number">To be added.</param>
+          <param name="unit">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.UnitConverterExtensions" Member="M:Iridium.Core.UnitConverterExtensions.In(System.Int32,Iridium.Core.Unit)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.Int64" />
+      </Targets>
+      <Member MemberName="In">
+        <MemberSignature Language="C#" Value="public static Iridium.Core.NumberWithUnit In (this long number, Iridium.Core.Unit unit);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig class Iridium.Core.NumberWithUnit In(int64 number, class Iridium.Core.Unit unit) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>Iridium.Core.NumberWithUnit</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="number" Type="System.Int64" RefType="this" />
+          <Parameter Name="unit" Type="Iridium.Core.Unit" />
+        </Parameters>
+        <Docs>
+          <param name="number">To be added.</param>
+          <param name="unit">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.UnitConverterExtensions" Member="M:Iridium.Core.UnitConverterExtensions.In(System.Int64,Iridium.Core.Unit)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.UInt16" />
+      </Targets>
+      <Member MemberName="In">
+        <MemberSignature Language="C#" Value="public static Iridium.Core.NumberWithUnit In (this ushort number, Iridium.Core.Unit unit);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig class Iridium.Core.NumberWithUnit In(unsigned int16 number, class Iridium.Core.Unit unit) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>Iridium.Core.NumberWithUnit</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="number" Type="System.UInt16" RefType="this" />
+          <Parameter Name="unit" Type="Iridium.Core.Unit" />
+        </Parameters>
+        <Docs>
+          <param name="number">To be added.</param>
+          <param name="unit">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.UnitConverterExtensions" Member="M:Iridium.Core.UnitConverterExtensions.In(System.UInt16,Iridium.Core.Unit)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.UInt32" />
+      </Targets>
+      <Member MemberName="In">
+        <MemberSignature Language="C#" Value="public static Iridium.Core.NumberWithUnit In (this uint number, Iridium.Core.Unit unit);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig class Iridium.Core.NumberWithUnit In(unsigned int32 number, class Iridium.Core.Unit unit) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>Iridium.Core.NumberWithUnit</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="number" Type="System.UInt32" RefType="this" />
+          <Parameter Name="unit" Type="Iridium.Core.Unit" />
+        </Parameters>
+        <Docs>
+          <param name="number">To be added.</param>
+          <param name="unit">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.UnitConverterExtensions" Member="M:Iridium.Core.UnitConverterExtensions.In(System.UInt32,Iridium.Core.Unit)" />
+      </Member>
+    </ExtensionMethod>
+    <ExtensionMethod>
+      <Targets>
+        <Target Type="T:System.UInt64" />
+      </Targets>
+      <Member MemberName="In">
+        <MemberSignature Language="C#" Value="public static Iridium.Core.NumberWithUnit In (this ulong number, Iridium.Core.Unit unit);" />
+        <MemberSignature Language="ILAsm" Value=".method public static hidebysig class Iridium.Core.NumberWithUnit In(unsigned int64 number, class Iridium.Core.Unit unit) cil managed" />
+        <MemberType>ExtensionMethod</MemberType>
+        <ReturnValue>
+          <ReturnType>Iridium.Core.NumberWithUnit</ReturnType>
+        </ReturnValue>
+        <Parameters>
+          <Parameter Name="number" Type="System.UInt64" RefType="this" />
+          <Parameter Name="unit" Type="Iridium.Core.Unit" />
+        </Parameters>
+        <Docs>
+          <param name="number">To be added.</param>
+          <param name="unit">To be added.</param>
+          <summary>To be added.</summary>
+        </Docs>
+        <Link Type="Iridium.Core.UnitConverterExtensions" Member="M:Iridium.Core.UnitConverterExtensions.In(System.UInt64,Iridium.Core.Unit)" />
+      </Member>
+    </ExtensionMethod>
+  </ExtensionMethods>
+</Overview>

@@ -1,0 +1,58 @@
+<Type Name="ConfigObjectAttribute" FullName="Iridium.Core.ConfigObjectAttribute">
+  <TypeSignature Language="C#" Value="public class ConfigObjectAttribute : Iridium.Core.ConfigKeyAttribute" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi beforefieldinit ConfigObjectAttribute extends Iridium.Core.ConfigKeyAttribute" />
+  <AssemblyInfo>
+    <AssemblyName>Iridium-Core</AssemblyName>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+    <AssemblyVersion>1.3.2.16888</AssemblyVersion>
+  </AssemblyInfo>
+  <Base>
+    <BaseTypeName>Iridium.Core.ConfigKeyAttribute</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Attributes>
+    <Attribute>
+      <AttributeName>System.AttributeUsage(System.AttributeTargets.Field)</AttributeName>
+    </Attribute>
+  </Attributes>
+  <Docs>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public ConfigObjectAttribute ();" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor() cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+        <AssemblyVersion>1.3.2.16888</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters />
+      <Docs>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public ConfigObjectAttribute (string baseKey);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor(string baseKey) cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+        <AssemblyVersion>1.3.2.16888</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters>
+        <Parameter Name="baseKey" Type="System.String" />
+      </Parameters>
+      <Docs>
+        <param name="baseKey">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>

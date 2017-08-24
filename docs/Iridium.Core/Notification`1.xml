@@ -1,0 +1,64 @@
+<Type Name="Notification&lt;T&gt;" FullName="Iridium.Core.Notification&lt;T&gt;">
+  <TypeSignature Language="C#" Value="public class Notification&lt;T&gt; : Iridium.Core.Notification" />
+  <TypeSignature Language="ILAsm" Value=".class public auto ansi beforefieldinit Notification`1&lt;T&gt; extends Iridium.Core.Notification" />
+  <AssemblyInfo>
+    <AssemblyName>Iridium-Core</AssemblyName>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+    <AssemblyVersion>1.3.2.16888</AssemblyVersion>
+  </AssemblyInfo>
+  <TypeParameters>
+    <TypeParameter Name="T" />
+  </TypeParameters>
+  <Base>
+    <BaseTypeName>Iridium.Core.Notification</BaseTypeName>
+  </Base>
+  <Interfaces />
+  <Docs>
+    <typeparam name="T">To be added.</typeparam>
+    <summary>To be added.</summary>
+    <remarks>To be added.</remarks>
+  </Docs>
+  <Members>
+    <Member MemberName=".ctor">
+      <MemberSignature Language="C#" Value="public Notification (object sender, string name, T payload);" />
+      <MemberSignature Language="ILAsm" Value=".method public hidebysig specialname rtspecialname instance void .ctor(object sender, string name, !T payload) cil managed" />
+      <MemberType>Constructor</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+        <AssemblyVersion>1.3.2.16888</AssemblyVersion>
+      </AssemblyInfo>
+      <Parameters>
+        <Parameter Name="sender" Type="System.Object" />
+        <Parameter Name="name" Type="System.String" />
+        <Parameter Name="payload" Type="T" />
+      </Parameters>
+      <Docs>
+        <param name="sender">To be added.</param>
+        <param name="name">To be added.</param>
+        <param name="payload">To be added.</param>
+        <summary>To be added.</summary>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+    <Member MemberName="Payload">
+      <MemberSignature Language="C#" Value="public T Payload { get; }" />
+      <MemberSignature Language="ILAsm" Value=".property instance !T Payload" />
+      <MemberType>Property</MemberType>
+      <AssemblyInfo>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <AssemblyVersion>1.3.1.30062</AssemblyVersion>
+        <AssemblyVersion>1.3.2.16888</AssemblyVersion>
+      </AssemblyInfo>
+      <ReturnValue>
+        <ReturnType>T</ReturnType>
+      </ReturnValue>
+      <Docs>
+        <summary>To be added.</summary>
+        <value>To be added.</value>
+        <remarks>To be added.</remarks>
+      </Docs>
+    </Member>
+  </Members>
+</Type>
