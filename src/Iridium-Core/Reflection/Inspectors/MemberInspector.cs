@@ -39,23 +39,29 @@ namespace Iridium.Core
         {
             MemberInfo = memberInfo;
 
-            Type = Switch(f => f.FieldType, p => p.PropertyType, m => m.ReturnType);
+            Type = Switch(f => f.FieldType, p => p.PropertyType, m => m.ReturnType, c => c.DeclaringType);
         }
 
-        private T Switch<T>(Func<FieldInfo, T> field = null, Func<PropertyInfo, T> prop = null, Func<MethodInfo, T> method = null, T defaultValue = default(T))
+        private T Switch<T>(Func<FieldInfo, T> field = null, Func<PropertyInfo, T> prop = null, Func<MethodInfo, T> method = null, Func<ConstructorInfo, T> constructor = null, T defaultValue = default(T))
         {
-            if (MemberInfo is FieldInfo)
-                return field == null ? defaultValue : field((FieldInfo) MemberInfo);
-            if (MemberInfo is PropertyInfo)
-                return prop == null ? defaultValue : prop((PropertyInfo)MemberInfo);
-            if (MemberInfo is MethodBase)
-                return method == null ? defaultValue : method((MethodInfo)MemberInfo);
+            switch (MemberInfo)
+            {
+                case ConstructorInfo constructorInfo:
+                    return constructor == null ? defaultValue : constructor(constructorInfo);
+                case FieldInfo fieldInfo:
+                    return field == null ? defaultValue : field(fieldInfo);
+                case PropertyInfo propertyInfo:
+                    return prop == null ? defaultValue : prop(propertyInfo);
+                case MethodInfo methodInfo:
+                    return method == null ? defaultValue : method(methodInfo);
+
+            }
 
             return defaultValue;
         }
 
         public Type DeclaringType => MemberInfo.DeclaringType;
-        public string Name => Switch(f => f.Name, p => p.Name, m => m.Name);
+        public string Name => Switch(f => f.Name, p => p.Name, m => m.Name, c => c.Name);
         public bool IsField => MemberInfo is FieldInfo;
         public bool IsProperty => MemberInfo is PropertyInfo;
         public bool IsMethod => MemberInfo is MethodBase;
@@ -96,13 +102,15 @@ namespace Iridium.Core
         public bool IsStatic => Switch(
             field: f => f.IsStatic, 
             prop: p => p.CanRead && p.GetMethod.IsStatic || p.CanWrite && p.SetMethod.IsStatic, 
-            method: m => m.IsStatic
+            method: m => m.IsStatic,
+            constructor: c => c.IsStatic
         );
 
         public bool IsPublic => Switch(
             field: f => f.IsPublic,
             prop: p => p.GetMethod.IsPublic,
-            method: m => m.IsPublic
+            method: m => m.IsPublic,
+            constructor: c => c.IsPublic
         );
 
         public bool IsWritePublic
@@ -144,7 +152,11 @@ namespace Iridium.Core
 
         public object GetValue(object instance)
         {
-            return Switch(f => f.GetValue(instance), p => p.GetValue(instance), m => m.GetParameters().Length == 0 ? m.Invoke(instance,new object[0]) : null);
+            return Switch(
+                f => f.GetValue(instance), 
+                p => p.GetValue(instance), 
+                m => m.GetParameters().Length == 0 ? m.Invoke(instance,new object[0]) : null
+                );
         }
 
         public T GetValue<T>(object instance) => GetValue(instance).Convert<T>();
