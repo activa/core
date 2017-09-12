@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace Iridium.Core
 {
@@ -68,6 +69,7 @@ namespace Iridium.Core
                 throw new Exception("Expected {");
 
             object obj;
+            List<MemberInspector> fieldsInType = null;
             bool isTypeMapped = true;
 
             if (objectType == null)
@@ -77,7 +79,11 @@ namespace Iridium.Core
                 isTypeMapped = false;
             }
             else
+            {
                 obj = Activator.CreateInstance(objectType);
+
+                fieldsInType = objectType.Inspector().GetFieldsAndProperties(BindingFlags.Public | BindingFlags.Instance).ToList();
+            }
 
             NextToken();
 
@@ -100,17 +106,15 @@ namespace Iridium.Core
 
                 if (isTypeMapped)
                 {
-                    var memberInfo = objectType.Inspector().GetFieldOrProperty(propName);
+                    var field = fieldsInType.FirstOrDefault(f => string.Equals(f.Name, propName, StringComparison.OrdinalIgnoreCase));
 
-                    if (memberInfo != null)
+                    if (field != null)
                     {
-                        var field = memberInfo.Inspector();
-
                         field.SetValue(obj, ParseValue(field.Type).As(field.Type));
                     }
                     else
                     {
-                        ParseValue(typeof (object));
+                        ParseValue(typeof(object)); // ignore
                     }
                 }
                 else

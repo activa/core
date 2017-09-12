@@ -8,7 +8,7 @@ TestResults/
 *.bak
 *.userprefs
 *.pidb
-Velox.DB.*.nupkg
+*.nupkg
 pushAll.cmd
 
 _ReSharper*/

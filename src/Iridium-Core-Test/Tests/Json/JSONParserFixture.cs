@@ -43,9 +43,9 @@ namespace Iridium.Core.Test
         [Test]
         public void EmptyArray()
         {
-            var json = @"{ ""IntArray"" : [] }";
+            var json = @"{ ""intArray"" : [] }";
 
-            JsonObject jsonObject = JsonParser.Parse(json)["IntArray"];
+            JsonObject jsonObject = JsonParser.Parse(json)["intArray"];
             var typedObject = JsonParser.Parse<_BasicTypes>(json);
 
             Assert.IsTrue(jsonObject.IsArray);
@@ -200,18 +200,18 @@ namespace Iridium.Core.Test
 
         string _deepClassJson = @"
 {
-    ""String1"":""test1"",
-    ""String2"":""test2"",
-    ""SubObject1"": {
-        ""String1"":""test11"",
-        ""String2"":""test12"",
+    ""string1"":""test1"",
+    ""string2"":""test2"",
+    ""subObject1"": {
+        ""string1"":""test11"",
+        ""string2"":""test12"",
     },
-    ""SubObject2"": {
-        ""String1"":""test21"",
-        ""String2"":""test22"",
-        ""SubObjectIntArray"": {
-            ""Value1"" : [1,2,3,4],
-            ""Value2"" : [11,22,33,44]
+    ""subObject2"": {
+        ""string1"":""test21"",
+        ""string2"":""test22"",
+        ""subObjectIntArray"": {
+            ""value1"" : [1,2,3,4],
+            ""value2"" : [11,22,33,44]
         }
     }
 }
@@ -237,32 +237,42 @@ namespace Iridium.Core.Test
         {
             var obj = JsonParser.Parse(_deepClassJson);
 
-            Assert.That((string)obj["String1"], Is.EqualTo("test1"));
-            Assert.That((string)obj["String2"], Is.EqualTo("test2"));
+            Assert.That((string)obj["string1"], Is.EqualTo("test1"));
+            Assert.That((string)obj["string2"], Is.EqualTo("test2"));
 
-            Assert.That((string)obj["SubObject1"]["String1"], Is.EqualTo("test11"));
-            Assert.That((string)obj["SubObject1.String1"], Is.EqualTo("test11"));
+            Assert.That((string)obj["subObject1"]["string1"], Is.EqualTo("test11"));
+            Assert.That((string)obj["subObject1.string1"], Is.EqualTo("test11"));
 
-            Assert.That((string)obj["SubObject1"]["String2"], Is.EqualTo("test12"));
-            Assert.That((string)obj["SubObject1.String2"], Is.EqualTo("test12"));
+            Assert.That((string)obj["subObject1"]["string2"], Is.EqualTo("test12"));
+            Assert.That((string)obj["subObject1.string2"], Is.EqualTo("test12"));
 
-            Assert.That((string)obj["SubObject2"]["String1"], Is.EqualTo("test21"));
-            Assert.That((string)obj["SubObject2.String1"], Is.EqualTo("test21"));
+            Assert.That((string)obj["subObject2"]["string1"], Is.EqualTo("test21"));
+            Assert.That((string)obj["subObject2.string1"], Is.EqualTo("test21"));
 
-            Assert.That((string)obj["SubObject2"]["String2"], Is.EqualTo("test22"));
-            Assert.That((string)obj["SubObject2.String2"], Is.EqualTo("test22"));
+            Assert.That((string)obj["subObject2"]["string2"], Is.EqualTo("test22"));
+            Assert.That((string)obj["subObject2.string2"], Is.EqualTo("test22"));
 
             Assert.That(obj["XXXXXX"].IsEmpty, Is.True);
-            Assert.That(obj["XXXXXX.String2"].IsEmpty, Is.True);
+            Assert.That(obj["XXXXXX.string2"].IsEmpty, Is.True);
 
-            Assert.That(obj["SubObject2"]["SubObjectIntArray"]["Value1"].Select(item => (int)item), Is.EquivalentTo(new[] { 1, 2, 3, 4 }));
-            Assert.That(obj["SubObject2"]["SubObjectIntArray"]["Value2"].Select(item => (int)item), Is.EquivalentTo(new[] { 11, 22, 33, 44 }));
+            Assert.That(obj["subObject2"]["subObjectIntArray"]["value1"].Select(item => (int)item), Is.EquivalentTo(new[] { 1, 2, 3, 4 }));
+            Assert.That(obj["subObject2"]["subObjectIntArray"]["value2"].Select(item => (int)item), Is.EquivalentTo(new[] { 11, 22, 33, 44 }));
 
-            Assert.That(obj["SubObject2"]["SubObjectIntArray.Value1"].Select(item => (int)item), Is.EquivalentTo(new[] { 1, 2, 3, 4 }));
-            Assert.That(obj["SubObject2.SubObjectIntArray.Value1"].Select(item => (int)item), Is.EquivalentTo(new[] { 1, 2, 3, 4 }));
-            Assert.That(obj["SubObject2.SubObjectIntArray"]["Value1"].Select(item => (int)item), Is.EquivalentTo(new[] { 1, 2, 3, 4 }));
+            Assert.That(obj["subObject2"]["subObjectIntArray.value1"].Select(item => (int)item), Is.EquivalentTo(new[] { 1, 2, 3, 4 }));
+            Assert.That(obj["subObject2.subObjectIntArray.value1"].Select(item => (int)item), Is.EquivalentTo(new[] { 1, 2, 3, 4 }));
+            Assert.That(obj["subObject2.subObjectIntArray"]["value1"].Select(item => (int)item), Is.EquivalentTo(new[] { 1, 2, 3, 4 }));
 
 
+        }
+
+        [Test]
+        public void TrailingComma()
+        {
+            string jsonText = @"{""x"":1,}";
+
+            var json = JsonParser.Parse(jsonText);
+
+            Assert.That(json["x"].As<int>(), Is.EqualTo(1));
         }
 
         [TestCaseSource(nameof(DataTypesSource))]

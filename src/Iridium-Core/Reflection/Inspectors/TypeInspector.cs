@@ -149,9 +149,7 @@ namespace Iridium.Core
             {
                 flags |= TypeFlags.Array;
 
-                TypeFlags arrayTypeFlags;
-
-                if (_typeflagsMap.TryGetValue(Type.GetElementType(), out arrayTypeFlags))
+                if (_typeflagsMap.TryGetValue(Type.GetElementType(), out var arrayTypeFlags))
                     flags |= arrayTypeFlags;
 
                 if ((_elementTypeInspector.TypeFlags & TypeFlags.CanBeNull) != 0)
