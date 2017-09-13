@@ -43,14 +43,14 @@ namespace Iridium.Core
                 Type = type;
                 Singleton = false;
 
-                IsUnboundGenericType = !Type.IsConstructedGenericType && Type.GetTypeInfo().IsGenericTypeDefinition;
+                IsUnboundGenericType = Type.GetTypeInfo().IsGenericTypeDefinition;
 
                 if (!IsUnboundGenericType)
                 {
                     Constructors = (from c in Type.Inspector().GetConstructors()
-                        let paramCount = c.GetParameters().Length
-                        orderby paramCount descending
-                        select c).ToArray();
+                                    let paramCount = c.GetParameters().Length
+                                    orderby paramCount descending
+                                    select c).ToArray();
                 }
             }
 
@@ -71,13 +71,20 @@ namespace Iridium.Core
 
             public bool IsMatch(Type type)
             {
-                if (!IsUnboundGenericType)
-                    return type.Inspector().IsAssignableFrom(RegistrationType);
+                if (IsUnboundGenericType)
+                {
+                    if (type.GetTypeInfo().IsGenericTypeDefinition) // type is unbound as well
+                        return type == RegistrationType;
 
-                if (!type.IsConstructedGenericType)
-                    return false;
+                    if (!type.IsConstructedGenericType)
+                    {
+                        return false;
+                    }
 
-                return type.Inspector().IsAssignableFrom(Type.MakeGenericType(type.GenericTypeArguments));
+                    return type.Inspector().IsAssignableFrom(Type.MakeGenericType(type.GenericTypeArguments));
+                }
+
+                return type.Inspector().IsAssignableFrom(RegistrationType);
             }
 
             public ConstructorInfo[] MatchingConstructors(Type type)
@@ -89,18 +96,18 @@ namespace Iridium.Core
                     return new ConstructorInfo[0];
 
                 return (from c in Type.MakeGenericType(type.GenericTypeArguments).Inspector().GetConstructors()
-                    let paramCount = c.GetParameters().Length
-                    orderby paramCount descending
-                    select c).ToArray();
+                        let paramCount = c.GetParameters().Length
+                        orderby paramCount descending
+                        select c).ToArray();
             }
         }
 
         private readonly List<ServiceDefinition> _services = new List<ServiceDefinition>();
-        
+
 
         public T Get<T>()
         {
-            return (T) Get(typeof(T));
+            return (T)Get(typeof(T));
         }
 
 
@@ -144,9 +151,9 @@ namespace Iridium.Core
             return constructor.Invoke(constructor.GetParameters().Select(p => Get(p.ParameterType)).ToArray());
         }
 
-        public T Create<T>() where T:class
+        public T Create<T>() where T : class
         {
-            return (T) Create(typeof(T));
+            return (T)Create(typeof(T));
         }
 
         public void UnRegister<T>()
@@ -189,9 +196,14 @@ namespace Iridium.Core
             return new RegistrationResult(this, serviceDefinition);
         }
 
+        public Type[] RegisteredTypes()
+        {
+            return _services.Select(svc => svc.RegistrationType).ToArray();
+        }
+
         private void RemoveConflicting(Type registrationType, ServiceDefinition svcDef)
         {
-            _services.RemoveAll(svc => !ReferenceEquals(svcDef,svc) && svc.IsMatch(registrationType));
+            _services.RemoveAll(svc => !ReferenceEquals(svcDef, svc) && svc.IsMatch(registrationType));
         }
 
         private class RegistrationResult : IServiceRegistrationResult
@@ -229,7 +241,7 @@ namespace Iridium.Core
 
             public IServiceRegistrationResult Replace<T>()
             {
-                Repository.RemoveConflicting(typeof(T),Svc);
+                Repository.RemoveConflicting(typeof(T), Svc);
 
                 return this;
             }

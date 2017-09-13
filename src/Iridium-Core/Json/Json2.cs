@@ -28,14 +28,13 @@ namespace Iridium.Core
                 if (o == null)
                     return new NullValue();
 
-                if (o is Value)
-                    return (Value)o;
+                if (o is Value value)
+                    return value;
 
                 var t = o.GetType().Inspector();
 
                 if (t.Is(TypeFlags.Numeric) || t.Is(TypeFlags.String) || t.Is(TypeFlags.Boolean))
                     return new SimpleValue(o);
-
 
                 return new NullValue();
             }
@@ -141,9 +140,7 @@ namespace Iridium.Core
                     return;
                 }
 
-                string s = _value as string;
-
-                if (s != null)
+                if (_value is string s)
                 {
                     stream.Write('\"');
 

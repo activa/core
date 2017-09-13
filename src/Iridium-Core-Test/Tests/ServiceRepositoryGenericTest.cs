@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 
 namespace Iridium.Core.Test
@@ -19,6 +20,14 @@ namespace Iridium.Core.Test
         }
 
         private class GenericService2<T> : IGenericService2<T>
+        {
+        }
+
+        private class SimpleClass1
+        {
+        }
+
+        private class SimpleClass2
         {
         }
 
@@ -69,6 +78,10 @@ namespace Iridium.Core.Test
             Assert.That(s1, Is.InstanceOf<GenericService1<int>>());
             Assert.That(s2, Is.InstanceOf<GenericService1<int>>());
             Assert.That(s1, Is.Not.SameAs(s2));
+
+            repo.UnRegister(typeof(GenericService1<>));
+
+            Assert.Null(repo.Get<IGenericService1<int>>());
         }
 
         [Test]
@@ -84,6 +97,10 @@ namespace Iridium.Core.Test
             Assert.That(s1, Is.InstanceOf<GenericService1<int>>());
             Assert.That(s2, Is.InstanceOf<GenericService1<int>>());
             Assert.That(s1, Is.SameAs(s2));
+
+            repo.UnRegister(typeof(GenericService1<>));
+
+            Assert.Null(repo.Get<IGenericService1<int>>());
         }
 
         [Test]
@@ -115,6 +132,10 @@ namespace Iridium.Core.Test
 
             Assert.That(repo.Get<GenericService1<int>>(), Is.SameAs(svc));
             Assert.That(repo.Get<GenericService1<bool>>(), Is.Null);
+
+            repo.UnRegister<GenericService1<int>>();
+
+            Assert.Null(repo.Get<GenericService1<int>>());
         }
         
         [Test]
@@ -172,5 +193,37 @@ namespace Iridium.Core.Test
             Assert.That(repo.Get<IGenericService1<int>>(), Is.InstanceOf<GenericService1Int>());
             Assert.That(repo.Get<IGenericService1<bool>>(), Is.InstanceOf<GenericService1Bool>());
         }
+
+        [Test]
+        public void SomethingThatFailsOnUWP()
+        {
+            var classType1 = typeof(SimpleClass1);
+            var classType2 = typeof(SimpleClass2);
+
+            ServiceRepository repo = new ServiceRepository();
+
+            var genericType1 = typeof(GenericService1<>).MakeGenericType(classType1);
+            var genericType2 = typeof(GenericService1<>).MakeGenericType(classType2);
+
+            var obj1 = Activator.CreateInstance(genericType1);
+            var obj2 = Activator.CreateInstance(genericType2);
+
+            repo.Register(obj1).As(genericType1);
+            repo.Register(obj2).As(genericType2);
+
+            Assert.That(repo.Get(genericType1), Is.SameAs(obj1));
+            Assert.That(repo.Get(genericType2), Is.SameAs(obj2));
+
+            repo.UnRegister(genericType1);
+
+            Assert.That(repo.Get(genericType1), Is.Null);
+            Assert.That(repo.Get(genericType2), Is.SameAs(obj2));
+
+            repo.UnRegister(genericType2);
+
+            Assert.That(repo.Get(genericType1), Is.Null);
+            Assert.That(repo.Get(genericType2), Is.Null);
+        }
+
     }
 }

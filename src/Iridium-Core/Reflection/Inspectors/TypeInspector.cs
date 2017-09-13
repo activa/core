@@ -204,6 +204,7 @@ namespace Iridium.Core
         public Type ArrayElementType => IsArray ? Type.GetElementType() : null;
         public bool IsGenericType => _typeInfo.IsGenericType;
         public bool IsGenericTypeDefinition => _typeInfo.IsGenericTypeDefinition;
+        public bool IsConstructedGenericType => Type.IsConstructedGenericType;
         public bool IsNullable => Is(TypeFlags.Nullable);
         public bool CanBeNull => Is(TypeFlags.CanBeNull);
         public bool IsPrimitive => Is(TypeFlags.Primitive);
