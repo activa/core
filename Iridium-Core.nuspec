@@ -15,6 +15,8 @@
     <tags>iridium core reflection json conversion caching</tags>
   </metadata>
   <files>
-    <file src="*.dll" target="lib\netstandard1.0" />
+    <file src="src\Iridium-Core\bin\$Configuration$\netstandard1.0\*.dll" target="lib\netstandard1.0" />
+    <file src="src\Iridium-Core\bin\$Configuration$\netstandard1.0\*.pdb" target="lib\netstandard1.0" />
+    <file src="src\Iridium-Core\**\*.cs" exclude="**\bin\**\*.cs;**\obj\**\*.cs" target="src" />
   </files>
 </package>
