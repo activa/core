@@ -81,7 +81,7 @@ namespace Iridium.Core
                         return false;
                     }
 
-                    return type.Inspector().IsAssignableFrom(Type.MakeGenericType(type.GenericTypeArguments));
+                    return type.GetGenericTypeDefinition().Inspector().IsAssignableFrom(Type);
                 }
 
                 return type.Inspector().IsAssignableFrom(RegistrationType);

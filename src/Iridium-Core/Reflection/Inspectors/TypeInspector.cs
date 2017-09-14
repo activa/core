@@ -260,7 +260,36 @@ namespace Iridium.Core
 
         public bool IsAssignableFrom(Type type)
         {
-            return _typeInfo.IsAssignableFrom(type.GetTypeInfo());
+            return type.Inspector().IsAssignableTo(Type);
+        }
+
+        public bool IsAssignableTo(Type targetType)
+        {
+            if (targetType.Inspector().IsGenericTypeDefinition)
+                return IsAssignableToGenericType(Type,targetType);
+
+            return targetType.GetTypeInfo().IsAssignableFrom(_typeInfo);
+        }
+
+        public static bool IsAssignableToGenericType(Type givenType, Type genericType)
+        {
+            var interfaceTypes = givenType.Inspector().GetInterfaces();
+
+            foreach (var it in interfaceTypes)
+            {
+                if (it.Inspector().IsGenericType && it.GetGenericTypeDefinition() == genericType)
+                    return true;
+            }
+
+            if (givenType.Inspector().IsGenericType && givenType.GetGenericTypeDefinition() == genericType)
+                return true;
+
+            Type baseType = givenType.Inspector().BaseType;
+
+            if (baseType == null)
+                return false;
+
+            return IsAssignableToGenericType(baseType, genericType);
         }
 
         public ConstructorInfo[] GetConstructors()

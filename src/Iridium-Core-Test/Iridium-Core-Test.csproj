@@ -82,8 +82,10 @@
     <Compile Include="Tests\Json\JsonSeralizerTestFixture.cs" />
     <Compile Include="Tests\MockTimeProvider.cs" />
     <Compile Include="Tests\NotifierTest.cs" />
+    <Compile Include="Tests\Reflection\LINQExtensions.cs" />
+    <Compile Include="Tests\Reflection\TypeFlagsTest.cs" />
     <Compile Include="Tests\ServiceRepositoryGenericTest.cs" />
-    <Compile Include="Tests\ValueInspectorTest.cs" />
+    <Compile Include="Tests\Reflection\ValueInspectorTest.cs" />
     <Compile Include="Tests\ObjectMappedTest.cs" />
     <Compile Include="Tests\SafeDictionaryTest.cs" />
     <Compile Include="Tests\SmartCache_Fixture.cs" />
@@ -93,7 +95,7 @@
     <Compile Include="Tests\StringExtensionsTest.cs" />
     <Compile Include="Tests\ServiceRepositoryTest.cs" />
     <Compile Include="Tests\Tokenizer_Fixture.cs" />
-    <Compile Include="Tests\TypeExtensionsTest.cs" />
+    <Compile Include="Tests\Reflection\TypeExtensionsTest.cs" />
     <Compile Include="Tests\SetupFixture.cs" />
   </ItemGroup>
   <ItemGroup>

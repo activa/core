@@ -34,12 +34,13 @@ namespace Iridium.Core
 	public static class ReflectionExtensions
 	{
         private static readonly ThreadLocal<Dictionary<Type,TypeInspector>> _typeInspectorCache = new ThreadLocal<Dictionary<Type, TypeInspector>>(() => new Dictionary<Type, TypeInspector>());
-       
+	    private static readonly ThreadLocal<Dictionary<MemberInfo, MemberInspector>> _memberInspectorCache = new ThreadLocal<Dictionary<MemberInfo, MemberInspector>>(() => new Dictionary<MemberInfo, MemberInspector>());
+	    private static readonly ThreadLocal<Dictionary<PropertyInfo, MemberInspector>> _propertyInspectorCache = new ThreadLocal<Dictionary<PropertyInfo, MemberInspector>>(() => new Dictionary<PropertyInfo, MemberInspector>());
+	    private static readonly ThreadLocal<Dictionary<FieldInfo, MemberInspector>> _fieldInspectorCache = new ThreadLocal<Dictionary<FieldInfo, MemberInspector>>(() => new Dictionary<FieldInfo, MemberInspector>());
+
         public static TypeInspector Inspector(this Type type)
         {
-            TypeInspector inspector;
-
-            if (!_typeInspectorCache.Value.TryGetValue(type, out inspector))
+            if (!_typeInspectorCache.Value.TryGetValue(type, out var inspector))
             {
                 inspector = new TypeInspector(type);
 
@@ -51,17 +52,38 @@ namespace Iridium.Core
 
 	    public static MemberInspector Inspector(this MemberInfo memberInfo)
 	    {
-	        return new MemberInspector(memberInfo);
+	        if (!_memberInspectorCache.Value.TryGetValue(memberInfo, out var inspector))
+	        {
+	            inspector = new MemberInspector(memberInfo);
+
+	            _memberInspectorCache.Value[memberInfo] = inspector;
+	        }
+
+	        return inspector;
 	    }
 
 	    public static MemberInspector Inspector(this PropertyInfo propertyInfo)
 	    {
-	        return new MemberInspector(propertyInfo);
+	        if (!_propertyInspectorCache.Value.TryGetValue(propertyInfo, out var inspector))
+	        {
+	            inspector = new MemberInspector(propertyInfo);
+
+	            _propertyInspectorCache.Value[propertyInfo] = inspector;
+	        }
+
+	        return inspector;
 	    }
 
         public static MemberInspector Inspector(this FieldInfo fieldInfo)
         {
-            return new MemberInspector(fieldInfo);
+            if (!_fieldInspectorCache.Value.TryGetValue(fieldInfo, out var inspector))
+            {
+                inspector = new MemberInspector(fieldInfo);
+
+                _fieldInspectorCache.Value[fieldInfo] = inspector;
+            }
+
+            return inspector;
         }
 
         public static AssemblyInspector Inspector(this Assembly assembly)

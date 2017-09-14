@@ -63,7 +63,20 @@ namespace Iridium.Core.Test
         {
         }
 
-        
+        [Test]
+        public void AssignableTests()
+        {
+            Assert.True(typeof(GenericService1Int).Inspector().IsAssignableTo(typeof(IGenericService1<>)));
+            Assert.False(typeof(GenericService1Int).Inspector().IsAssignableTo(typeof(IGenericService2<>)));
+            Assert.True(typeof(GenericService1<int>).Inspector().IsAssignableTo(typeof(IGenericService1<>)));
+            Assert.True(typeof(GenericService2<int>).Inspector().IsAssignableTo(typeof(IGenericService2<>)));
+            Assert.False(typeof(GenericService1<int>).Inspector().IsAssignableTo(typeof(IGenericService2<>)));
+            Assert.False(typeof(GenericService2<int>).Inspector().IsAssignableTo(typeof(IGenericService1<>)));
+
+            Assert.True(typeof(GenericService1<>).Inspector().IsAssignableTo(typeof(IGenericService1<>)));
+        }
+
+
 
         [Test]
         public void SimpleInterface()
