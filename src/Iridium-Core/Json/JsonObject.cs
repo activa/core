@@ -33,23 +33,46 @@ namespace Iridium.Core
 {
     public class JsonObject : IFormattable, IEnumerable<JsonObject>
     {
-        private readonly object _value;
+        private object _value;
+        private bool _isUndefined;
 
-        internal JsonObject(object value = null, bool empty = false)
+        private JsonObject(object value)
         {
             _value = value;
-            IsEmpty = empty;
         }
+
+        private JsonObject(JsonObject obj)
+        {
+            _value = obj._value;
+            _isUndefined = obj._isUndefined;
+        }
+
+        private JsonObject()
+        {
+            _isUndefined = true;
+        }
+
+        [Obsolete("IsEmpty has been renamed to IsUndefined")]
+        public bool IsEmpty => _isUndefined;
 
         public bool IsObject => _value is Dictionary<string, JsonObject>;
         public bool IsArray => _value is JsonObject[];
-        public bool IsValue => !IsObject && !IsArray && !IsEmpty;
-        public bool IsEmpty { get; }
-        public bool IsNull => _value == null && !IsEmpty;
+        public bool IsValue => !IsObject && !IsArray && !IsUndefined;
+        public bool IsUndefined => _isUndefined;
+        public bool IsNull => _value == null && !IsUndefined;
         public bool IsNullOrEmpty => _value == null;
         public object Value => IsValue ? _value : null;
 
-        public static JsonObject Empty { get; } = new JsonObject(empty:true);
+        public static JsonObject Undefined() => new JsonObject();
+        public static JsonObject EmptyObject() => new JsonObject(new Dictionary<string,JsonObject>());
+        public static JsonObject EmptyArray() => new JsonObject(new JsonObject[0]);
+        public static JsonObject FromValue(object value) => new JsonObject(value);
+
+        private void Set(JsonObject o)
+        {
+            _value = o._value;
+            _isUndefined = o._isUndefined;
+        }
 
         public object As(Type type)
         {
@@ -121,9 +144,69 @@ namespace Iridium.Core
             return jsonObject.AsArray();
         }
 
-        public static implicit operator string[] (JsonObject jsonObject)
+        public static implicit operator string[](JsonObject jsonObject)
         {
             return jsonObject.AsArray<string>();
+        }
+
+        public static implicit operator JsonObject(string value)
+        {
+            return FromValue(value);
+        }
+
+        public static implicit operator JsonObject(int value)
+        {
+            return FromValue(value);
+        }
+
+        public static implicit operator JsonObject(int? value)
+        {
+            return FromValue(value);
+        }
+
+        public static implicit operator JsonObject(long value)
+        {
+            return FromValue(value);
+        }
+
+        public static implicit operator JsonObject(long? value)
+        {
+            return FromValue(value);
+        }
+
+        public static implicit operator JsonObject(decimal value)
+        {
+            return FromValue(value);
+        }
+
+        public static implicit operator JsonObject(decimal? value)
+        {
+            return FromValue(value);
+        }
+
+        public static implicit operator JsonObject(double value)
+        {
+            return FromValue(value);
+        }
+
+        public static implicit operator JsonObject(double? value)
+        {
+            return FromValue(value);
+        }
+
+        public static implicit operator JsonObject(bool value)
+        {
+            return FromValue(value);
+        }
+
+        public static implicit operator JsonObject(bool? value)
+        {
+            return FromValue(value);
+        }
+
+        public static implicit operator JsonObject(Array arr)
+        {
+            return FromValue(arr.Cast<object>().Select(o => (o is JsonObject) ? (JsonObject)o : new JsonObject(o)).ToArray());
         }
 
         public JsonObject[] AsArray()
@@ -134,77 +217,136 @@ namespace Iridium.Core
         public T[] AsArray<T>()
         {
             if (!IsArray)
-                return null;
+                return new T[0];
 
             return AsArray().Select(x => x.As<T>()).ToArray();
         }
 
         public Dictionary<string, JsonObject> AsDictionary()
         {
-            return _value as Dictionary<string,JsonObject>;
-        } 
+            return _value as Dictionary<string, JsonObject>;
+        }
+
+        public bool HasField(string field) => IsObject && AsDictionary().ContainsKey(field);
 
         public string[] Keys => IsObject ? AsDictionary().Keys.ToArray() : new string[0];
 
-        public JsonObject this[string key] => ValueForExpression(this, key);
+        public JsonObject this[string key]
+        {
+            get { return ValueForExpression(this, key, createIfNotExists:false); }
+            set { ValueForExpression(this, key, createIfNotExists:true).Set(value); }
+        }
 
         public JsonObject this[int index]
         {
             get
             {
                 if (!IsArray || index >= AsArray().Length)
-                    return Empty;
+                    return Undefined();
 
                 return AsArray()[index];
             }
         }
-
-        private static IEnumerable<string> AllKeyParts(string key)
+        
+        private static JsonObject ValueForExpression(JsonObject obj, string key, bool createIfNotExists)
         {
-            int index = 0;
+            int dotIndex = key.IndexOf('.');
+            int bIndex = key.IndexOf('[');
+            int nextIndex = -1;
 
-            for (; ; )
+            string firstKey = key;
+
+            if (dotIndex > 0 && (bIndex < 0 || dotIndex < bIndex))
             {
-                int dotIndex = key.IndexOf('.', index);
-
-                if (dotIndex < 0)
-                {
-                    yield return key;
-                    break;
-                }
-
-                yield return key.Substring(0, dotIndex);
-
-                index = dotIndex + 1;
+                firstKey = key.Substring(0, dotIndex);
+                nextIndex = dotIndex + 1;
             }
-        }
-
-        private static JsonObject ValueForExpression(JsonObject obj, string key)
-        {
-            if (!obj.IsObject)
-                return Empty;
-
-            foreach (var keyPart in AllKeyParts(key).Reverse().ToArray())
+            else if (bIndex > 0 && (dotIndex < 0 || bIndex < dotIndex))
             {
-                var dic = obj.AsDictionary();
-
-                if (dic.ContainsKey(keyPart))
-                {
-                    var value = dic[keyPart];
-
-                    if (keyPart.Length == key.Length)
-                        return value;
-
-                    string key2 = key.Substring(keyPart.Length + 1);
-
-                    return ValueForExpression(value,key2);
-                }
-
+                firstKey = key.Substring(0, bIndex);
+                nextIndex = bIndex;
             }
 
-            return Empty;
-        }
+            if (nextIndex >= 0)
+            {
+                if (createIfNotExists)
+                {
+                    if (!obj.IsObject)
+                        obj.Set(EmptyObject());
 
+                    var dict = obj.AsDictionary();
+
+                    if (!dict.ContainsKey(firstKey))
+                        dict[firstKey] = Undefined();
+                }
+
+                return ValueForExpression(obj[firstKey], key.Substring(nextIndex), createIfNotExists);
+            }
+
+            if (bIndex == 0)
+            {
+                bIndex = key.IndexOf(']');
+
+                if (bIndex < 2)
+                    return Undefined();
+
+                int index = key.Substring(1, bIndex - 1).To<int>();
+
+                if (index < 0)
+                    return Undefined();
+
+                if (createIfNotExists)
+                {
+                    if (!obj.IsArray)
+                        obj.Set(EmptyArray());
+
+                    var arr = obj.AsArray();
+
+                    if (arr.Length <= index)
+                    {
+                        var newArr = new JsonObject[index + 1];
+
+                        for (int i = 0; i < arr.Length; i++)
+                            newArr[i] = arr[i];
+                        for (int i = arr.Length; i <= index; i++)
+                            newArr[i] = Undefined();
+
+                        obj._value = newArr;
+                        arr = newArr;
+                    }
+                    else
+                    {
+                        arr[index] = Undefined();
+                    }
+                }
+
+                if (bIndex + 1 >= key.Length)
+                    return obj[index];
+
+                if (key[bIndex + 1] == '.')
+                    return ValueForExpression(obj[index], key.Substring(bIndex + 2), createIfNotExists);
+                else
+                    return ValueForExpression(obj[index], key.Substring(bIndex + 1), createIfNotExists);
+            }
+
+            var dic = obj.AsDictionary();
+
+            if (dic != null && dic.TryGetValue(key, out var value))
+                return value;
+
+            var returnValue = Undefined();
+
+            if (createIfNotExists)
+            {
+                if (!obj.IsObject)
+                    obj.Set(EmptyObject());
+
+                obj.AsDictionary()[key] = returnValue;
+            }
+
+            return returnValue;
+        }
+        
         public IEnumerator<JsonObject> GetEnumerator()
         {
             if (IsObject)
@@ -215,13 +357,15 @@ namespace Iridium.Core
             {
                 return (from obj in AsArray() select obj).GetEnumerator();
             }
+            else if (IsUndefined)
+            {
+                return Enumerable.Empty<JsonObject>().GetEnumerator();
+            }
             else
             {
-                return (IEnumerator<JsonObject>) (new[] {this}).GetEnumerator();
+                return Enumerable.Repeat(this, 1).GetEnumerator();
             }
-            
         }
-
 
         IEnumerator IEnumerable.GetEnumerator()
         {
@@ -246,10 +390,10 @@ namespace Iridium.Core
             if (_value == null)
                 return "(null)";
 
-            if (_value is IFormattable && format != null)
-                return ((IFormattable) _value).ToString(format, formatProvider);
+            if (_value is IFormattable formattable && format != null)
+                return formattable.ToString(format, formatProvider);
 #endif
-            return _value.ToString();
+            return _value?.ToString() ?? "null";
         }
     }
 }

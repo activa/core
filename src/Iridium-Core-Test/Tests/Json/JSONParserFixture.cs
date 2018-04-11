@@ -56,6 +56,52 @@ namespace Iridium.Core.Test
         }
 
         [Test]
+        public void EnumerateArray()
+        {
+            var json = @"{ ""array"" : [1,2,3] }";
+
+            var jsonObject = JsonParser.Parse(json);
+
+            Assert.That(jsonObject["array"].Count(), Is.EqualTo(3));
+            Assert.That((int)jsonObject["array"].FirstOrDefault(), Is.EqualTo(1));
+            Assert.That((int)jsonObject["array"].Skip(1).FirstOrDefault(), Is.EqualTo(2));
+            Assert.That((int)jsonObject["array"].Skip(2).FirstOrDefault(), Is.EqualTo(3));
+        }
+
+        [Test]
+        public void EnumerateArrayEmpty()
+        {
+            var json = @"{ ""array"" : [] }";
+
+            var jsonObject = JsonParser.Parse(json);
+
+            Assert.That(jsonObject["array"].Count(), Is.EqualTo(0));
+            Assert.That(jsonObject["array"].FirstOrDefault(), Is.Null);
+        }
+
+        [Test]
+        public void EnumerateNonArray()
+        {
+            var json = @"{ ""array"" : 1 }";
+
+            var jsonObject = JsonParser.Parse(json);
+
+            Assert.That(jsonObject["array"].Count(), Is.EqualTo(1));
+            Assert.That((int)jsonObject["array"].FirstOrDefault(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void EnumerateNonExisting()
+        {
+            var json = @"{ ""array"" : [] }";
+
+            var jsonObject = JsonParser.Parse(json);
+
+            Assert.That(jsonObject["arrayX"].Count(), Is.EqualTo(0));
+            Assert.That(jsonObject["arrayX"].FirstOrDefault(), Is.Null);
+        }
+
+        [Test]
         public void Escapes()
         {
             JsonObject obj = JsonParser.Parse(@"{ ""s1"" : ""\n"", ""s2"" : ""\t"", ""s3"" : ""\\"" , ""s4"" : ""\u00aa"" }");
@@ -237,32 +283,174 @@ namespace Iridium.Core.Test
         {
             var obj = JsonParser.Parse(_deepClassJson);
 
-            Assert.That((string)obj["string1"], Is.EqualTo("test1"));
-            Assert.That((string)obj["string2"], Is.EqualTo("test2"));
+            Assert.That((string) obj["string1"], Is.EqualTo("test1"));
+            Assert.That((string) obj["string2"], Is.EqualTo("test2"));
 
-            Assert.That((string)obj["subObject1"]["string1"], Is.EqualTo("test11"));
-            Assert.That((string)obj["subObject1.string1"], Is.EqualTo("test11"));
+            Assert.That((string) obj["subObject1"]["string1"], Is.EqualTo("test11"));
+            Assert.That((string) obj["subObject1.string1"], Is.EqualTo("test11"));
 
-            Assert.That((string)obj["subObject1"]["string2"], Is.EqualTo("test12"));
-            Assert.That((string)obj["subObject1.string2"], Is.EqualTo("test12"));
+            Assert.That((string) obj["subObject1"]["string2"], Is.EqualTo("test12"));
+            Assert.That((string) obj["subObject1.string2"], Is.EqualTo("test12"));
 
-            Assert.That((string)obj["subObject2"]["string1"], Is.EqualTo("test21"));
-            Assert.That((string)obj["subObject2.string1"], Is.EqualTo("test21"));
+            Assert.That((string) obj["subObject2"]["string1"], Is.EqualTo("test21"));
+            Assert.That((string) obj["subObject2.string1"], Is.EqualTo("test21"));
 
-            Assert.That((string)obj["subObject2"]["string2"], Is.EqualTo("test22"));
-            Assert.That((string)obj["subObject2.string2"], Is.EqualTo("test22"));
+            Assert.That((string) obj["subObject2"]["string2"], Is.EqualTo("test22"));
+            Assert.That((string) obj["subObject2.string2"], Is.EqualTo("test22"));
 
             Assert.That(obj["XXXXXX"].IsEmpty, Is.True);
             Assert.That(obj["XXXXXX.string2"].IsEmpty, Is.True);
 
-            Assert.That(obj["subObject2"]["subObjectIntArray"]["value1"].Select(item => (int)item), Is.EquivalentTo(new[] { 1, 2, 3, 4 }));
-            Assert.That(obj["subObject2"]["subObjectIntArray"]["value2"].Select(item => (int)item), Is.EquivalentTo(new[] { 11, 22, 33, 44 }));
+            Assert.That(obj["subObject2"]["subObjectIntArray"]["value1"].Select(item => (int) item), Is.EquivalentTo(new[] {1, 2, 3, 4}));
+            Assert.That(obj["subObject2"]["subObjectIntArray"]["value2"].Select(item => (int) item), Is.EquivalentTo(new[] {11, 22, 33, 44}));
 
-            Assert.That(obj["subObject2"]["subObjectIntArray.value1"].Select(item => (int)item), Is.EquivalentTo(new[] { 1, 2, 3, 4 }));
-            Assert.That(obj["subObject2.subObjectIntArray.value1"].Select(item => (int)item), Is.EquivalentTo(new[] { 1, 2, 3, 4 }));
-            Assert.That(obj["subObject2.subObjectIntArray"]["value1"].Select(item => (int)item), Is.EquivalentTo(new[] { 1, 2, 3, 4 }));
+            Assert.That(obj["subObject2"]["subObjectIntArray.value1"].Select(item => (int) item), Is.EquivalentTo(new[] {1, 2, 3, 4}));
+            Assert.That(obj["subObject2.subObjectIntArray.value1"].Select(item => (int) item), Is.EquivalentTo(new[] {1, 2, 3, 4}));
+            Assert.That(obj["subObject2.subObjectIntArray"]["value1"].Select(item => (int) item), Is.EquivalentTo(new[] {1, 2, 3, 4}));
+
+            Assert.That((int)obj["subObject2.subObjectIntArray.value1[1]"], Is.EqualTo(2));
+            Assert.That((int)obj["subObject2.subObjectIntArray.value2[1]"], Is.EqualTo(22));
+
+            obj["string1"] = 1;
+
+            Assert.That((int)obj["string1"], Is.EqualTo(1));
+        }
+
+        [Test]
+        public void TestDeepSet()
+        {
+            var obj = JsonObject.EmptyObject();
+
+            Assert.That(obj["value1"].IsUndefined);
+
+            obj["value1"] = 123;
+
+            Assert.That((int) obj["value1"], Is.EqualTo(123));
+
+            obj = JsonObject.Undefined();
+
+            Assert.That(obj["value1"].IsUndefined);
+
+            obj["value1"] = 123;
+
+            Assert.That((int) obj["value1"], Is.EqualTo(123));
 
 
+            obj = JsonObject.EmptyObject();
+
+            Assert.That(obj["value1.value2"].IsUndefined);
+
+            obj["value1.value2"] = 123;
+
+            Assert.That((int) obj["value1.value2"], Is.EqualTo(123));
+            Assert.That((int) obj["value1"]["value2"], Is.EqualTo(123));
+
+            obj = JsonParser.Parse("{\"value1\":123}");
+
+            Assert.That((int)obj["value1"],Is.EqualTo(123));
+
+            obj["value1"]["value2"] = 123;
+
+            Assert.That(obj["value1"].IsObject);
+
+            Assert.That((int) obj["value1.value2"], Is.EqualTo(123));
+            Assert.That((int) obj["value1"]["value2"], Is.EqualTo(123));
+
+            obj["value1"]["value3"] = 456;
+
+            Assert.That((int) obj["value1.value3"], Is.EqualTo(456));
+            Assert.That((int) obj["value1"]["value3"], Is.EqualTo(456));
+            Assert.That((int) obj["value1.value2"], Is.EqualTo(123));
+            Assert.That((int) obj["value1"]["value2"], Is.EqualTo(123));
+
+            obj = JsonObject.EmptyObject();
+
+            Assert.That(obj["value1"].IsUndefined);
+            Assert.That(obj["value1.value2"].IsUndefined);
+            Assert.That(obj["value1.value2.value3"].IsUndefined);
+            Assert.That(obj["value1.value2.value3.value4"].IsUndefined);
+
+            obj["value1.value2.value3.value4"] = 123;
+
+            Assert.That(obj["value1"].IsObject);
+            Assert.That(obj["value1.value2"].IsObject);
+            Assert.That(obj["value1.value2.value3"].IsObject);
+            Assert.That(obj["value1.value2.value3.value4"].IsValue);
+
+
+            Assert.That((int) obj["value1.value2.value3.value4"], Is.EqualTo(123));
+            Assert.That((int) obj["value1"]["value2"]["value3"]["value4"], Is.EqualTo(123));
+
+        }
+
+        [Test]
+        public void TestArraySet()
+        {
+            var obj = JsonObject.Undefined();
+
+            obj["value1[0]"] = 123;
+
+            Assert.That(obj["value1"].IsArray);
+            Assert.That(obj["value1"].AsArray().Length, Is.EqualTo(1));
+            Assert.That((int)obj["value1"][0], Is.EqualTo(123));
+            Assert.That((int)obj["value1[0]"], Is.EqualTo(123));
+
+            obj["value1[10]"] = 456;
+
+            Assert.That(obj["value1"].IsArray);
+            Assert.That(obj["value1"].AsArray().Length, Is.EqualTo(11));
+            Assert.That((int)obj["value1"][0], Is.EqualTo(123));
+            Assert.That((int)obj["value1"][10], Is.EqualTo(456));
+            Assert.That((int)obj["value1[0]"], Is.EqualTo(123));
+            Assert.That((int)obj["value1[10]"], Is.EqualTo(456));
+        }
+
+        [Test]
+        public void TestArrayDeepSet()
+        {
+            var obj = JsonObject.Undefined();
+
+            obj["value1[0].value2"] = 123;
+
+            Assert.That(obj["value1"].IsArray);
+            Assert.That(obj["value1"].AsArray().Length, Is.EqualTo(1));
+            Assert.That((int)obj["value1"][0]["value2"], Is.EqualTo(123));
+            Assert.That((int)obj["value1[0].value2"], Is.EqualTo(123));
+
+            obj["value1[10].value2"] = 456;
+
+            Assert.That(obj["value1"].IsArray);
+            Assert.That(obj["value1"].AsArray().Length, Is.EqualTo(11));
+            Assert.That((int)obj["value1"][0]["value2"], Is.EqualTo(123));
+            Assert.That((int)obj["value1"][10]["value2"], Is.EqualTo(456));
+            Assert.That((int)obj["value1[0].value2"], Is.EqualTo(123));
+            Assert.That((int)obj["value1[10].value2"], Is.EqualTo(456));
+
+            obj = JsonObject.Undefined();
+
+            obj["value1[0][0]"] = 123;
+
+            Assert.That(obj["value1"].IsArray);
+            Assert.That(obj["value1"].AsArray().Length, Is.EqualTo(1));
+            Assert.That(obj["value1"][0].IsArray);
+            Assert.That(obj["value1"][0].AsArray().Length, Is.EqualTo(1));
+
+            Assert.That((int)obj["value1"][0][0], Is.EqualTo(123));
+            Assert.That((int)obj["value1[0][0]"], Is.EqualTo(123));
+        }
+
+        [Test]
+        public void TestSetValues()
+        {
+            JsonObject obj = JsonObject.Undefined();
+
+            obj["value"] = new[] {1, 2, 3};
+
+            Assert.That(obj["value"].IsArray);
+
+            obj["value"] = 123;
+
+            Assert.That((int)obj["value"], Is.EqualTo(123));
         }
 
         [Test]

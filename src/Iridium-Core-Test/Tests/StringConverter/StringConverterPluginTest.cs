@@ -71,7 +71,7 @@ namespace Iridium.Core.Test
             }
         }
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void Setup()
         {
             StringConverter.UnregisterAllStringConverters();

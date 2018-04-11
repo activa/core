@@ -273,20 +273,9 @@ namespace Iridium.Core
             public override bool IsEmpty => false;
             public override bool IsNull => false;
 
-            public override Value this[string key]
-            {
-                get
-                {
-                    Value value;
+            public override Value this[string key] => _fields.TryGetValue(key, out var value) ? value : NoValue;
 
-                    return _fields.TryGetValue(key, out value) ? value : NoValue;
-                }
-            }
-
-            public override IEnumerator<Value> GetEnumerator()
-            {
-                return _fields.Keys.Select(fieldName => new SimpleValue(fieldName)).GetEnumerator();
-            }
+            public override IEnumerator<Value> GetEnumerator() => _fields.Keys.Select(fieldName => new SimpleValue(fieldName)).GetEnumerator();
 
             protected internal override void Serialize(StreamWriter streamWriter, bool pretty = false)
             {

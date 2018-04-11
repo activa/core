@@ -133,7 +133,7 @@ namespace Iridium.Core
 
             NextToken();
 
-            return new JsonObject(obj);
+            return JsonObject.FromValue(obj);
         }
 
         private static bool IsArray(Type type)
@@ -159,7 +159,7 @@ namespace Iridium.Core
                         break;
                     case JsonTokenType.Null:
                         NextToken();
-                        return new JsonObject();
+                        return JsonObject.FromValue(null);
                     case JsonTokenType.True:
                         type = typeof(bool);
                         break;
@@ -195,7 +195,7 @@ namespace Iridium.Core
 
                 NextToken();
 
-                return new JsonObject(value);
+                return JsonObject.FromValue(value);
             }
 
             if (type == typeof(int) || type == typeof(short) || type == typeof(long) || type == typeof(double) || type == typeof(float) || type == typeof(decimal))
@@ -228,7 +228,7 @@ namespace Iridium.Core
 
             NextToken();
 
-            return new JsonObject(Convert.ChangeType(n, type, null));
+            return JsonObject.FromValue(Convert.ChangeType(n, type, null));
         }
 
 
@@ -241,7 +241,7 @@ namespace Iridium.Core
 
             NextToken();
 
-            return new JsonObject(s);
+            return JsonObject.FromValue(s);
         }
 
         private JsonObject ParseArray(Type type)
@@ -281,7 +281,7 @@ namespace Iridium.Core
             for (int i = 0; i < array.Length; i++)
                 array.SetValue(list[i], i);
 
-            return new JsonObject(array);
+            return JsonObject.FromValue(array);
         }
     }
 }
