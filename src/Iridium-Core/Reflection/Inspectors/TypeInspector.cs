@@ -124,9 +124,7 @@ namespace Iridium.Core
 
         private TypeFlags BuildTypeFlags()
         {
-            TypeFlags flags;
-
-            _typeflagsMap.TryGetValue(RealType, out flags);
+            _typeflagsMap.TryGetValue(RealType, out var flags);
 
             if (Type != RealType)
                 flags |= TypeFlags.Nullable | TypeFlags.CanBeNull;
@@ -138,9 +136,7 @@ namespace Iridium.Core
 
             if (_realTypeInfo.IsEnum)
             {
-                TypeFlags enumTypeFlags;
-
-                if (_typeflagsMap.TryGetValue(Enum.GetUnderlyingType(RealType), out enumTypeFlags))
+                if (_typeflagsMap.TryGetValue(Enum.GetUnderlyingType(RealType), out var enumTypeFlags))
                     flags |= enumTypeFlags;
 
                 flags |= TypeFlags.Enum;
@@ -435,7 +431,12 @@ namespace Iridium.Core
 
         public object Cast(object value)
         {
-            var conversion = ImplicitConversion(value.GetType());
+            var valueType = value.GetType();
+
+            if (valueType == Type)
+                return value;
+
+            var conversion = ImplicitConversion(valueType);
 
             if (conversion != null)
                 return conversion(value);

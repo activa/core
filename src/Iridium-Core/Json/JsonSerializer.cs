@@ -80,22 +80,22 @@ namespace Iridium.Core
         {
             if (obj == null)
                 _output.Append("null");
-            else if (obj is JsonObject)
-                WriteJsonObject((JsonObject)obj);
+            else if (obj is JsonObject jsonObject)
+                WriteJsonObject(jsonObject);
             else if (obj is sbyte || obj is byte || obj is short || obj is ushort || obj is int || obj is uint || obj is long || obj is ulong || obj is decimal || obj is double || obj is float)
                 _output.Append(Convert.ToString(obj, NumberFormatInfo.InvariantInfo));
             else if (obj is bool)
                 _output.Append(obj.ToString().ToLower());
             else if (obj is char || obj is Enum || obj is Guid)
                 WriteString("" + obj);
-            else if (obj is DateTime)
-                WriteDate((DateTime) obj);
-            else if (obj is string)
-                WriteString((string)obj);
-            else if (obj is IDictionary)
-                WriteDictionary((IDictionary)obj);
-            else if (obj is IEnumerable)
-                WriteArray((IEnumerable)obj);
+            else if (obj is DateTime dateTime)
+                WriteDate(dateTime);
+            else if (obj is string s)
+                WriteString(s);
+            else if (obj is IDictionary dictionary)
+                WriteDictionary(dictionary);
+            else if (obj is IEnumerable enumerable)
+                WriteArray(enumerable);
             else
                 WriteObject(obj);
         }

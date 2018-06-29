@@ -36,18 +36,18 @@ namespace Iridium.Core
         private object _value;
         private bool _isUndefined;
 
-        private JsonObject(object value)
+        public JsonObject(object value)
         {
             _value = value;
         }
 
-        private JsonObject(JsonObject obj)
+        public JsonObject(JsonObject obj)
         {
             _value = obj._value;
             _isUndefined = obj._isUndefined;
         }
 
-        private JsonObject()
+        public JsonObject()
         {
             _isUndefined = true;
         }
@@ -246,6 +246,11 @@ namespace Iridium.Core
 
                 return AsArray()[index];
             }
+        }
+
+        public void Add(string key, JsonObject value)
+        {
+            this[key] = value;
         }
         
         private static JsonObject ValueForExpression(JsonObject obj, string key, bool createIfNotExists)

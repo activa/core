@@ -454,6 +454,17 @@ namespace Iridium.Core.Test
         }
 
         [Test]
+        public void TestSetWithJsonObject()
+        {
+            JsonObject obj = JsonObject.Undefined();
+
+            obj["value"] = JsonParser.Parse("{\"value2\":123}");
+
+            Assert.That(obj["value"].IsObject);
+            Assert.That((int) obj["value"]["value2"], Is.EqualTo(123));
+        }
+
+        [Test]
         public void TrailingComma()
         {
             string jsonText = @"{""x"":1,}";

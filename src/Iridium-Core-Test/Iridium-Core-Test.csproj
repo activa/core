@@ -80,6 +80,7 @@
     <Compile Include="Tests\CoreExtensionsTest.cs" />
     <Compile Include="Tests\GeohashTest.cs" />
     <Compile Include="Tests\Json\Json2Test.cs" />
+    <Compile Include="Tests\Json\JsonBuilderFixture.cs" />
     <Compile Include="Tests\Json\JSONParserFixture.cs" />
     <Compile Include="Tests\Json\JsonSeralizerTestFixture.cs" />
     <Compile Include="Tests\MockTimeProvider.cs" />

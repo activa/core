@@ -126,14 +126,8 @@ namespace Iridium.Core
 
         public TV this[TK key]
         {
-            get
-            {
-                return ContainsKey(key) ? _dic[key] : DefaultValue;
-            }
-            set
-            {
-                _dic[key] = value;
-            }
+            get => ContainsKey(key) ? _dic[key] : DefaultValue;
+            set => _dic[key] = value;
         }
 
         public ICollection<TK> Keys => _dic.Keys;
