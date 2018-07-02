@@ -146,89 +146,69 @@ namespace Iridium.Core
 
         private JsonObject ParseValue(Type type = null)
         {
-            bool isArray = false;
-
-            if (type == null)
+            switch (CurrentToken.Type)
             {
-                switch (CurrentToken.Type)
-                {
-                    case JsonTokenType.ObjectStart:
-                        break;
-                    case JsonTokenType.ArrayStart:
-                        isArray = true;
-                        break;
-                    case JsonTokenType.Null:
-                        NextToken();
-                        return JsonObject.FromValue(null);
-                    case JsonTokenType.True:
-                        type = typeof(bool);
-                        break;
-                    case JsonTokenType.False:
-                        type = typeof(bool);
-                        break;
-                    case JsonTokenType.Integer:
-                        type = typeof(long);
-                        break;
-                    case JsonTokenType.Float:
-                        type = typeof(double);
-                        break;
-                    case JsonTokenType.String:
-                        type = typeof(string);
-                        break;
-                    default:
-                        throw new Exception("Unexpected token " + CurrentToken.Type);
-                }
+                case JsonTokenType.ObjectStart:
+                    return ParseObject(type);
+
+                case JsonTokenType.ArrayStart:
+                    return ParseArray(type);
+
+                case JsonTokenType.Null:
+                    NextToken();
+                    return JsonObject.FromValue(null);
+
+                case JsonTokenType.True:
+                    NextToken();
+                    return JsonObject.FromValue(true);
+
+                case JsonTokenType.False:
+                    NextToken();
+                    return JsonObject.FromValue(false);
+
+                case JsonTokenType.Integer:
+                    return ParseNumber();
+
+                case JsonTokenType.Float:
+                    return ParseNumber();
+
+                case JsonTokenType.String:
+                    return ParseString();
+
+                default:
+                    throw new Exception("Unexpected token " + CurrentToken.Type);
             }
-
-            if (isArray || IsArray(type))
-                return ParseArray(type);
-
-            if (type == null)
-                return ParseObject();
-
-            if (type == typeof(string))
-                return ParseString();
-
-            if (type == typeof(bool))
-            {
-                bool value = CurrentToken.Type == JsonTokenType.True;
-
-                NextToken();
-
-                return JsonObject.FromValue(value);
-            }
-
-            if (type == typeof(int) || type == typeof(short) || type == typeof(long) || type == typeof(double) || type == typeof(float) || type == typeof(decimal))
-                return ParseNumber(type);
-
-            return ParseObject(type);
         }
 
-        private JsonObject ParseNumber(Type type)
+        private JsonObject ParseNumber()
         {
             if (CurrentToken.Type != JsonTokenType.Float && CurrentToken.Type != JsonTokenType.Integer)
                 throw new Exception("Number expected");
 
-            object n;
-
-            if (CurrentToken.Type == JsonTokenType.Integer)
+            try
             {
-                n = Int64.Parse(CurrentToken.Token, NumberFormatInfo.InvariantInfo);
-
-                if ((long) n > Int32.MinValue && (long) n < Int32.MaxValue)
+                if (CurrentToken.Type == JsonTokenType.Integer)
                 {
-                    n = (int) (long) n;
-                    type = typeof(int);
+                    long longValue = Int64.Parse(CurrentToken.Token, NumberFormatInfo.InvariantInfo);
+
+                    if (longValue > Int32.MinValue && longValue < Int32.MaxValue)
+                    {
+                        return JsonObject.FromValue((int) longValue);
+                    }
+                    else
+                    {
+                        return JsonObject.FromValue(longValue);
+                    }
+                }
+                else
+                {
+                    return JsonObject.FromValue(Double.Parse(CurrentToken.Token, NumberFormatInfo.InvariantInfo));
                 }
             }
-            else
+            finally
             {
-                n = Double.Parse(CurrentToken.Token, NumberFormatInfo.InvariantInfo);
+                NextToken();
             }
-
-            NextToken();
-
-            return JsonObject.FromValue(Convert.ChangeType(n, type, null));
         }
 
 

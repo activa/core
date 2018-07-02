@@ -22,10 +22,9 @@ namespace Iridium.Core
 
         private abstract class CharFeeder
         {
-            private bool _backTracked = false;
-            private char _current;
+            public char Current { get; private set; }
 
-            public char Current => _current;
+            private bool _backTracked;
 
             protected abstract int ReadNext();
 
@@ -40,12 +39,12 @@ namespace Iridium.Core
                     int next = ReadNext();
 
                     if (next < 0)
-                        _current = (char) 0;
+                        Current = (char) 0;
                     else
-                        _current = (char) next;
+                        Current = (char) next;
                 }
 
-                return _current;
+                return Current;
             }
 
             public void Backtrack()
@@ -56,18 +55,20 @@ namespace Iridium.Core
 
         private class StringCharFeeder : CharFeeder
         {
-            private string _s;
+            private readonly string _s;
+            private readonly int _len;
             private int _index;
 
             public StringCharFeeder(string s)
             {
                 _s = s;
                 _index = 0;
+                _len = s.Length;
             }
 
             protected override int ReadNext()
             {
-                return _index >= _s.Length ? -1 : _s[_index++];
+                return _index >= _len ? -1 : _s[_index++];
             }
         }
 
@@ -90,23 +91,11 @@ namespace Iridium.Core
 
         private readonly CharFeeder _charFeeder;
 
-        //private JsonToken _token;
-
-        private static readonly Dictionary<char, JsonTokenType> _tokenTypes = new Dictionary<char, JsonTokenType>()
+        private static readonly Dictionary<string, JsonToken> _keywords = new Dictionary<string, JsonToken>()
         {
-            {'{', JsonTokenType.ObjectStart},
-            {'}', JsonTokenType.ObjectEnd },
-            {'[', JsonTokenType.ArrayStart },
-            {']', JsonTokenType.ArrayEnd },
-            {',', JsonTokenType.Comma },
-            {':', JsonTokenType.Colon }
-        };
-
-        private static readonly Dictionary<string, JsonTokenType> _keywords = new Dictionary<string, JsonTokenType>()
-        {
-            {"null", JsonTokenType.Null},
-            {"true", JsonTokenType.True},
-            {"false", JsonTokenType.False}
+            {"null", JsonToken.Null},
+            {"true", JsonToken.True},
+            {"false", JsonToken.False}
         };
 
         public JsonToken NextToken()
@@ -118,26 +107,43 @@ namespace Iridium.Core
                 if (char.IsWhiteSpace(c))
                     continue;
 
-                JsonTokenType tokenType;
-
-                if (_tokenTypes.TryGetValue(c, out tokenType))
+                switch (c)
                 {
-                    return new JsonToken(tokenType);
+                    case ',':
+                        return JsonToken.Comma;
+                    case ':':
+                        return JsonToken.Colon;
+                    case '"':
+                        return ReadStringToken();
+                    case '{':
+                        return JsonToken.ObjectStart;
+                    case '}':
+                        return JsonToken.ObjectEnd;
+                    case '[':
+                        return JsonToken.ArrayStart;
+                    case ']':
+                        return JsonToken.ArrayEnd;
+                    case 'n':
+                    case 't':
+                    case 'f':
+                        return ReadKeyword();
+                    case '0':
+                    case '1':
+                    case '2':
+                    case '3':
+                    case '4':
+                    case '5':
+                    case '6':
+                    case '7':
+                    case '8':
+                    case '9':
+                    case '-':
+                        return ReadNumber();
+                    case (char)0:
+                        return JsonToken.Eof;
+                    default:
+                        throw new Exception("Enexpected json character " + c);
                 }
-                if (c == '"')
-                {
-                    return ReadStringToken();
-                }
-                if (char.IsDigit(c) || c == '-')
-                {
-                    return ReadNumber();
-                }
-                if (char.IsLetter(c))
-                {
-                    return ReadKeyword();
-                }
-
-                return new JsonToken(JsonTokenType.EOF);
             }
         }
 
@@ -149,11 +155,9 @@ namespace Iridium.Core
 
             for (;;)
             {
-                JsonTokenType match;
-
-                if (_keywords.TryGetValue(keyword, out match))
+                if (_keywords.TryGetValue(keyword, out var match))
                 {
-                    return new JsonToken(match);
+                    return match;
                 }
 
                 c = _charFeeder.Next();
@@ -212,7 +216,7 @@ namespace Iridium.Core
                 char c = _charFeeder.Next();
 
                 if (c == 0)
-                    throw new Exception();
+                    throw new Exception("JSON: Unexpected EOF ");
 
                 if (inEscape)
                 {
@@ -247,6 +251,5 @@ namespace Iridium.Core
                 s.Append(c);
             }
         }
-
     }
 }

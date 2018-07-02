@@ -88,8 +88,6 @@ namespace Iridium.Core.Test
 
             ParameterizedThreadStart t = o =>
             {
-                
-
                 try
                 {
                     Random random = new Random();
@@ -123,7 +121,6 @@ namespace Iridium.Core.Test
 
             for (int i = 0; i < 50; i++)
             {
-                
                 threads[i] = new Thread(t);
 
                 threads[i].Start();

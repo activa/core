@@ -9,7 +9,6 @@ namespace Iridium.Core
         Null,
         True,
         False,
-        Whitespace,
         Comma,
         Colon,
         Integer,
