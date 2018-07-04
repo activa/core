@@ -174,9 +174,9 @@ namespace Iridium.Core
 		{
 			Type type = o.GetType();
 
-			if (o is Type)
+			if (o is Type t)
 			{
-				type = (Type)o;
+				type = t;
 				o = null;
 			}
 

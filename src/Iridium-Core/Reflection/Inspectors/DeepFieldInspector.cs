@@ -57,9 +57,7 @@ namespace Iridium.Core
             string field = dotIndex > 0 ? path.Substring(0, dotIndex) : path;
             string subField = dotIndex > 0 ? path.Substring(dotIndex + 1) : null;
 
-            var type = obj as Type;
-
-            if (type != null)
+            if (obj is Type type)
                 obj = null;
             else
                 type = obj.GetType();

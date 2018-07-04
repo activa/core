@@ -20,11 +20,6 @@ namespace Iridium.Core.Test
             public Stream UnmappableField = Stream.Null;
         }
 
-        private T X<T>(T x)
-        {
-            return x;
-        }
-
         Func<string, Tuple<object, bool>> f = key =>
         {
             switch (key)
@@ -66,9 +61,7 @@ namespace Iridium.Core.Test
         {
             ObjectMapper mapper = new ObjectMapper();
 
-            _MappableClass obj;
-
-            obj = mapper.CreateObject<_MappableClass>(f);
+            var obj = mapper.CreateObject<_MappableClass>(f);
 
             Assert.AreEqual(101,obj.IntField);
             Assert.AreEqual(null,obj.IntFieldNullable);
@@ -85,7 +78,7 @@ namespace Iridium.Core.Test
         {
             ObjectMapper mapper = new ObjectMapper();
 
-            _MappableClass obj = mapper.CreateObject<_MappableClass>(dic);
+            var obj = mapper.CreateObject<_MappableClass>(dic);
 
             Assert.AreEqual(101, obj.IntField);
             Assert.AreEqual(null, obj.IntFieldNullable);
@@ -102,7 +95,7 @@ namespace Iridium.Core.Test
         {
             ObjectMapper mapper = new ObjectMapper();
 
-            _MappableClass obj = mapper.CreateObject<_MappableClass>(dicLower);
+            var obj = mapper.CreateObject<_MappableClass>(dicLower);
 
             Assert.AreEqual(0, obj.IntField);
             Assert.AreEqual(null, obj.IntFieldNullable);
@@ -119,7 +112,7 @@ namespace Iridium.Core.Test
         {
             ObjectMapper mapper = new ObjectMapper(ignoreCase: true);
 
-            _MappableClass obj = mapper.CreateObject<_MappableClass>(dicLower);
+            var obj = mapper.CreateObject<_MappableClass>(dicLower);
 
             Assert.AreEqual(101, obj.IntField);
             Assert.AreEqual(null, obj.IntFieldNullable);
@@ -130,8 +123,5 @@ namespace Iridium.Core.Test
             Assert.AreEqual(DateTime.MinValue, obj.DateProperty);
             Assert.AreEqual(Stream.Null, obj.UnmappableField);
         }
-
-
-
     }
 }

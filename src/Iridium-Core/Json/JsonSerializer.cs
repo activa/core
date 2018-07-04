@@ -123,11 +123,11 @@ namespace Iridium.Core
                     break;
 
                 case JsonDateFormat.UtcISO:
-                    _output.AppendFormat("\"{0}\"", date.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ"));
+                    _output.AppendFormat("\"{0:yyyy-MM-ddTHH:mm:ssZ}\"", date.ToUniversalTime());
                     break;
 
                 case JsonDateFormat.LocalISO:
-                    _output.AppendFormat("\"{0}\"", date.ToLocalTime().ToString("yyyy-MM-ddTHH:mm:ss"));
+                    _output.AppendFormat("\"{0:yyyy-MM-ddTHH:mm:ss}\"", date.ToLocalTime());
                     break;
             }
             
@@ -176,25 +176,17 @@ namespace Iridium.Core
 
             bool pendingSeparator = false;
 
-            foreach (var fieldInfo in obj.GetType().Inspector().GetFields(BindingFlags.Public | BindingFlags.Instance))
+            
+
+            foreach (var fieldInfo in obj.GetType().Inspector().GetFieldsAndProperties(BindingFlags.Instance | BindingFlags.Public))
             {
-                if (pendingSeparator)
-                    _output.Append(',');
-
-                WritePair(fieldInfo.Name, fieldInfo.GetValue(obj));
-
-                pendingSeparator = true;
-            }
-
-            foreach (var propertyInfo in obj.GetType().Inspector().GetProperties(BindingFlags.Public | BindingFlags.Instance))
-            {
-                if (!propertyInfo.CanRead)
+                if (!fieldInfo.CanRead)
                     continue;
 
                 if (pendingSeparator)
                     _output.Append(',');
 
-                WritePair(propertyInfo.Name, propertyInfo.GetValue(obj, null));
+                WritePair(fieldInfo.Name, fieldInfo.GetValue(obj));
 
                 pendingSeparator = true;
             }
@@ -255,22 +247,34 @@ namespace Iridium.Core
         {
             _output.Append('\"');
 
-            foreach (char c in s)
+            int l = s.Length;
+
+            for (var i = 0; i < l; i++)
             {
+                char c = s[i];
+
                 switch (c)
                 {
-                    case '\t': _output.Append("\\t"); break;
-                    case '\r': _output.Append("\\r"); break;
-                    case '\n': _output.Append("\\n"); break;
+                    case '\t':
+                        _output.Append("\\t");
+                        break;
+                    case '\r':
+                        _output.Append("\\r");
+                        break;
+                    case '\n':
+                        _output.Append("\\n");
+                        break;
                     case '"':
-                    case '\\': _output.Append("\\" + c); break;
+                    case '\\':
+                        _output.Append("\\" + c);
+                        break;
                     default:
-                        {
-                            if (c >= ' ' && c < 128)
-                                _output.Append(c);
-                            else
-                                _output.Append("\\u" + ((int)c).ToString("X4"));
-                        }
+                    {
+                        if (c >= ' ' && c < 128)
+                            _output.Append(c);
+                        else
+                            _output.Append("\\u" + ((int) c).ToString("X4"));
+                    }
                         break;
                 }
             }

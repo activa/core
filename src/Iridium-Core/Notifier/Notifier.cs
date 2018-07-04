@@ -118,7 +118,7 @@ namespace Iridium.Core
         }
 
         private readonly List<Subscription> _subscriptions = new List<Subscription>();
-        public static Notifier Default { get; private set; } = new Notifier();
+        public static Notifier Default { get; } = new Notifier();
 
         public void Post(string name)
         {
@@ -152,16 +152,16 @@ namespace Iridium.Core
         {
             Notification<T> notification = new Notification<T>(sender,name,payload);
 
-            foreach (Subscription subscription in _subscriptions)
+            foreach (var subscription in _subscriptions)
             {
                 if (subscription.Matches(name))
                 {
-                    if (subscription is Subscription<T>)
+                    if (subscription is Subscription<T> sub)
                     {
-                        NotificationDelegate<T> method = ((Subscription<T>) subscription).Method;
+                        NotificationDelegate<T> method = sub.Method;
 
                         if (method == null)
-                            subscription.EnqueueNotification(notification);
+                            sub.EnqueueNotification(notification);
                         else
                             method(notification);
                     }
@@ -193,7 +193,7 @@ namespace Iridium.Core
 
         public ISubscription Subscribe(string name , NotificationDelegate method)
         {
-            Subscription subscription = new Subscription(this, name, method);
+            var subscription = new Subscription(this, name, method);
 
             _subscriptions.Add(subscription);
 
@@ -202,7 +202,7 @@ namespace Iridium.Core
 
         public ISubscription<T> Subscribe<T>(string name, NotificationDelegate<T> method)
         {
-            Subscription<T> subscription = new Subscription<T>(this,name,method);
+            var subscription = new Subscription<T>(this,name,method);
 
             _subscriptions.Add(subscription);
 
@@ -219,5 +219,4 @@ namespace Iridium.Core
             _subscriptions.RemoveAll(s => subscription == s);
         }
     }
-
 }

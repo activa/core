@@ -40,8 +40,12 @@ namespace Iridium.Core
 
         public static readonly Unit Grams = new WeightUnit(1.0);
         public static readonly Unit Kilograms = new WeightUnit(1000.0);
-        public static readonly Unit Pounds = new WeightUnit(0.454);
-        public static readonly Unit Ounces = new WeightUnit(0.454/16.0);
+        public static readonly Unit Pounds = new WeightUnit(453.59237);
+        public static readonly Unit Ounces = new WeightUnit(453.59237/16.0);
+        
+        public static readonly Unit Tons = new WeightUnit(453.59237*2000);
+        public static readonly Unit MetricTons = new WeightUnit(1000000.0);
+        public static readonly Unit MetricPounds = new WeightUnit(500);
 
         public abstract double Convert(double number, Unit targetUnit);
     }

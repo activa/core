@@ -78,11 +78,13 @@
     <Compile Include="Tests\BinaryExtensionsTest.cs" />
     <Compile Include="Tests\ConfigTest.cs" />
     <Compile Include="Tests\CoreExtensionsTest.cs" />
-    <Compile Include="Tests\GeohashTest.cs" />
-    <Compile Include="Tests\Json\Json2Test.cs" />
+    <Compile Include="Tests\UnitsTest.cs" />
     <Compile Include="Tests\Json\JsonBuilderFixture.cs" />
     <Compile Include="Tests\Json\JSONParserFixture.cs" />
+    <Compile Include="Tests\Json\JsonParserPerformanceTestFixture.cs" />
+    <Compile Include="Tests\Json\JsonParseToTypeFixture.cs" />
     <Compile Include="Tests\Json\JsonSeralizerTestFixture.cs" />
+    <Compile Include="Tests\Json\JsonValueGettersTestFixture.cs" />
     <Compile Include="Tests\MockTimeProvider.cs" />
     <Compile Include="Tests\NotifierTest.cs" />
     <Compile Include="Tests\Reflection\LINQExtensions.cs" />

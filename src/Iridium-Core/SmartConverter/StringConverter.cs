@@ -49,16 +49,13 @@ namespace Iridium.Core
                 if (!typeof(T).Inspector().IsAssignableFrom(targetType))
                     return false;
 
-                T typedValue;
-
-                if (_converter.TryConvert(s, out typedValue))
+                if (_converter.TryConvert(s, out var typedValue))
                 {
                     value = typedValue;
                     return true;
                 }
 
                 return false;
-                
             }
         }
 
@@ -73,7 +70,6 @@ namespace Iridium.Core
             {
                 _stringConverters = null;
             }
-            
         }
 
         public static void UnregisterStringConverter(IStringConverter stringConverter)
@@ -142,18 +138,11 @@ namespace Iridium.Core
                 if (_stringConverters.Any(converter => converter.TryConvert(stringValue, targetType, out returnValue)))
                     return returnValue;
 
-            var implicitOperator = targetTypeInspector.GetMethod("op_Implicit", new[] { typeof(string) });
-
-            if (implicitOperator != null)
-                return implicitOperator.Invoke(null, new[] { stringValue });
-
             if (targetTypeInspector.IsEnum)
             {
                 if (char.IsNumber(stringValue, 0))
                 {
-                    long longValue;
-
-                    if (Int64.TryParse(stringValue, out longValue))
+                    if (Int64.TryParse(stringValue, out var longValue))
                     {
                         returnValue = Enum.ToObject(targetType, longValue);
 
@@ -169,51 +158,40 @@ namespace Iridium.Core
 
                 return targetTypeInspector.DefaultValue();
             }
-
-            if (targetTypeInspector.Is(TypeFlags.Single|TypeFlags.Double))
+            else if (targetTypeInspector.Is(TypeFlags.SignedInteger))
             {
-                double doubleValue;
-
-                if (!Double.TryParse(stringValue.Replace(',', '.'), NumberStyles.Any, NumberFormatInfo.InvariantInfo, out doubleValue))
+                if (!Int64.TryParse(stringValue, out var longValue))
+                    returnValue = null;
+                else
+                    returnValue = longValue;
+            }
+            else if (targetTypeInspector.Is(TypeFlags.Single|TypeFlags.Double))
+            {
+                if (!Double.TryParse(stringValue.Replace(',', '.'), NumberStyles.Any, NumberFormatInfo.InvariantInfo, out var doubleValue))
                     returnValue = null;
                 else
                     returnValue = doubleValue;
             }
             else if (targetTypeInspector.Is(TypeFlags.Decimal))
             {
-                decimal decimalValue;
-
-                if (!Decimal.TryParse(stringValue.Replace(',', '.'), NumberStyles.Any, NumberFormatInfo.InvariantInfo, out decimalValue))
+                if (!Decimal.TryParse(stringValue.Replace(',', '.'), NumberStyles.Any, NumberFormatInfo.InvariantInfo, out var decimalValue))
                     returnValue = null;
                 else
                     returnValue = decimalValue;
             }
-            else if (targetTypeInspector.Is(TypeFlags.SignedInteger))
-            {
-                long longValue;
-
-                if (!Int64.TryParse(stringValue, out longValue))
-                    returnValue = null;
-                else
-                    returnValue = longValue;
-            }
             else if (targetTypeInspector.Is(TypeFlags.UnsignedInteger))
             {
-                ulong longValue;
-
-                if (!UInt64.TryParse(stringValue, out longValue))
+                if (!UInt64.TryParse(stringValue, out var longValue))
                     returnValue = null;
                 else
                     returnValue = longValue;
             }
             else if (targetType == typeof (DateTime))
             {
-                DateTime dateTime;
-
                 if (dateFormats.Length == 0)
                     dateFormats = _dateFormats;
 
-                if (!DateTime.TryParseExact(stringValue, dateFormats ?? _dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.NoCurrentDateDefault, out dateTime))
+                if (!DateTime.TryParseExact(stringValue, dateFormats ?? _dateFormats, CultureInfo.InvariantCulture, DateTimeStyles.NoCurrentDateDefault, out var dateTime))
                 {
                     if (!DateTime.TryParse(stringValue, out dateTime))
                     {
@@ -242,6 +220,13 @@ namespace Iridium.Core
                     returnValue = stringValue[0];
                 else
                     returnValue = null;
+            }
+            else
+            {
+                var implicitOperator = targetTypeInspector.GetMethod("op_Implicit", new[] { typeof(string) });
+
+                if (implicitOperator != null)
+                    returnValue = implicitOperator.Invoke(null, new[] { stringValue });
             }
 
             if (returnValue == null)

@@ -46,11 +46,17 @@ namespace Iridium.Core.Test
             var json = @"{ ""intArray"" : [] }";
 
             JsonObject jsonObject = JsonParser.Parse(json)["intArray"];
-            var typedObject = JsonParser.Parse<_BasicTypes>(json);
 
             Assert.IsTrue(jsonObject.IsArray);
             Assert.AreEqual(0, jsonObject.AsArray<long>().Length);
+        }
 
+        [Test]
+        public void EmptyArray_ToType()
+        {
+            var json = @"{ ""intArray"" : [] }";
+
+            var typedObject = JsonParser.Parse<_BasicTypes>(json);
             Assert.That(typedObject.IntArray, Is.Not.Null);
             Assert.That(typedObject.IntArray.Length, Is.Zero);
         }
@@ -128,22 +134,21 @@ namespace Iridium.Core.Test
         }
 
         [Test]
-        public void NullOrEmpty()
+        public void NullOrUndefined()
         {
             JsonObject json = JsonParser.Parse("{\"x\":null,\"y\":1}");
 
             Assert.That(json["x"].IsNull, Is.True);
-            Assert.That(json["x"].IsNullOrEmpty, Is.True);
-            Assert.That(json["x"].IsEmpty, Is.False);
+            Assert.That(json["x"].IsNullOrUndefined, Is.True);
+            Assert.That(json["x"].IsUndefined, Is.False);
 
             Assert.That(json["y"].IsNull, Is.False);
-            Assert.That(json["y"].IsNullOrEmpty, Is.False);
-            Assert.That(json["y"].IsEmpty, Is.False);
+            Assert.That(json["y"].IsNullOrUndefined, Is.False);
+            Assert.That(json["y"].IsUndefined, Is.False);
 
             Assert.That(json["z"].IsNull, Is.False);
-            Assert.That(json["z"].IsNullOrEmpty, Is.True);
-            Assert.That(json["z"].IsEmpty, Is.True);
-
+            Assert.That(json["z"].IsNullOrUndefined, Is.True);
+            Assert.That(json["z"].IsUndefined, Is.True);
         }
 
 
@@ -163,8 +168,6 @@ namespace Iridium.Core.Test
         [Test]
         public void ImplicitCasts()
         {
-            Func<string, JsonObject> j = JsonParser.Parse;
-
             JsonObject json = JsonParser.Parse("{\"i\":123,\"s\":\"abc\",\"f\":123.0,\"b\":true}");
 
             int i1;
@@ -279,7 +282,7 @@ namespace Iridium.Core.Test
         }
 
         [Test]
-        public void TestDeepClassGeneric()
+        public void TestDeep()
         {
             var obj = JsonParser.Parse(_deepClassJson);
 
@@ -298,8 +301,8 @@ namespace Iridium.Core.Test
             Assert.That((string) obj["subObject2"]["string2"], Is.EqualTo("test22"));
             Assert.That((string) obj["subObject2.string2"], Is.EqualTo("test22"));
 
-            Assert.That(obj["XXXXXX"].IsEmpty, Is.True);
-            Assert.That(obj["XXXXXX.string2"].IsEmpty, Is.True);
+            Assert.That(obj["XXXXXX"].IsUndefined, Is.True);
+            Assert.That(obj["XXXXXX.string2"].IsUndefined, Is.True);
 
             Assert.That(obj["subObject2"]["subObjectIntArray"]["value1"].Select(item => (int) item), Is.EquivalentTo(new[] {1, 2, 3, 4}));
             Assert.That(obj["subObject2"]["subObjectIntArray"]["value2"].Select(item => (int) item), Is.EquivalentTo(new[] {11, 22, 33, 44}));
@@ -327,7 +330,7 @@ namespace Iridium.Core.Test
 
             Assert.That((int) obj["value1"], Is.EqualTo(123));
 
-            obj = JsonObject.Undefined();
+            obj = new JsonObject();
 
             Assert.That(obj["value1"].IsUndefined);
 
@@ -363,7 +366,7 @@ namespace Iridium.Core.Test
             Assert.That((int) obj["value1.value2"], Is.EqualTo(123));
             Assert.That((int) obj["value1"]["value2"], Is.EqualTo(123));
 
-            obj = JsonObject.EmptyObject();
+            obj = new JsonObject();
 
             Assert.That(obj["value1"].IsUndefined);
             Assert.That(obj["value1.value2"].IsUndefined);
@@ -377,32 +380,94 @@ namespace Iridium.Core.Test
             Assert.That(obj["value1.value2.value3"].IsObject);
             Assert.That(obj["value1.value2.value3.value4"].IsValue);
 
-
             Assert.That((int) obj["value1.value2.value3.value4"], Is.EqualTo(123));
             Assert.That((int) obj["value1"]["value2"]["value3"]["value4"], Is.EqualTo(123));
-
         }
 
         [Test]
-        public void TestArraySet()
+        public void TestArraySetWithPath()
         {
-            var obj = JsonObject.Undefined();
+            var obj = new JsonObject();
+
+            Assert.That(obj["value1"].IsUndefined);
+            Assert.That(obj.IsUndefined);
 
             obj["value1[0]"] = 123;
 
+            Assert.That(obj.IsObject);
+
             Assert.That(obj["value1"].IsArray);
             Assert.That(obj["value1"].AsArray().Length, Is.EqualTo(1));
-            Assert.That((int)obj["value1"][0], Is.EqualTo(123));
-            Assert.That((int)obj["value1[0]"], Is.EqualTo(123));
+
+            Assert.That(obj["value1"][0].As<int>(), Is.EqualTo(123));
+            Assert.That(obj["value1[0]"].As<int>(), Is.EqualTo(123));
 
             obj["value1[10]"] = 456;
 
             Assert.That(obj["value1"].IsArray);
             Assert.That(obj["value1"].AsArray().Length, Is.EqualTo(11));
+
             Assert.That((int)obj["value1"][0], Is.EqualTo(123));
             Assert.That((int)obj["value1"][10], Is.EqualTo(456));
             Assert.That((int)obj["value1[0]"], Is.EqualTo(123));
             Assert.That((int)obj["value1[10]"], Is.EqualTo(456));
+
+            obj = new JsonObject();
+
+            Assert.That(obj["value1"].IsUndefined);
+
+            obj["value1[100]"] = 123;
+
+            Assert.That(obj["value1"].IsArray);
+            Assert.That(obj["value1"].AsArray().Length, Is.EqualTo(101));
+
+            Assert.That(obj["value1"][100].As<int>(), Is.EqualTo(123));
+            Assert.That(obj["value1[100]"].As<int>(), Is.EqualTo(123));
+        }
+
+        [Test]
+        public void TestArraySetDirect()
+        {
+            var obj = new JsonObject();
+
+            Assert.That(obj["value1"].IsUndefined);
+            Assert.That(obj.IsUndefined);
+
+            obj["value1"] = null;
+
+            obj["value1"][0] = 123;
+
+            Assert.That(obj.IsObject);
+
+            Assert.That(obj["value1"].IsArray);
+            Assert.That(obj["value1"].AsArray().Length, Is.EqualTo(1));
+
+            Assert.That(obj["value1"][0].As<int>(), Is.EqualTo(123));
+            Assert.That(obj["value1[0]"].As<int>(), Is.EqualTo(123));
+
+            obj["value1"][10] = 456;
+
+            Assert.That(obj["value1"].IsArray);
+            Assert.That(obj["value1"].AsArray().Length, Is.EqualTo(11));
+
+            Assert.That((int)obj["value1"][0], Is.EqualTo(123));
+            Assert.That((int)obj["value1"][10], Is.EqualTo(456));
+            Assert.That((int)obj["value1[0]"], Is.EqualTo(123));
+            Assert.That((int)obj["value1[10]"], Is.EqualTo(456));
+
+            obj = new JsonObject();
+
+            Assert.That(obj["value1"].IsUndefined);
+
+            obj["value1"] = new JsonObject();
+
+            obj["value1"][100] = 123;
+
+            Assert.That(obj["value1"].IsArray);
+            Assert.That(obj["value1"].AsArray().Length, Is.EqualTo(101));
+
+            Assert.That(obj["value1"][100].As<int>(), Is.EqualTo(123));
+            Assert.That(obj["value1[100]"].As<int>(), Is.EqualTo(123));
         }
 
         [Test]
@@ -442,9 +507,10 @@ namespace Iridium.Core.Test
         [Test]
         public void TestSetValues()
         {
-            JsonObject obj = JsonObject.Undefined();
-
-            obj["value"] = new[] {1, 2, 3};
+            JsonObject obj = new JsonObject
+            {
+                ["value"] = new[] {1, 2, 3}
+            };
 
             Assert.That(obj["value"].IsArray);
 
@@ -524,6 +590,5 @@ namespace Iridium.Core.Test
                 yield return new TestCaseData("{\"value\":false}", typeof(bool), false);
             }
         }
-
     }
 }

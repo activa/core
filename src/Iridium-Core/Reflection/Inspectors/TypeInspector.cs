@@ -441,8 +441,8 @@ namespace Iridium.Core
             if (conversion != null)
                 return conversion(value);
 
-            if (Is(TypeFlags.Numeric) && value is char)
-                value = (short)(char)value; // compiler supports char to number casting but framework does not
+            if (Is(TypeFlags.Numeric) && value is char c)
+                value = (short)c; // compiler supports char to number casting but framework does not
 
             return Convert.ChangeType(value, Type, null);
         }

@@ -104,12 +104,10 @@ namespace Iridium.Core
 
         private readonly List<ServiceDefinition> _services = new List<ServiceDefinition>();
 
-
         public T Get<T>()
         {
             return (T)Get(typeof(T));
         }
-
 
         private bool CanResolve(Type type)
         {

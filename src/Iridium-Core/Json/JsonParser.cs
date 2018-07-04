@@ -1,3 +1,29 @@
+#region License
+//=============================================================================
+// Iridium-Core - Portable .NET Productivity Library 
+//
+// Copyright (c) 2008-2017 Philippe Leybaert
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy 
+// of this software and associated documentation files (the "Software"), to deal 
+// in the Software without restriction, including without limitation the rights 
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell 
+// copies of the Software, and to permit persons to whom the Software is 
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in 
+// all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE 
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.
+//=============================================================================
+#endregion
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -43,9 +69,7 @@ namespace Iridium.Core
 
         private T _Parse<T>() where T:class
         {
-            NextToken();
-
-            return ParseObject(typeof(T)).As<T>();
+            return _Parse().As<T>();
         }
 
         private JsonObject _Parse()
@@ -55,85 +79,51 @@ namespace Iridium.Core
             return ParseValue();
         }
 
-        private JsonToken CurrentToken;
+        private JsonToken _currentToken;
 
         private void NextToken()
         {
-            CurrentToken = _tokenizer.NextToken();
+            _currentToken = _tokenizer.NextToken();
         }
 
-        
-        private JsonObject ParseObject(Type objectType = null)
+        private JsonToken NextToken(JsonTokenType tokenType)
         {
-            if (CurrentToken.Type != JsonTokenType.ObjectStart)
-                throw new Exception("Expected {");
+            var token = _currentToken;
 
-            object obj;
-            List<MemberInspector> fieldsInType = null;
-            bool isTypeMapped = true;
+            if (token.Type != tokenType)
+                throw new Exception("Expected " + tokenType);
 
-            if (objectType == null)
+            _currentToken = _tokenizer.NextToken();
+
+            return token;
+        }
+        
+        private JsonObject ParseObject()
+        {
+            Dictionary<string, JsonObject> obj =  new Dictionary<string, JsonObject>();
+
+            NextToken(JsonTokenType.ObjectStart);
+
+            for (;;)
             {
-                obj = new Dictionary<string, JsonObject>();
-
-                isTypeMapped = false;
-            }
-            else
-            {
-                obj = Activator.CreateInstance(objectType);
-
-                fieldsInType = objectType.Inspector().GetFieldsAndProperties(BindingFlags.Public | BindingFlags.Instance).ToList();
-            }
-
-            NextToken();
-
-            for (; ; )
-            {
-                if (CurrentToken.Type == JsonTokenType.ObjectEnd)
+                if (_currentToken.Type == JsonTokenType.ObjectEnd)
                     break;
 
-                if (CurrentToken.Type != JsonTokenType.String)
-                    throw new Exception("Expected property name");
+                var propNameToken = NextToken(JsonTokenType.String);
 
-                string propName = CurrentToken.Token;
+                NextToken(JsonTokenType.Colon);
 
-                NextToken();
+                obj[propNameToken.Token] = ParseValue();
 
-                if (CurrentToken.Type != JsonTokenType.Colon)
-                    throw new Exception("Expected colon");
-
-                NextToken();
-
-                if (isTypeMapped)
-                {
-                    var field = fieldsInType.FirstOrDefault(f => string.Equals(f.Name, propName, StringComparison.OrdinalIgnoreCase));
-
-                    if (field != null)
-                    {
-                        field.SetValue(obj, ParseValue(field.Type).As(field.Type));
-                    }
-                    else
-                    {
-                        ParseValue(typeof(object)); // ignore
-                    }
-                }
-                else
-                {
-                    ((Dictionary<string, JsonObject>) obj)[propName] = ParseValue();
-                }
-
-                if (CurrentToken.Type != JsonTokenType.Comma)
+                if (_currentToken.Type != JsonTokenType.Comma)
                     break;
 
                 NextToken();
             }
 
-            if (CurrentToken.Type != JsonTokenType.ObjectEnd)
-                throw new Exception("Expected }");
+            NextToken(JsonTokenType.ObjectEnd);
 
-            NextToken();
-
-            return JsonObject.FromValue(obj);
+            return JsonObject.FromObject(obj);
         }
 
         private static bool IsArray(Type type)
@@ -144,15 +134,15 @@ namespace Iridium.Core
                 type.Inspector().ImplementsOrInherits(typeof (IList<>)));
         }
 
-        private JsonObject ParseValue(Type type = null)
+        private JsonObject ParseValue()
         {
-            switch (CurrentToken.Type)
+            switch (_currentToken.Type)
             {
                 case JsonTokenType.ObjectStart:
-                    return ParseObject(type);
+                    return ParseObject();
 
                 case JsonTokenType.ArrayStart:
-                    return ParseArray(type);
+                    return ParseArray();
 
                 case JsonTokenType.Null:
                     NextToken();
@@ -176,20 +166,20 @@ namespace Iridium.Core
                     return ParseString();
 
                 default:
-                    throw new Exception("Unexpected token " + CurrentToken.Type);
+                    throw new Exception("Unexpected token " + _currentToken.Type);
             }
         }
 
         private JsonObject ParseNumber()
         {
-            if (CurrentToken.Type != JsonTokenType.Float && CurrentToken.Type != JsonTokenType.Integer)
+            if (_currentToken.Type != JsonTokenType.Float && _currentToken.Type != JsonTokenType.Integer)
                 throw new Exception("Number expected");
 
             try
             {
-                if (CurrentToken.Type == JsonTokenType.Integer)
+                if (_currentToken.Type == JsonTokenType.Integer)
                 {
-                    long longValue = Int64.Parse(CurrentToken.Token, NumberFormatInfo.InvariantInfo);
+                    long longValue = Int64.Parse(_currentToken.Token, NumberFormatInfo.InvariantInfo);
 
                     if (longValue > Int32.MinValue && longValue < Int32.MaxValue)
                     {
@@ -202,7 +192,7 @@ namespace Iridium.Core
                 }
                 else
                 {
-                    return JsonObject.FromValue(Double.Parse(CurrentToken.Token, NumberFormatInfo.InvariantInfo));
+                    return JsonObject.FromValue(Double.Parse(_currentToken.Token, NumberFormatInfo.InvariantInfo));
                 }
             }
             finally
@@ -211,57 +201,35 @@ namespace Iridium.Core
             }
         }
 
-
         private JsonObject ParseString()
         {
-            if (CurrentToken.Type != JsonTokenType.String)
-                throw new Exception("Expected string");
+            var stringToken = NextToken(JsonTokenType.String);
 
-            string s = CurrentToken.Token;
-
-            NextToken();
-
-            return JsonObject.FromValue(s);
+            return JsonObject.FromValue(stringToken.Token);
         }
 
-        private JsonObject ParseArray(Type type)
+        private JsonObject ParseArray()
         {
-            Type elementType = null;
-
-            if (type != null && type.IsArray)
-                elementType = type.GetElementType();
-
-            if (CurrentToken.Type != JsonTokenType.ArrayStart)
-                throw new Exception("Expected [");
-
-            NextToken();
+            NextToken(JsonTokenType.ArrayStart);
  
-            var list = new List<object>();
+            var list = new List<JsonObject>();
 
             for (;;)
             {
-                if (CurrentToken.Type == JsonTokenType.ArrayEnd)
+                if (_currentToken.Type == JsonTokenType.ArrayEnd)
                     break;
 
-                list.Add(elementType == null ? ParseValue() : ParseValue().As(elementType));
+                list.Add(ParseValue());
 
-                if (CurrentToken.Type != JsonTokenType.Comma)
+                if (_currentToken.Type != JsonTokenType.Comma)
                     break;
 
                 NextToken();
             }
 
-            if (CurrentToken.Type != JsonTokenType.ArrayEnd)
-                throw new Exception("Expected ]");
+            NextToken(JsonTokenType.ArrayEnd);
 
-            NextToken();
-
-            Array array = Array.CreateInstance(elementType ?? typeof(JsonObject), list.Count);
-
-            for (int i = 0; i < array.Length; i++)
-                array.SetValue(list[i], i);
-
-            return JsonObject.FromValue(array);
+            return JsonObject.FromArray(list.ToArray());
         }
     }
 }

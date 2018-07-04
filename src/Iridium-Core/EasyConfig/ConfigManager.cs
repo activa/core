@@ -40,12 +40,7 @@ namespace Iridium.Core
         private List<int> _configVersions = new List<int>();
         private readonly List<IConfigurationProvider> _configProviders = new List<IConfigurationProvider>();
 
-        public static ConfigManager Default { get; private set; }
-
-        static ConfigManager()
-        {
-            Default = new ConfigManager();
-        }
+        public static ConfigManager Default { get; } = new ConfigManager();
 
         public void Register<T>()
         {
@@ -70,10 +65,7 @@ namespace Iridium.Core
 
         public string Environment
         {
-            get
-            {
-                return _environment;
-            }
+            get => _environment;
             set
             {
                 _environment = value;

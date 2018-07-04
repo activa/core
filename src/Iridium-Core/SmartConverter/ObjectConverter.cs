@@ -41,8 +41,8 @@ namespace Iridium.Core
             if (targetType == typeof(object))
                 return value;
 
-            if (value is string)
-                return StringConverter.Convert((string)value, targetType);
+            if (value is string s)
+                return StringConverter.Convert(s, targetType);
 
             var targetTypeInspector = targetType.Inspector();
 
@@ -56,13 +56,12 @@ namespace Iridium.Core
 			if (sourceType == targetType)
                 return value;
 
-            var sourceTypeInspector = sourceType.Inspector();
-
 			var implicitOperator = targetTypeInspector.GetMethod("op_Implicit", new [] {sourceType});
 
             if (implicitOperator != null)
                 return implicitOperator.Invoke(null, new [] {value});
 
+            var sourceTypeInspector = sourceType.Inspector();
 
 			if (targetType == typeof(string))
             {

@@ -7,4 +7,8 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Json\Json2.cs" />
+  </ItemGroup>
+
 </Project>

@@ -45,8 +45,6 @@ namespace Iridium.Core
 
     public class SmartBinder
     {
-        public static SmartBinder Default { get; } = new SmartBinder();
-
         private enum ParameterCompareType
         {
             Exact,
@@ -84,7 +82,6 @@ namespace Iridium.Core
             }
         }
 
-
         public static bool MatchParameters(Type[] parameterTypes, ParameterInfo[] parameters)
         {
             var compareTypes = new[] { ParameterCompareType.Exact, ParameterCompareType.Assignable, ParameterCompareType.Implicit };
@@ -97,10 +94,7 @@ namespace Iridium.Core
             if (parameterTypes.Length != parameters.Length)
                 return false;
 
-            if (parameterTypes.Length == 0)
-                return true;
-
-            return parameterTypes.SequenceEqual(parameters.Select(p => p.ParameterType), new ParameterComparer(compareType));
+            return parameterTypes.Length == 0 || parameterTypes.SequenceEqual(parameters.Select(p => p.ParameterType), new ParameterComparer(compareType));
         }
 
         public static T SelectBestMethod<T>(IEnumerable<T> methods, Type[] parameterTypes, BindingFlags bindingFlags = BindingFlags.Default) where T:MethodBase
@@ -128,8 +122,8 @@ namespace Iridium.Core
         {
             object[] p = ConvertParameters(parameters, method.GetParameters());
 
-            if (method is ConstructorInfo)
-                return ((ConstructorInfo) method).Invoke(p);
+            if (method is ConstructorInfo constructorInfo)
+                return constructorInfo.Invoke(p);
 
             return method.Invoke(null, p);
         }
@@ -138,8 +132,5 @@ namespace Iridium.Core
         {
             return method.Invoke(target, ConvertParameters(parameters, method.GetParameters()));
         }
-
     }
-
-
 }

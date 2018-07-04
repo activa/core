@@ -49,14 +49,8 @@ namespace Iridium.Core
 
         public new T Payload 
         { 
-            get 
-            {
-                return (T)base.Payload;
-            }
-            private set 
-            {
-                base.Payload = value;
-            }
+            get => (T)base.Payload;
+            private set => base.Payload = value;
         }
     }
 

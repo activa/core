@@ -25,6 +25,7 @@
 #endregion
 
 using System;
+using System.Text;
 
 namespace Iridium.Core
 {
@@ -44,19 +45,25 @@ namespace Iridium.Core
 
         public virtual void LogException(DateTime timeStamp, LogLevel logLevel, Exception e)
         {
-            string text = "";
+            StringBuilder text = new StringBuilder();
 
-            Exception innerException = e;
-            
+            var innerException = e;
+
+            text.AppendLine("===== EXCEPTION =====");
+
             while (innerException != null)
             {
-                text += "*** Exception: " + innerException.Message + "\r\n";
-                text += "*** Stacktrace: " + innerException.StackTrace + "\r\n";
+                text.AppendLine($"{innerException.GetType().Name} : {innerException.Message}");
+                text.AppendLine();
+                text.AppendLine(innerException.StackTrace);
+                text.AppendLine("---------------------");
             
                 innerException = innerException.InnerException;
             }
             
-            LogText(timeStamp, logLevel, text);
+            text.AppendLine("=====================");
+
+            LogText(timeStamp, logLevel, text.ToString());
         }
 
         public virtual string FormatTime(DateTime time)
@@ -73,6 +80,4 @@ namespace Iridium.Core
             Dispose(true);
         }
     }
-
-    
 }
